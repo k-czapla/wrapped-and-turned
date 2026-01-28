@@ -28,9 +28,6 @@
   height: 480px;
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 28px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .board-design-card__preview app-assistant-board-card,
