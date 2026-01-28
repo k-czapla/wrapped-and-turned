@@ -63,6 +63,7 @@ The board should include (when available):
   - No size/yarn/designer: show “—” or hide the field.
 - **R5 — Mobile-friendly**: board should fit on smaller screens and still be readable.
 - **R12 — Board design selection**: users can access a Board Design page to browse and select from available visual styles. Selected design persists across sessions (localStorage) and applies to all generated boards (preview and PNG export).
+- **R13 — Board design preview consistency**: On the Board Design page, each design option is shown in a preview that uses the same sample project data (pattern name, designer, size, yarn, image placeholder) and the same dimensions (320×480px) as the Podcaster’s Assistant board preview, so users can compare designs accurately and see how the board will look with real content.
 
 ### Functional requirements
 

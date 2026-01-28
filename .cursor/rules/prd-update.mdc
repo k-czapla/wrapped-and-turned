@@ -1,8 +1,6 @@
 ---
-name: basic-instructions
-description: PRD update
+alwaysApply: true
 ---
-
 # Overview
 
 Make sure to read and update PRD documents every time new technology or major functionality is introduced or an existing one is changed

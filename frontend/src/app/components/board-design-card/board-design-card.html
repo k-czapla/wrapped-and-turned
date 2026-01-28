@@ -6,21 +6,8 @@
   [attr.aria-pressed]="selected()"
   [attr.aria-label]="'Select ' + design().name + ' board design'"
 >
-  <div
-    class="board-design-card__preview"
-    [ngStyle]="{
-      'font-family': design().style['fontFamily'],
-      background: design().style['background'],
-      color: design().style['color'],
-      'border-radius': design().style['borderRadius'],
-      'box-shadow': design().style['boxShadow'],
-      border: design().style['border'],
-      'letter-spacing': design().style['letterSpacing'],
-      'text-align': design().style['textAlign'] || 'center',
-      'line-height': design().style['lineHeight']
-    }"
-  >
-    <span class="board-design-card__preview-text">Sample</span>
+  <div class="board-design-card__preview">
+    <app-assistant-board-card [card]="sampleCard" [design]="design()" />
   </div>
   <div class="board-design-card__meta">
     <span class="board-design-card__name">{{ design().name }}</span>
