@@ -9,5 +9,5 @@ This folder contains the PRDs for **Wrapped and Turned**.
 - `PRD-020-Podcasters-Assistant.md` — vertical, shareable project board (PNG export)
 - `PRD-030-Backend-API-and-Data.md` — backend responsibilities, API contracts, data model notes
 - `PRD-040-Deployment-CICD-and-Observability.md` — CI/CD, hosting, secrets, monitoring (v1)
-- `PRD-050-Future-Development-Ideas.md` — backlog: AI YouTube description (Assistant), downloadable drill-down charts (Wrapped)
+- `PRD-050-Future-Development-Ideas.md` — backlog: AI YouTube description (Assistant), downloadable drill-down charts (Wrapped); **Idea 3 (Board style customization) partially implemented**
 

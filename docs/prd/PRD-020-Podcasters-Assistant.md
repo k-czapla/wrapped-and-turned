@@ -8,7 +8,7 @@
 
 ## Summary
 
-Podcaster’s Assistant generates a **vertical, share-ready board** for a chosen Ravelry project and lets the user **download it as a PNG** for use in podcast show notes, Instagram Stories, and similar formats.
+Podcaster’s Assistant generates a **vertical, share-ready board** for a chosen Ravelry project and lets the user **download it as a PNG** for use in podcast show notes, Instagram Stories, and similar formats. Users can select from multiple visual design styles to personalize their boards.
 
 ## User story
 
@@ -20,6 +20,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 - Date range (**From**, **To**) to load candidate projects
 - **Selectable project list**: user is presented with a checkmark list of projects in range; they select one or more projects to generate a visualisation for
+- **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). Selected design is persisted in localStorage and applied to all generated boards.
 
 ### Output (board content)
 
@@ -39,10 +40,14 @@ The board should include (when available):
 
 ## Out of scope (v1)
 
-- Editable templates, fonts, themes, or a “Canva-like” editor
+- Custom color picker or full design editor (Canva-like experience)
+- User-uploaded fonts or custom images beyond the project photo
+- Data field selection (toggling which fields appear on the board) — see PRD-050 Idea 3
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations
+
+**Note:** Style selection from predefined designs is implemented (10 design options available).
 
 ## Requirements
 
@@ -57,6 +62,7 @@ The board should include (when available):
   - No image: show placeholder without broken layout.
   - No size/yarn/designer: show “—” or hide the field.
 - **R5 — Mobile-friendly**: board should fit on smaller screens and still be readable.
+- **R12 — Board design selection**: users can access a Board Design page to browse and select from available visual styles. Selected design persists across sessions (localStorage) and applies to all generated boards (preview and PNG export).
 
 ### Functional requirements
 
@@ -92,7 +98,9 @@ The board should include (when available):
 
 - User can load projects for a date range.
 - User is presented with a selectable (checkmark) list of projects and can select one or more to generate visualisations for.
-- User sees a vertical board preview for each selected project.
-- User can export each board as a PNG.
+- User can access the Board Design page to browse and select a visual style for their boards.
+- Selected board design persists across sessions and applies to all generated boards.
+- User sees a vertical board preview for each selected project (using the selected design style).
+- User can export each board as a PNG (export matches the preview style).
 - Board remains readable and visually stable when optional fields are missing.
 

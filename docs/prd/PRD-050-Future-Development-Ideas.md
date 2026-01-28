@@ -5,6 +5,8 @@
 - **Status**: Draft
 - **Last updated**: 2026-01-28
 
+**Implemented:** Idea 3 (Project Board style customization) — style selection page, 10 board designs, persistence via localStorage; data field selection is not yet implemented.
+
 ## Purpose
 
 This document describes planned feature ideas that extend the current Wrapped and Podcaster’s Assistant experiences. It is intended as a **base for further development**—no implementation is specified here; the goal is to capture scope, user value, and requirements so that future work can be scoped and estimated.
@@ -136,6 +138,8 @@ As a fiber artist viewing my Wrapped summary, I want to click on a stat like “
 ---
 
 ## Idea 3: Project Board style customization and data selection (Podcaster's Assistant)
+
+**Implementation status (2026-01-28):** Partially implemented. Delivered: dedicated Board Design page (`/board-design`) where users can browse and select from 10 visual styles (from `project-board-prompts`); selected design is persisted in localStorage and applied to all Podcaster's Assistant project boards (preview and PNG export). Not yet implemented: data field selection (R2, toggles for which fields appear on the board).
 
 ### Summary
 
