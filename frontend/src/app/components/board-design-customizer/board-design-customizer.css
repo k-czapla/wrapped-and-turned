@@ -35,6 +35,16 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-height: 0;
+}
+
+.board-design-customizer__section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
 }
 
 .board-design-customizer__group {
