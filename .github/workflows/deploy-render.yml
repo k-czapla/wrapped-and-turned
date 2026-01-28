@@ -42,7 +42,7 @@ jobs:
         run: npm ci --prefix frontend
 
       - name: Build frontend
-        run: npm --prefix frontend run build -- --output-path dist
+        run: npm --prefix frontend run build
 
       - name: Trigger Render backend deploy hook (optional)
         if: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK != '' }}

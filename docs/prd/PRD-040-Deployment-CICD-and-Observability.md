@@ -98,21 +98,27 @@ Prefer calling backend via relative paths (`/api/...`) when frontend and backend
 
 - **Root directory**: `frontend`
 - **Build command**:
-  - `npm ci && npm run build -- --output-path dist`
+  - `npm ci && npm run build`
 - **Publish directory**:
   - `dist`
 
-Using an explicit `--output-path dist` avoids Angular output path ambiguity across Angular versions/builders.
+Single-page app routing requires a rewrite rule:
+
+- Add a **Rewrite** in Render: `/*` → `/index.html`
+
+Note: Angular’s `@angular/build:application` builder can sometimes emit browser files under a `browser/` subfolder. This repo configures `outputPath.browser=""` so `index.html` is at `dist/index.html` (and `dist` is the correct publish directory).
 
 ### Backend (Render Web Service)
 
 - **Root directory**: `backend`
 - **Build command**:
-  - `npm ci && npm run build`
+  - `npm ci --include=dev && npm run build`
 - **Start command**:
   - `npm start`
 - **Port**:
   - Render supplies `PORT` automatically; backend reads `PORT` from env.
+
+Note: some hosts (including Render) may perform installs in “production mode” during builds, which can omit `devDependencies`. Since TypeScript builds need `typescript` + `@types/*`, use `npm ci --include=dev` in the build command.
 
 ### Deploy triggers
 
