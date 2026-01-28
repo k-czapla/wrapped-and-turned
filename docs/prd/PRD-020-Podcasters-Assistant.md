@@ -21,6 +21,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - Date range (**From**, **To**) to load candidate projects
 - **Selectable project list**: user is presented with a checkmark list of projects in range; they select one or more projects to generate a visualisation for
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). Selected design is persisted in localStorage and applied to all generated boards.
+- **Board design customization** (optional): on the Board Design page, user can further customize the selected design: choose from 10 fonts, set background and text colors via RGBA color pickers, and choose card shape (rounded or square). Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
 
 ### Output (board content)
 
@@ -40,14 +41,14 @@ The board should include (when available):
 
 ## Out of scope (v1)
 
-- Custom color picker or full design editor (Canva-like experience)
+- Full design editor (Canva-like experience); basic customization (font, RGBA colors, card shape) is in scope.
 - User-uploaded fonts or custom images beyond the project photo
 - Data field selection (toggling which fields appear on the board) — see PRD-050 Idea 3
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations
 
-**Note:** Style selection from predefined designs is implemented (10 design options available).
+**Note:** Style selection from predefined designs is implemented (10 design options). Users can also customize font (10 options), background and text colors (RGBA pickers), and card shape (rounded or square); customizations override the selected design and persist across sessions.
 
 ## Requirements
 
@@ -63,7 +64,8 @@ The board should include (when available):
   - No size/yarn/designer: show “—” or hide the field.
 - **R5 — Mobile-friendly**: board should fit on smaller screens and still be readable.
 - **R12 — Board design selection**: users can access a Board Design page to browse and select from available visual styles. Selected design persists across sessions (localStorage) and applies to all generated boards (preview and PNG export).
-- **R13 — Board design preview consistency**: On the Board Design page, each design option is shown in a preview that uses the same sample project data (pattern name, designer, size, yarn, image placeholder) and the same dimensions (320×480px) as the Podcaster’s Assistant board preview, so users can compare designs accurately and see how the board will look with real content.
+- **R12a — Board design customization**: users can override the selected design with a custom font (10 options), background and text colors (RGBA pickers), and card shape (rounded or square). Customizations persist in localStorage and apply together with the selected design to all generated boards.
+- **R13 — Board design preview consistency**: On the Board Design page, each design option is shown in a preview that uses the same sample project data (pattern name, designer, size, yarn, image placeholder) and the same dimensions (320×480px) as the Podcaster’s Assistant board preview, so users can compare designs accurately and see how the board will look with real content. A live “Customize design” section shows a preview with the effective design (selected style plus user customizations).
 
 ### Functional requirements
 
@@ -100,7 +102,8 @@ The board should include (when available):
 - User can load projects for a date range.
 - User is presented with a selectable (checkmark) list of projects and can select one or more to generate visualisations for.
 - User can access the Board Design page to browse and select a visual style for their boards.
-- Selected board design persists across sessions and applies to all generated boards.
+- User can optionally customize the design (font, RGBA background/text colors, card shape); customizations persist and apply to all generated boards.
+- Selected board design (and any customizations) persists across sessions and applies to all generated boards.
 - User sees a vertical board preview for each selected project (using the selected design style).
 - User can export each board as a PNG (export matches the preview style).
 - Board remains readable and visually stable when optional fields are missing.

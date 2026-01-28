@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BoardDesignService } from '../../services/board-design.service';
 import { BoardDesignCard } from '../../components/board-design-card/board-design-card';
+import { BoardDesignCustomizer } from '../../components/board-design-customizer/board-design-customizer';
 
 @Component({
   selector: 'app-board-design',
-  imports: [RouterLink, BoardDesignCard],
+  imports: [RouterLink, BoardDesignCard, BoardDesignCustomizer],
   templateUrl: './board-design.html',
   styleUrl: './board-design.css',
 })

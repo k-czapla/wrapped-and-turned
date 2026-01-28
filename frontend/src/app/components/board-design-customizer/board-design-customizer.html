@@ -1,0 +1,119 @@
+<div class="board-design-customizer">
+  <h2 class="board-design-customizer__title">Customize design</h2>
+  <p class="board-design-customizer__intro">
+    Override the selected design with your own font, colors, and card shape. Changes apply to the board cards when you generate and download.
+  </p>
+
+  <div class="board-design-customizer__grid">
+    <div class="board-design-customizer__controls">
+      <div class="board-design-customizer__group">
+        <label for="customizer-font" class="board-design-customizer__label">Font</label>
+        <select
+          id="customizer-font"
+          class="board-design-customizer__select"
+          [value]="userCustomization().fontId ?? ''"
+          (change)="setFont($any($event.target).value)"
+        >
+          <option value="">Use design default</option>
+          @for (font of fonts; track font.id) {
+            <option [value]="font.id" [style.fontFamily]="font.fontFamily">{{ font.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="board-design-customizer__group">
+        <span class="board-design-customizer__label">Background color (RGBA)</span>
+        <div class="board-design-customizer__color-row">
+          <input
+            type="color"
+            class="board-design-customizer__color-swatch"
+            [value]="backgroundColorHex() || '#f6f4f1'"
+            (input)="onBackgroundColorChange($any($event.target).value, backgroundColorAlpha())"
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            class="board-design-customizer__alpha"
+            [value]="backgroundColorAlpha()"
+            (input)="onBackgroundColorChange(backgroundColorHex() || '#f6f4f1', +$any($event.target).value)"
+          />
+          <span class="board-design-customizer__alpha-value">{{ backgroundColorAlpha() }}%</span>
+        </div>
+        <button
+          type="button"
+          class="board-design-customizer__reset"
+          (click)="setBackgroundColor('', 100)"
+        >
+          Use design default
+        </button>
+      </div>
+
+      <div class="board-design-customizer__group">
+        <span class="board-design-customizer__label">Text color (RGBA)</span>
+        <div class="board-design-customizer__color-row">
+          <input
+            type="color"
+            class="board-design-customizer__color-swatch"
+            [value]="textColorHex() || '#2e2e2e'"
+            (input)="onTextColorChange($any($event.target).value, textColorAlpha())"
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            class="board-design-customizer__alpha"
+            [value]="textColorAlpha()"
+            (input)="onTextColorChange(textColorHex() || '#2e2e2e', +$any($event.target).value)"
+          />
+          <span class="board-design-customizer__alpha-value">{{ textColorAlpha() }}%</span>
+        </div>
+        <button
+          type="button"
+          class="board-design-customizer__reset"
+          (click)="setTextColor('', 100)"
+        >
+          Use design default
+        </button>
+      </div>
+
+      <div class="board-design-customizer__group">
+        <span class="board-design-customizer__label">Card shape</span>
+        <div class="board-design-customizer__shape-options" role="group" aria-label="Card shape">
+          <label class="board-design-customizer__shape-option">
+            <input
+              type="radio"
+              name="cardShape"
+              [checked]="(userCustomization().cardShape ?? 'rounded') === 'rounded'"
+              (change)="setCardShape('rounded')"
+            />
+            <span>Rounded</span>
+          </label>
+          <label class="board-design-customizer__shape-option">
+            <input
+              type="radio"
+              name="cardShape"
+              [checked]="userCustomization().cardShape === 'square'"
+              (change)="setCardShape('square')"
+            />
+            <span>Square</span>
+          </label>
+        </div>
+        <button
+          type="button"
+          class="board-design-customizer__reset"
+          (click)="setCardShape(undefined)"
+        >
+          Use design default
+        </button>
+      </div>
+    </div>
+
+    <div class="board-design-customizer__preview-wrap">
+      <span class="board-design-customizer__preview-label">Preview</span>
+      <div class="board-design-customizer__preview">
+        <app-assistant-board-card [card]="sampleCard" [design]="effectiveDesign()" />
+      </div>
+    </div>
+  </div>
+</div>

@@ -24,7 +24,7 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
-  protected selectedDesign = computed(() => this.boardDesign.selectedDesign());
+  protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
   constructor(
     private api: Api,
