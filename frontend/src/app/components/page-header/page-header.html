@@ -23,25 +23,48 @@
         class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >Podcaster's Assistant</a
       >
-      <ng-container *ngIf="(me$() | async) as me">
-        <a
-          routerLink="/stats-preferences"
-          routerLinkActive="bg-slate-900 text-white"
-          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-          >Stats preferences</a
-        >
-      </ng-container>
     </nav>
 
     <div class="flex items-center gap-3">
       <ng-container *ngIf="(me$() | async) as me; else loggedOut">
-        <div class="hidden text-sm text-slate-600 sm:block">Logged in as <span class="font-medium">{{ me.username }}</span></div>
-        <button
-          (click)="logout.emit()"
-          class="rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-        >
-          Log out
-        </button>
+        <div class="relative" data-user-menu>
+          <button
+            (click)="toggleUserMenu($event)"
+            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >
+            <span class="hidden sm:inline">Logged in as <span class="font-medium">{{ me.username }}</span></span>
+            <span class="sm:hidden">{{ me.username }}</span>
+            <svg
+              class="h-4 w-4 text-slate-500 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              [class.rotate-180]="showUserMenu()"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          @if (showUserMenu()) {
+            <div class="absolute right-0 top-full z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white shadow-lg" data-user-menu>
+              <div class="py-1">
+                <a
+                  routerLink="/stats-preferences"
+                  routerLinkActive="bg-slate-50"
+                  (click)="closeUserMenu()"
+                  class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Stats Preferences
+                </a>
+                <button
+                  (click)="logout.emit(); closeUserMenu()"
+                  class="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Log out
+                </button>
+              </div>
+            </div>
+          }
+        </div>
       </ng-container>
       <ng-template #loggedOut>
         <button
