@@ -72,9 +72,14 @@ export class BoardDesignService {
     ...PROJECT_BOARD_DESIGNS,
   ]);
 
-  /** Selected design with user customization (font, colors, shape, border) applied to style. */
+  /** Selected design; user customization applied only when "My design" is selected. */
   readonly effectiveDesign = computed<ProjectBoardDesign>(() => {
-    return this.applyCustomization(this.selectedDesign());
+    const id = this.selectedDesignId();
+    const design = this.selectedDesign();
+    if (id === USER_BOARD_DESIGN_ID) {
+      return this.applyCustomization(design);
+    }
+    return design;
   });
 
   private applyCustomization(design: ProjectBoardDesign): ProjectBoardDesign {
