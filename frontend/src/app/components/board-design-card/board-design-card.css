@@ -23,16 +23,16 @@
 }
 
 .board-design-card__preview {
-  height: 80px;
+  aspect-ratio: 320 / 480;
+  min-height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
-  min-height: 0;
+  padding: 1rem;
 }
 
 .board-design-card__preview-text {
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-weight: 600;
   opacity: 0.9;
 }
