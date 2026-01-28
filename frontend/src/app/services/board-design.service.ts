@@ -9,6 +9,9 @@ import {
 const STORAGE_KEY = 'wrapped-and-turned-board-design';
 const CUSTOMIZATION_STORAGE_KEY = 'wrapped-and-turned-board-design-customization';
 
+/** Id for the user's custom board (first in the list); selecting it opens the customizer. */
+export const USER_BOARD_DESIGN_ID = 'user';
+
 /** User overrides for the selected board design (font, colors, card shape, border). */
 export interface BoardDesignCustomization {
   fontId?: string;
@@ -48,109 +51,126 @@ export class BoardDesignService {
 
   readonly selectedDesign = computed<ProjectBoardDesign>(() => {
     const id = this.selectedDesignId();
+    if (id === USER_BOARD_DESIGN_ID) return PROJECT_BOARD_DESIGNS[0];
     return getProjectBoardDesignById(id) ?? PROJECT_BOARD_DESIGNS[0];
   });
 
   readonly userCustomization = this.customization.asReadonly();
 
-  /** Selected design with user customization (font, colors, shape, border) applied to style. */
-  readonly effectiveDesign = computed<ProjectBoardDesign>(() => {
-    const design = this.selectedDesign();
-    const custom = this.customization();
-    const baseStyle = { ...design.style };
-
-    if (custom.fontId) {
-      const font = BOARD_DESIGN_FONTS.find((f) => f.id === custom.fontId);
-      if (font) baseStyle['fontFamily'] = font.fontFamily;
-    }
-    if (custom.backgroundColor != null) baseStyle['background'] = custom.backgroundColor;
-    if (custom.textColor != null) baseStyle['color'] = custom.textColor;
-    if (custom.cardShape === 'square') baseStyle['borderRadius'] = '0';
-    else if (custom.cardShape === 'rounded') baseStyle['borderRadius'] = design.style?.['borderRadius'] ?? DEFAULT_BORDER_RADIUS;
-
-    // Apply border customization
-    if (custom.borderWidth != null || custom.borderStyle != null || custom.borderColor != null) {
-      // Remove individual border properties if they exist in the design
-      delete baseStyle['borderLeft'];
-      delete baseStyle['borderRight'];
-      delete baseStyle['borderTop'];
-      delete baseStyle['borderBottom'];
-      delete baseStyle['borderWidth'];
-      delete baseStyle['borderStyle'];
-      delete baseStyle['borderColor'];
-      
-      // Handle border style 'none' or width 0 - remove border completely
-      if (custom.borderStyle === 'none' || (custom.borderWidth != null && custom.borderWidth === 0)) {
-        baseStyle['border'] = 'none';
-      } else {
-        // Construct complete border value from user customization
-        // Use user values or sensible defaults
-        const width = custom.borderWidth != null ? `${custom.borderWidth}px` : '1px';
-        const style = custom.borderStyle ?? 'solid';
-        const color = custom.borderColor ?? (baseStyle['color'] || '#2e2e2e');
-        
-        // Use shorthand border property to override any existing border styles
-        baseStyle['border'] = `${width} ${style} ${color}`;
-      }
-    }
-
-    return { ...design, style: baseStyle };
+  /** User's design card (first in the list): base design + customization. */
+  readonly userDesignCard = computed<ProjectBoardDesign>(() => {
+    const base = PROJECT_BOARD_DESIGNS[0];
+    const withStyle = this.applyCustomization(base);
+    return {
+      ...withStyle,
+      id: USER_BOARD_DESIGN_ID,
+      name: "My design",
+      vibe: "Your font, colors, shape & border",
+    };
   });
 
-  setSelectedDesignId(id: string) {
-    const design = getProjectBoardDesignById(id);
-    if (design) {
-      this.selectedId.set(id);
-      try {
-        localStorage.setItem(STORAGE_KEY, id);
-      } catch {
-        // ignore storage errors
-      }
+  /** All board options: user's design first, then predefined designs. */
+  readonly designList = computed<ProjectBoardDesign[]>(() => [
+    this.userDesignCard(),
+    ...PROJECT_BOARD_DESIGNS,
+  ]);
+
+  /** Selected design with user customization (font, colors, shape, border) applied to style. */
+  readonly effectiveDesign = computed<ProjectBoardDesign>(() =>
+    this.applyCustomization(this.selectedDesign())
+  });
+
+  private applyCustomization(design: ProjectBoardDesign): ProjectBoardDesign {
+  const custom = this.customization();
+  const baseStyle = { ...design.style };
+
+  if (custom.fontId) {
+    const font = BOARD_DESIGN_FONTS.find((f) => f.id === custom.fontId);
+    if (font) baseStyle['fontFamily'] = font.fontFamily;
+  }
+  if (custom.backgroundColor != null) baseStyle['background'] = custom.backgroundColor;
+  if (custom.textColor != null) baseStyle['color'] = custom.textColor;
+  if (custom.cardShape === 'square') baseStyle['borderRadius'] = '0';
+  else if (custom.cardShape === 'rounded') baseStyle['borderRadius'] = design.style?.['borderRadius'] ?? DEFAULT_BORDER_RADIUS;
+
+  // Apply border customization
+  if (custom.borderWidth != null || custom.borderStyle != null || custom.borderColor != null) {
+    delete baseStyle['borderLeft'];
+    delete baseStyle['borderRight'];
+    delete baseStyle['borderTop'];
+    delete baseStyle['borderBottom'];
+    delete baseStyle['borderWidth'];
+    delete baseStyle['borderStyle'];
+    delete baseStyle['borderColor'];
+
+    if (custom.borderStyle === 'none' || (custom.borderWidth != null && custom.borderWidth === 0)) {
+      baseStyle['border'] = 'none';
+    } else {
+      const width = custom.borderWidth != null ? `${custom.borderWidth}px` : '1px';
+      const style = custom.borderStyle ?? 'solid';
+      const color = custom.borderColor ?? (baseStyle['color'] || '#2e2e2e');
+      baseStyle['border'] = `${width} ${style} ${color}`;
     }
   }
 
-  setUserCustomization(partial: Partial<BoardDesignCustomization>) {
-    this.customization.update((prev) => {
-      const next = { ...prev, ...partial };
-      try {
-        localStorage.setItem(CUSTOMIZATION_STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // ignore storage errors
-      }
-      return next;
-    });
+  return { ...design, style: baseStyle };
+}
+
+setSelectedDesignId(id: string) {
+  const design = id === USER_BOARD_DESIGN_ID || getProjectBoardDesignById(id);
+  if (design) {
+    this.selectedId.set(id);
+    try {
+      localStorage.setItem(STORAGE_KEY, id);
+    } catch {
+      // ignore storage errors
+    }
   }
+}
+
+setUserCustomization(partial: Partial<BoardDesignCustomization>) {
+  this.customization.update((prev) => {
+    const next = { ...prev, ...partial };
+    try {
+      localStorage.setItem(CUSTOMIZATION_STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // ignore storage errors
+    }
+    return next;
+  });
+}
 
   private readStoredId(): string | null {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored && getProjectBoardDesignById(stored)) return stored;
-    } catch {
-      // ignore
-    }
-    return null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && (stored === USER_BOARD_DESIGN_ID || getProjectBoardDesignById(stored)))
+      return stored;
+  } catch {
+    // ignore
   }
+  return null;
+}
 
   private readStoredCustomization(): BoardDesignCustomization {
-    try {
-      const raw = localStorage.getItem(CUSTOMIZATION_STORAGE_KEY);
-      if (!raw) return {};
-      const parsed = JSON.parse(raw) as unknown;
-      if (parsed == null || typeof parsed !== 'object') return {};
-      const o = parsed as Record<string, unknown>;
-      const out: BoardDesignCustomization = {};
-      if (typeof o['fontId'] === 'string') out.fontId = o['fontId'];
-      if (typeof o['backgroundColor'] === 'string') out.backgroundColor = o['backgroundColor'];
-      if (typeof o['textColor'] === 'string') out.textColor = o['textColor'];
-      if (o['cardShape'] === 'rounded' || o['cardShape'] === 'square') out.cardShape = o['cardShape'];
-      if (typeof o['borderWidth'] === 'number') out.borderWidth = o['borderWidth'];
-      if (o['borderStyle'] === 'solid' || o['borderStyle'] === 'dashed' || o['borderStyle'] === 'dotted' || o['borderStyle'] === 'double' || o['borderStyle'] === 'none') {
-        out.borderStyle = o['borderStyle'];
-      }
-      if (typeof o['borderColor'] === 'string') out.borderColor = o['borderColor'];
-      return out;
-    } catch {
-      return {};
+  try {
+    const raw = localStorage.getItem(CUSTOMIZATION_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    if (parsed == null || typeof parsed !== 'object') return {};
+    const o = parsed as Record<string, unknown>;
+    const out: BoardDesignCustomization = {};
+    if (typeof o['fontId'] === 'string') out.fontId = o['fontId'];
+    if (typeof o['backgroundColor'] === 'string') out.backgroundColor = o['backgroundColor'];
+    if (typeof o['textColor'] === 'string') out.textColor = o['textColor'];
+    if (o['cardShape'] === 'rounded' || o['cardShape'] === 'square') out.cardShape = o['cardShape'];
+    if (typeof o['borderWidth'] === 'number') out.borderWidth = o['borderWidth'];
+    if (o['borderStyle'] === 'solid' || o['borderStyle'] === 'dashed' || o['borderStyle'] === 'dotted' || o['borderStyle'] === 'double' || o['borderStyle'] === 'none') {
+      out.borderStyle = o['borderStyle'];
     }
+    if (typeof o['borderColor'] === 'string') out.borderColor = o['borderColor'];
+    return out;
+  } catch {
+    return {};
   }
+}
 }

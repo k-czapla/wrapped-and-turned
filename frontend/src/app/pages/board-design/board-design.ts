@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BoardDesignService } from '../../services/board-design.service';
+import { BoardDesignService, USER_BOARD_DESIGN_ID } from '../../services/board-design.service';
 import { BoardDesignCard } from '../../components/board-design-card/board-design-card';
 import { BoardDesignCustomizer } from '../../components/board-design-customizer/board-design-customizer';
 import { Modal } from '../../components/modal/modal';
@@ -13,13 +13,13 @@ import { Modal } from '../../components/modal/modal';
 })
 export class BoardDesign {
   protected boardDesign = inject(BoardDesignService);
-  protected designs = this.boardDesign.designs;
+  protected designList = this.boardDesign.designList;
   protected selectedDesignId = this.boardDesign.selectedDesignId;
   protected isCustomizerModalOpen = signal(false);
 
   selectDesign(id: string) {
     this.boardDesign.setSelectedDesignId(id);
-    this.isCustomizerModalOpen.set(true);
+    this.isCustomizerModalOpen.set(id === USER_BOARD_DESIGN_ID);
   }
 
   closeCustomizerModal() {

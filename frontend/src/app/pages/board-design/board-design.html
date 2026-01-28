@@ -2,14 +2,14 @@
   <div class="board-design-page__header">
     <h1 class="board-design-page__title">Project board design</h1>
     <p class="board-design-page__intro">
-      Choose a visual style for your Podcaster's Assistant project board. Click on a design to customize it.
+      Choose a visual style for your Podcaster's Assistant project board. Pick "My design" to customize font, colors, shape, and border; pick a predefined design to use it as-is.
       The selected design and your customizations will be used when you generate and download boards.
     </p>
     <a routerLink="/assistant" class="board-design-page__back">← Back to Podcaster's Assistant</a>
   </div>
 
   <div class="board-design-page__grid" role="list">
-    @for (design of designs; track design.id) {
+    @for (design of designList(); track design.id) {
       <div class="board-design-page__item" role="listitem">
         <app-board-design-card
           [design]="design"
