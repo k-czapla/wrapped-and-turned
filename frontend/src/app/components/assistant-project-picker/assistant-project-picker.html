@@ -1,0 +1,16 @@
+<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <div class="text-sm font-semibold text-slate-900">Pick a project</div>
+  <div class="mt-1 text-xs text-slate-500">We'll use the first project photo from Ravelry when available.</div>
+
+  <select
+    class="mt-4 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"
+    (change)="onSelect($any($event.target).value)"
+  >
+    <option value="">Select…</option>
+    @for (p of projects(); track p.id) {
+      <option [value]="p.id">{{ p.name }}</option>
+    }
+  </select>
+
+  <div class="mt-4 text-xs text-slate-500">Tip: once you like it, download and drop into your show notes.</div>
+</div>

@@ -1,13 +1,21 @@
-import { DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BaseChartDirective } from 'ng2-charts';
 import type { ChartConfiguration, ChartData } from 'chart.js';
 import { Api, type WrappedStats } from '../../services/api';
+import { WrappedControls } from '../../components/wrapped-controls/wrapped-controls';
+import { WrappedTotals } from '../../components/wrapped-totals/wrapped-totals';
+import { WrappedCraftChart } from '../../components/wrapped-craft-chart/wrapped-craft-chart';
+import { WrappedHighlights } from '../../components/wrapped-highlights/wrapped-highlights';
+import { WrappedProjectsGallery } from '../../components/wrapped-projects-gallery/wrapped-projects-gallery';
 
 @Component({
   selector: 'app-wrapped',
-  imports: [NgIf, NgFor, FormsModule, BaseChartDirective, DecimalPipe],
+  imports: [
+    WrappedControls,
+    WrappedTotals,
+    WrappedCraftChart,
+    WrappedHighlights,
+    WrappedProjectsGallery,
+  ],
   templateUrl: './wrapped.html',
   styleUrl: './wrapped.css',
 })
@@ -43,15 +51,16 @@ export class Wrapped {
       next: (s) => {
         try {
           this.stats = s ?? null;
-          const craft = (s && typeof s === 'object' && s.breakdowns && typeof s.breakdowns === 'object')
-            ? (s.breakdowns as { craft?: Record<string, number> }).craft
-            : undefined;
+          const craft =
+            s && typeof s === 'object' && s.breakdowns && typeof s.breakdowns === 'object'
+              ? (s.breakdowns as { craft?: Record<string, number> }).craft
+              : undefined;
           const entries = Object.entries(craft ?? {}).sort((a, b) => b[1] - a[1]);
           this.craftChartData = {
             labels: entries.map(([k]) => k),
             datasets: [{ data: entries.map(([, v]) => v) }],
           };
-        } catch (err) {
+        } catch {
           this.error = 'Invalid response from server. Please try again.';
           this.stats = null;
         } finally {

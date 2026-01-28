@@ -1,12 +1,12 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { toPng } from 'html-to-image';
+import { Component } from '@angular/core';
 import { Api, type ProjectCard, type WrappedStats } from '../../services/api';
+import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
+import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
+import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
 
 @Component({
   selector: 'app-assistant',
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [AssistantControls, AssistantProjectPicker, AssistantBoardPreview],
   templateUrl: './assistant.html',
   styleUrl: './assistant.css',
 })
@@ -21,9 +21,7 @@ export class Assistant {
   protected selectedProjectId: number | null = null;
   protected card: ProjectCard | null = null;
 
-  @ViewChild('board') private boardEl?: ElementRef<HTMLElement>;
-
-  constructor(private api: Api) {}
+  constructor(private api: Api) { }
 
   loadProjects() {
     this.loading = true;
@@ -44,9 +42,7 @@ export class Assistant {
     });
   }
 
-  onSelectProject(idStr: string) {
-    const id = Number(idStr);
-    if (!Number.isFinite(id)) return;
+  onSelectProject(id: number) {
     this.selectedProjectId = id;
     this.card = null;
 
@@ -54,21 +50,6 @@ export class Assistant {
       next: (c) => (this.card = c),
       error: () => (this.error = 'Failed to load project details.'),
     });
-  }
-
-  async downloadBoard() {
-    if (!this.boardEl?.nativeElement) return;
-
-    const dataUrl = await toPng(this.boardEl.nativeElement, {
-      cacheBust: true,
-      pixelRatio: 2,
-      backgroundColor: '#ffffff',
-    });
-
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = `wrapped-and-turned-project-${this.selectedProjectId ?? 'board'}.png`;
-    a.click();
   }
 }
 

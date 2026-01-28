@@ -1,0 +1,8 @@
+---
+name: angular-components
+description: New functionalities should be separate components
+---
+
+# Overview
+
+Whenever adding a new feature consider whether it can be separated into an individual Angular component

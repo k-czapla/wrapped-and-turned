@@ -1,11 +1,12 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { Api } from '../../services/api';
+import { HomeHero } from '../../components/home-hero/home-hero';
+import { HomeFeatures } from '../../components/home-features/home-features';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, AsyncPipe, NgIf],
+  imports: [AsyncPipe, HomeHero, HomeFeatures],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
