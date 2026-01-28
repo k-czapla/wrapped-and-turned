@@ -52,13 +52,15 @@ describe('Api', () => {
   });
 
   describe('refreshMe', () => {
-    it('should fetch user info and update me$ observable', (done) => {
+    it('should fetch user info and update me$ observable', () => {
       const mockMe: Me = { username: 'testuser' };
 
-      service.refreshMe().subscribe(() => {
-        service.me$.subscribe((me) => {
-          expect(me).toEqual(mockMe);
-          done();
+      const assertion = new Promise<void>((resolve) => {
+        service.refreshMe().subscribe(() => {
+          service.me$.subscribe((me) => {
+            expect(me).toEqual(mockMe);
+            resolve();
+          });
         });
       });
 
@@ -66,18 +68,22 @@ describe('Api', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
       req.flush(mockMe);
+      return assertion;
     });
 
-    it('should handle errors gracefully', (done) => {
-      service.refreshMe().subscribe(() => {
-        service.me$.subscribe((me) => {
-          expect(me).toBeNull();
-          done();
+    it('should handle errors gracefully', () => {
+      const assertion = new Promise<void>((resolve) => {
+        service.refreshMe().subscribe(() => {
+          service.me$.subscribe((me) => {
+            expect(me).toBeNull();
+            resolve();
+          });
         });
       });
 
       const req = httpMock.expectOne('http://localhost:3000/api/me');
       req.error(new ProgressEvent('error'));
+      return assertion;
     });
   });
 
@@ -195,23 +201,26 @@ describe('Api', () => {
   });
 
   describe('logout', () => {
-    it('should logout and clear me state', (done) => {
-      // First set a user
-      service.refreshMe().subscribe(() => {
-        // Then logout
-        service.logout().subscribe(() => {
-          service.me$.subscribe((me) => {
-            expect(me).toBeNull();
-            done();
+    it('should logout and clear me state', () => {
+      const assertion = new Promise<void>((resolve) => {
+        // First set a user
+        service.refreshMe().subscribe(() => {
+          // Then logout
+          service.logout().subscribe(() => {
+            service.me$.subscribe((me) => {
+              expect(me).toBeNull();
+              resolve();
+            });
           });
-        });
 
-        const logoutReq = httpMock.expectOne('http://localhost:3000/auth/logout');
-        logoutReq.flush({});
+          const logoutReq = httpMock.expectOne('http://localhost:3000/auth/logout');
+          logoutReq.flush({});
+        });
       });
 
       const meReq = httpMock.expectOne('http://localhost:3000/api/me');
       meReq.flush({ username: 'testuser' });
+      return assertion;
     });
   });
 });
