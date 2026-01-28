@@ -42,9 +42,8 @@ export class Assistant {
           this.wrapped = normalized;
           this.error = null;
         } else {
-          this.error = (s && typeof s === 'object' && typeof (s as Record<string, unknown>).error === 'string')
-            ? (s as { error: string }).error
-            : 'Invalid response from server.';
+          const err = s && typeof s === 'object' ? (s as Record<string, unknown>)['error'] : undefined;
+          this.error = typeof err === 'string' ? err : 'Invalid response from server.';
         }
         this.loading = false;
         this.cdr.markForCheck();
@@ -86,16 +85,18 @@ export class Assistant {
 function normalizeWrapped(raw: unknown): WrappedStats | null {
   if (!raw || typeof raw !== 'object') return null;
   const s = raw as Record<string, unknown>;
-  if (typeof s.error === 'string') return null;
-  const projects = Array.isArray(s.projects) ? s.projects : [];
-  const range = s.range && typeof s.range === 'object' && 'from' in s.range && 'to' in s.range
-    ? (s.range as WrappedStats['range'])
+  if (typeof s['error'] === 'string') return null;
+  const projects = Array.isArray(s['projects']) ? s['projects'] : [];
+  const rangeVal = s['range'];
+  const range = rangeVal && typeof rangeVal === 'object' && 'from' in rangeVal && 'to' in rangeVal
+    ? (rangeVal as WrappedStats['range'])
     : { from: '', to: '' };
-  const totals = s.totals && typeof s.totals === 'object'
-    ? (s.totals as WrappedStats['totals'])
+  const totalsVal = s['totals'];
+  const totals = totalsVal && typeof totalsVal === 'object'
+    ? (totalsVal as WrappedStats['totals'])
     : { projects: 0, finishedProjects: 0, totalYardage: 0, totalMeterage: 0 };
-  const breakdowns = s.breakdowns && typeof s.breakdowns === 'object'
-    ? (s.breakdowns as WrappedStats['breakdowns'])
+  const breakdowns = s['breakdowns'] && typeof s['breakdowns'] === 'object'
+    ? (s['breakdowns'] as WrappedStats['breakdowns'])
     : { craft: {} };
   const highlights = s['highlights'] && typeof s['highlights'] === 'object'
     ? (s['highlights'] as WrappedStats['highlights'])
