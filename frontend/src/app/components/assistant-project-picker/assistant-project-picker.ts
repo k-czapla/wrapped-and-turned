@@ -10,13 +10,28 @@ type ProjectItem = WrappedStats['projects'][number];
 })
 export class AssistantProjectPicker {
   projects = input.required<ProjectItem[]>();
+  selectedIds = input<number[]>([]);
 
-  projectSelect = output<number>();
+  selectionChange = output<number[]>();
 
-  onSelect(value: string) {
-    const id = Number(value);
-    if (Number.isFinite(id)) {
-      this.projectSelect.emit(id);
-    }
+  isSelected(id: number): boolean {
+    return this.selectedIds().includes(id);
+  }
+
+  toggle(id: number) {
+    const ids = this.selectedIds();
+    const next = ids.includes(id)
+      ? ids.filter((x) => x !== id)
+      : [...ids, id].sort((a, b) => a - b);
+    this.selectionChange.emit(next);
+  }
+
+  selectAll() {
+    const next = this.projects().map((p) => p.id).sort((a, b) => a - b);
+    this.selectionChange.emit(next);
+  }
+
+  clearSelection() {
+    this.selectionChange.emit([]);
   }
 }

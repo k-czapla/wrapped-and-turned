@@ -13,11 +13,12 @@
     <div class="grid gap-4 md:grid-cols-2">
       <app-assistant-project-picker
         [projects]="w.projects"
-        (projectSelect)="onSelectProject($event)"
+        [selectedIds]="selectedProjectIds"
+        (selectionChange)="onSelectionChange($event)"
       />
       <app-assistant-board-preview
-        [card]="card"
-        [selectedProjectId]="selectedProjectId"
+        [cards]="cards"
+        [cardsLoading]="cardsLoading"
       />
     </div>
   }

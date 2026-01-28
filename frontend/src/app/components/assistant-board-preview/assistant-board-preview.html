@@ -2,23 +2,33 @@
   <div class="flex items-center justify-between gap-3">
     <div>
       <div class="text-sm font-semibold text-slate-900">Preview</div>
-      <div class="mt-1 text-xs text-slate-500">Vertical board · 9:16-ish</div>
+      <div class="mt-1 text-xs text-slate-500">Vertical board · 9:16-ish · one per selected project</div>
     </div>
-    <button
-      (click)="downloadBoard()"
-      [disabled]="!card()"
-      class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-    >
-      Download PNG
-    </button>
   </div>
 
-  <div class="mt-4 flex justify-center">
-    <div
-      #board
-      class="w-[320px] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm"
-    >
-      <app-assistant-board-card [card]="card()" />
+  @if (cardsLoading()) {
+    <p class="mt-4 text-sm text-slate-500">Loading project details…</p>
+  } @else if (cards().length === 0) {
+    <p class="mt-4 text-sm text-slate-500">Select one or more projects to generate a visualisation.</p>
+  } @else {
+    <div class="mt-4 flex flex-col gap-6">
+      @for (card of cards(); track card.id; let i = $index) {
+        <div class="flex flex-col items-center gap-3">
+          <div
+            #board
+            class="w-[320px] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm"
+          >
+            <app-assistant-board-card [card]="card" />
+          </div>
+          <button
+            type="button"
+            (click)="downloadBoard(i)"
+            class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+          >
+            Download PNG
+          </button>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>

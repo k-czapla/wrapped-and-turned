@@ -1,4 +1,4 @@
-import { Component, ElementRef, input, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, QueryList, ViewChildren } from '@angular/core';
 import { toPng } from 'html-to-image';
 import type { ProjectCard } from '../../services/api';
 import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
@@ -10,23 +10,26 @@ import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card
   styleUrl: './assistant-board-preview.css',
 })
 export class AssistantBoardPreview {
-  card = input<ProjectCard | null>(null);
-  selectedProjectId = input<number | null>(null);
+  cards = input<ProjectCard[]>([]);
+  cardsLoading = input<boolean>(false);
 
-  @ViewChild('board') private boardEl?: ElementRef<HTMLElement>;
+  @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 
-  async downloadBoard() {
-    if (!this.boardEl?.nativeElement) return;
+  async downloadBoard(index: number) {
+    const el = this.boardEls?.get(index)?.nativeElement;
+    if (!el) return;
 
-    const dataUrl = await toPng(this.boardEl.nativeElement, {
+    const dataUrl = await toPng(el, {
       cacheBust: true,
       pixelRatio: 2,
       backgroundColor: '#ffffff',
     });
 
+    const card = this.cards()[index];
+    const id = card?.id ?? index;
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `wrapped-and-turned-project-${this.selectedProjectId() ?? 'board'}.png`;
+    a.download = `wrapped-and-turned-project-${id}.png`;
     a.click();
   }
 }

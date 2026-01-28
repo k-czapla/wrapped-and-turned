@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { Api, type ProjectCard, type WrappedStats } from '../../services/api';
 import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
@@ -18,8 +19,9 @@ export class Assistant {
   protected to = defaultTo();
 
   protected wrapped: WrappedStats | null = null;
-  protected selectedProjectId: number | null = null;
-  protected card: ProjectCard | null = null;
+  protected selectedProjectIds: number[] = [];
+  protected cards: ProjectCard[] = [];
+  protected cardsLoading = false;
 
   constructor(private api: Api) { }
 
@@ -27,8 +29,8 @@ export class Assistant {
     this.loading = true;
     this.error = null;
     this.wrapped = null;
-    this.selectedProjectId = null;
-    this.card = null;
+    this.selectedProjectIds = [];
+    this.cards = [];
 
     this.api.getWrapped(this.from, this.to).subscribe({
       next: (s) => {
@@ -42,13 +44,25 @@ export class Assistant {
     });
   }
 
-  onSelectProject(id: number) {
-    this.selectedProjectId = id;
-    this.card = null;
+  onSelectionChange(ids: number[]) {
+    this.selectedProjectIds = ids;
+    this.error = null;
 
-    this.api.getProjectCard(id).subscribe({
-      next: (c) => (this.card = c),
-      error: () => (this.error = 'Failed to load project details.'),
+    if (ids.length === 0) {
+      this.cards = [];
+      return;
+    }
+
+    this.cardsLoading = true;
+    forkJoin(ids.map((id) => this.api.getProjectCard(id))).subscribe({
+      next: (cardList) => {
+        this.cards = cardList;
+        this.cardsLoading = false;
+      },
+      error: () => {
+        this.cardsLoading = false;
+        this.error = 'Failed to load project details for one or more projects.';
+      },
     });
   }
 }
