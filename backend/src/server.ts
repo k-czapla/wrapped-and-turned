@@ -4,7 +4,7 @@ import cors from 'cors';
 import session from 'express-session';
 import { getEnv } from './env.js';
 import { buildAuthorizeUrl, exchangeCodeForToken, makeState, refreshAccessToken } from './ravelryOAuth2.js';
-import { makeRavelryApi, type RavelryProjectsListResponse } from './ravelryApi.js';
+import { makeRavelryApi, type RavelryCurrentUserResponse, type RavelryProjectsListResponse } from './ravelryApi.js';
 import { computeBaseStats, mapWithConcurrency, safeDate } from './stats.js';
 
 declare module 'express-session' {
@@ -168,10 +168,18 @@ app.get('/auth/ravelry/callback', async (req, res) => {
     redirectUri,
   });
 
-  req.session.ravelry = {
+  const sessionWithTokens = {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     expiresAt: tokens.expiresAt,
+  };
+  const api = makeRavelryApi({ session: sessionWithTokens });
+  const currentUser = await api.getJson<RavelryCurrentUserResponse>('/current_user.json');
+  const username = currentUser?.user?.username;
+
+  req.session.ravelry = {
+    ...sessionWithTokens,
+    ...(username && { username }),
   };
   req.session.oauthState = undefined;
 
@@ -186,7 +194,18 @@ app.post('/auth/logout', (req, res) => {
 
 app.get('/api/me', async (req, res) => {
   if (!(await requireAuth(req, res))) return;
-  res.json({ username: req.session.ravelry!.username ?? 'ravelry-user' });
+  let username = req.session.ravelry!.username;
+  if (!username && ravelryEnabled && req.session.ravelry!.accessToken) {
+    try {
+      const api = makeRavelryApi({ session: req.session.ravelry! });
+      const currentUser = await api.getJson<RavelryCurrentUserResponse>('/current_user.json');
+      username = currentUser?.user?.username;
+      if (username) req.session.ravelry!.username = username;
+    } catch {
+      // keep username undefined, fallback below
+    }
+  }
+  res.json({ username: username ?? 'ravelry-user' });
 });
 
 function mockWrapped(from: string, to: string) {

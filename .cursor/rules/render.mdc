@@ -6,3 +6,18 @@ description: Show Render adjustments
 # Overview
 
 Inform me whenever I need to make changes to my Render configuration. I have a web service running for the /backend folder, and a static site for /frontend.
+
+Frontend url: https://wrapped-turned.onrender.com
+Backend url: https://wrapped-and-turned.onrender.com
+
+Current variables set for backend: 
+FRONTEND_URL=https://wrapped-turned.onrender.com
+PUBLIC_BACKEND_URL=https://wrapped-and-turned.onrender.com
+RAVELRY_CLIENT_ID=86cb7a1ed7892e7b601e15ebfbc5c996
+RAVELRY_CLIENT_SECRET=kB9qidoeJjyBxb/PMyKNBhaUD3_QcA0ynfcvm2Zu
+SESSION_SECRET=kB9qidoeJjyBxb/PMyKNBhaUD3_QcA0ynfcvm2Zu
+
+
+Current variables set for frontend: 
+NODE_VERSION=22.22.0
+WT_BACKEND_URL=https://wrapped-and-turned.onrender.com

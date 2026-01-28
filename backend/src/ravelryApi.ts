@@ -43,3 +43,7 @@ export type RavelryProjectsListResponse = {
   projects: RavelryProjectListItem[];
   pagination?: { page: number; pages: number; page_size: number; results: number };
 };
+
+export type RavelryCurrentUserResponse = {
+  user: { username: string };
+};
