@@ -1,17 +1,21 @@
 <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
   <div class="flex items-center justify-between gap-3">
-    <div>
-      <div class="text-sm font-semibold text-slate-900">Craft breakdown</div>
-      <div class="mt-1 text-xs text-slate-500">Knitting vs crochet (and others)</div>
-    </div>
-    @if (mostProductiveMonth()) {
+    @if (showChart()) {
+      <div>
+        <div class="text-sm font-semibold text-slate-900">Craft breakdown</div>
+        <div class="mt-1 text-xs text-slate-500">Knitting vs crochet (and others)</div>
+      </div>
+    }
+    @if (showMostProductive() && mostProductiveMonth()) {
       <div class="text-xs text-slate-500">
         Most productive: <span class="font-medium">{{ mostProductiveMonth() }}</span>
       </div>
     }
   </div>
 
-  <div class="mt-4">
-    <canvas baseChart [data]="chartData()" [type]="'doughnut'" [options]="chartOptions()"></canvas>
-  </div>
+  @if (showChart()) {
+    <div class="mt-4">
+      <canvas baseChart [data]="chartData()" [type]="'doughnut'" [options]="chartOptions()"></canvas>
+    </div>
+  }
 </div>
