@@ -1,0 +1,8 @@
+---
+name: error-handling
+description: Error handling
+---
+
+# Overview
+
+Whenever adding a new functionality or changing an existing one make sure error handling is included for both backend as well as the frontend part.

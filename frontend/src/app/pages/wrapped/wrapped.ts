@@ -1,5 +1,5 @@
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import type { ChartConfiguration, ChartData } from 'chart.js';
@@ -28,7 +28,10 @@ export class Wrapped {
     },
   };
 
-  constructor(private api: Api) {}
+  constructor(
+    private api: Api,
+    private ngZone: NgZone,
+  ) { }
 
   generate() {
     this.loading = true;
@@ -37,21 +40,30 @@ export class Wrapped {
 
     this.api.getWrapped(this.from, this.to).subscribe({
       next: (s) => {
-        this.stats = s;
-        const entries = Object.entries(s.breakdowns.craft ?? {}).sort((a, b) => b[1] - a[1]);
-        this.craftChartData = {
-          labels: entries.map(([k]) => k),
-          datasets: [
-            {
-              data: entries.map(([, v]) => v),
-            },
-          ],
-        };
-        this.loading = false;
+        this.ngZone.run(() => {
+          try {
+            this.stats = s ?? null;
+            const craft = (s && typeof s === 'object' && s.breakdowns && typeof s.breakdowns === 'object')
+              ? (s.breakdowns as { craft?: Record<string, number> }).craft
+              : undefined;
+            const entries = Object.entries(craft ?? {}).sort((a, b) => b[1] - a[1]);
+            this.craftChartData = {
+              labels: entries.map(([k]) => k),
+              datasets: [{ data: entries.map(([, v]) => v) }],
+            };
+          } catch (err) {
+            this.error = 'Invalid response from server. Please try again.';
+            this.stats = null;
+          } finally {
+            this.loading = false;
+          }
+        });
       },
       error: (e) => {
-        this.loading = false;
-        this.error = e?.error?.error ?? 'Failed to load wrapped stats. Are you logged in?';
+        this.ngZone.run(() => {
+          this.loading = false;
+          this.error = e?.error?.error ?? 'Failed to load wrapped stats. Are you logged in?';
+        });
       },
     });
   }
