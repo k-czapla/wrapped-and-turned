@@ -128,6 +128,8 @@ Note: Angular’s `@angular/build:application` builder can sometimes emit browse
 
 Note: some hosts (including Render) may perform installs in “production mode” during builds, which can omit `devDependencies`. Since TypeScript builds need `typescript` + `@types/*`, use `npm ci --include=dev` in the build command.
 
+**Tests**: Run tests in CI (GitHub Actions), not on Render. Render does not support multiple build “jobs”; it has a single build command per service. Keeping tests in CI and using only `npm ci --include=dev && npm run build` on Render keeps deploys fast and avoids needing test deps (e.g. vitest, supertest) in the Render build.
+
 ### Deploy triggers
 
 - **Simplest**: connect the GitHub repo in Render and enable **Auto Deploy** on main.
@@ -144,7 +146,8 @@ Implemented workflows (in repo):
 
 - `.github/workflows/ci.yml`
   - Runs on PRs and `main` pushes
-  - Builds backend + frontend
+  - **Test** job: runs backend and frontend tests
+  - **Build** job: runs after tests pass; builds backend + frontend
 - `.github/workflows/deploy-render.yml`
   - Runs on `main` pushes
   - Builds backend + frontend
