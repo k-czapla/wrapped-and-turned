@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, switchMap, take, tap } from 'rxjs';
+import { map, switchMap, take } from 'rxjs';
 import { Api } from '../services/api';
 
 /**
@@ -13,11 +13,6 @@ export const authGuard: CanActivateFn = () => {
 
   return api.refreshMe().pipe(
     switchMap(() => api.me$.pipe(take(1))),
-    map((me) => me != null),
-    tap((isLoggedIn) => {
-      if (!isLoggedIn) {
-        router.navigate(['/']);
-      }
-    }),
+    map((me) => (me != null ? true : router.createUrlTree(['/']))),
   );
 };
