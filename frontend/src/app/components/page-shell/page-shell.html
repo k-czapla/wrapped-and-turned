@@ -1,0 +1,54 @@
+<div class="min-h-dvh">
+  <header class="sticky top-0 z-10 border-b border-slate-200/70 bg-white/70 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <a routerLink="/" class="flex items-center gap-2">
+        <div class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-rose-500 text-white">
+          <span class="text-sm font-semibold">W&T</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-sm font-semibold text-slate-900">Wrapped and Turned</div>
+          <div class="text-xs text-slate-500">Your fiber arts year in stats</div>
+        </div>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex">
+        <a
+          routerLink="/wrapped"
+          routerLinkActive="bg-slate-900 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >Wrapped</a
+        >
+        <a
+          routerLink="/assistant"
+          routerLinkActive="bg-slate-900 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >Podcaster’s Assistant</a
+        >
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <ng-container *ngIf="(me$ | async) as me; else loggedOut">
+          <div class="hidden text-sm text-slate-600 sm:block">Logged in as <span class="font-medium">{{ me.username }}</span></div>
+          <button
+            (click)="logout()"
+            class="rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            Log out
+          </button>
+        </ng-container>
+        <ng-template #loggedOut>
+          <button
+            (click)="login()"
+            class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-3 py-2 text-sm font-semibold text-white hover:from-indigo-500 hover:to-rose-500"
+          >
+            Log in with Ravelry
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-8">
+    <router-outlet></router-outlet>
+  </main>
+</div>
