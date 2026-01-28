@@ -1,1 +1,89 @@
-/* Presentational */
+.assistant-board-card {
+  position: relative;
+  min-height: 100%;
+}
+
+.assistant-board-card__inner {
+  position: relative;
+  padding: 1.25rem;
+}
+
+.assistant-board-card__brand {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+}
+
+.assistant-board-card__image-wrap {
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.assistant-board-card__image,
+.assistant-board-card__image-placeholder {
+  aspect-ratio: 1;
+  width: 100%;
+  object-fit: cover;
+}
+
+.assistant-board-card__image-placeholder {
+  display: block;
+}
+
+.assistant-board-card__title-block {
+  margin-top: 1rem;
+}
+
+.assistant-board-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.assistant-board-card__designer {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.assistant-board-card__fields {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.assistant-board-card__field {
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.assistant-board-card__field-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.assistant-board-card__field-value {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.assistant-board-card__footer {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.assistant-board-card__link {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.assistant-board-card__link:hover {
+  opacity: 0.9;
+}

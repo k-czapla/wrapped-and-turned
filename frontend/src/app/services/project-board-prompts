@@ -1,0 +1,165 @@
+1. Scandinavian Calm
+
+Vibe: Quiet, cozy, modern craft
+Colors: Warm white #F6F4F1, oat beige #D8CFC4, sage #9BAE9E, charcoal #2E2E2E
+Layout: Lots of breathing room, centered content, soft shadows
+
+CSS style cues:
+
+font-family: 'Inter', 'Helvetica Neue', sans-serif;
+background: #F6F4F1;
+color: #2E2E2E;
+border-radius: 16px;
+box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+letter-spacing: 0.02em;
+
+
+Prompt hint: “Minimal Scandinavian knitting mood board, soft daylight, linen textures, calm neutral tones”
+
+2. Vintage Pattern Book
+
+Vibe: 1950s knitting magazine, slightly nostalgic
+Colors: Cream #FAF3E6, dusty rose #C87C74, moss #6F7F5E, ink brown #3B2E2A
+Layout: Framed sections, serif titles, decorative dividers
+
+CSS style cues:
+
+font-family: 'Playfair Display', serif;
+background: #FAF3E6;
+color: #3B2E2A;
+border: 2px solid #6F7F5E;
+text-transform: uppercase;
+
+
+Prompt hint: “Vintage crochet pattern board, aged paper, retro typography, soft grain”
+
+3. Botanical Studio
+
+Vibe: Yarn meets herbarium
+Colors: Fern #4F6F52, clay #C08A5A, parchment #EFE8D8, ink #2B2B2B
+Layout: Organic spacing, botanical overlays, yarn photographed with plants
+
+CSS style cues:
+
+font-family: 'Libre Baskerville', serif;
+background: #EFE8D8;
+color: #2B2B2B;
+border-radius: 12px;
+background-image: linear-gradient(#EFE8D8, #E5DCCB);
+
+
+Prompt hint: “Fiber art mood board with leaves, botanical illustration style, warm natural light”
+
+4. Editorial Fashion Spread
+
+Vibe: High-end knitwear magazine
+Colors: Black #0F0F0F, bone #EDEBE7, steel #9FA4A9
+Layout: Big photography, tiny captions, strong grid
+
+CSS style cues:
+
+font-family: 'Didot', 'Bodoni MT', serif;
+background: #0F0F0F;
+color: #EDEBE7;
+letter-spacing: 0.08em;
+text-align: left;
+
+
+Prompt hint: “Luxury knitting project board, editorial fashion layout, dramatic lighting”
+
+5. Playful Modern Craft
+
+Vibe: Fun, bold, indie yarn shop
+Colors: Coral #FF6F61, mustard #F2B705, sky #5DA9E9, off-white #FFF8EE
+Layout: Color blocks, stickers, irregular shapes
+
+CSS style cues:
+
+font-family: 'Poppins', sans-serif;
+background: #FFF8EE;
+color: #333;
+border-radius: 24px;
+box-shadow: 0 12px 0 #FF6F61;
+
+
+Prompt hint: “Playful crochet mood board, bold colors, modern craft aesthetic”
+
+6. Japanese Minimal Craft
+
+Vibe: Thoughtful, restrained, tactile
+Colors: Rice #F7F6F2, sumi ink #2A2A2A, muted indigo #3E4A59
+Layout: Vertical rhythm, asymmetry, negative space
+
+CSS style cues:
+
+font-family: 'Noto Sans JP', sans-serif;
+background: #F7F6F2;
+color: #2A2A2A;
+line-height: 1.8;
+
+
+Prompt hint: “Japanese minimal knitting board, wabi-sabi textures, soft shadows”
+
+7. Rustic Cabin Handmade
+
+Vibe: Fireside knitting, wool and wood
+Colors: Bark #5A3E2B, wool #D6C6B2, forest #3E5B4F
+Layout: Layered textures, kraft paper look
+
+CSS style cues:
+
+font-family: 'Merriweather', serif;
+background: #D6C6B2;
+color: #3B2A20;
+background-texture: url('paper-grain');
+
+
+Prompt hint: “Rustic knitting project board, cabin aesthetic, natural wool textures”
+
+8. Technical Pattern Sheet
+
+Vibe: Clear, modern, almost architectural
+Colors: White #FFFFFF, graphite #2D2D2D, blueprint blue #3A6EA5
+Layout: Grid-heavy, icons, precise alignment
+
+CSS style cues:
+
+font-family: 'IBM Plex Sans', sans-serif;
+background: #FFFFFF;
+color: #2D2D2D;
+border-left: 6px solid #3A6EA5;
+
+
+Prompt hint: “Clean technical knitting pattern board, schematic diagrams, precision layout”
+
+9. Soft Romantic Heirloom
+
+Vibe: Lace, heirlooms, slow craft
+Colors: Blush #EAD7D1, pearl #F8F6F4, lavender #B8A1C6
+Layout: Soft focus images, flowing typography
+
+CSS style cues:
+
+font-family: 'Cormorant Garamond', serif;
+background: #F8F6F4;
+color: #5A4A4A;
+border-radius: 20px;
+
+
+Prompt hint: “Romantic crochet project board, lace textures, dreamy lighting”
+
+10. Experimental Art Fiber
+
+Vibe: Gallery wall, conceptual textile art
+Colors: Concrete #BEBEBE, rust #A23E2A, black #111111
+Layout: Overlapping elements, raw photography, bold type
+
+CSS style cues:
+
+font-family: 'Neue Haas Grotesk', sans-serif;
+background: #BEBEBE;
+color: #111111;
+mix-blend-mode: multiply;
+
+
+Prompt hint: “Experimental fiber art mood board, contemporary art exhibition style”

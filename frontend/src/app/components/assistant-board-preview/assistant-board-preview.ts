@@ -1,12 +1,14 @@
 import { Component, ElementRef, inject, input, QueryList, ViewChildren } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
 import type { ProjectCard } from '../../services/api';
+import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { Api } from '../../services/api';
 import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
 
 @Component({
   selector: 'app-assistant-board-preview',
-  imports: [AssistantBoardCard],
+  imports: [AssistantBoardCard, RouterLink],
   templateUrl: './assistant-board-preview.html',
   styleUrl: './assistant-board-preview.css',
 })
@@ -14,6 +16,7 @@ export class AssistantBoardPreview {
   private api = inject(Api);
   cards = input<ProjectCard[]>([]);
   cardsLoading = input<boolean>(false);
+  design = input<ProjectBoardDesign | null>(null);
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 

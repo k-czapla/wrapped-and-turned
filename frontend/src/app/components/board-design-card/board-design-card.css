@@ -1,0 +1,61 @@
+.board-design-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.board-design-card:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.board-design-card--selected {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.board-design-card__preview {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  min-height: 0;
+}
+
+.board-design-card__preview-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.board-design-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.board-design-card__name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.board-design-card__vibe {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.board-design-card__check {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6366f1;
+}

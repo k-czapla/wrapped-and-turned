@@ -48,6 +48,14 @@
             <div class="absolute right-0 top-full z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white shadow-lg" data-user-menu>
               <div class="py-1">
                 <a
+                  routerLink="/board-design"
+                  routerLinkActive="bg-slate-50"
+                  (click)="closeUserMenu()"
+                  class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Board design
+                </a>
+                <a
                   routerLink="/stats-preferences"
                   routerLinkActive="bg-slate-50"
                   (click)="closeUserMenu()"

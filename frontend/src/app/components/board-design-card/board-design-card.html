@@ -1,0 +1,32 @@
+<button
+  type="button"
+  (click)="selectedChange.emit()"
+  class="board-design-card"
+  [class.board-design-card--selected]="selected()"
+  [attr.aria-pressed]="selected()"
+  [attr.aria-label]="'Select ' + design().name + ' board design'"
+>
+  <div
+    class="board-design-card__preview"
+    [ngStyle]="{
+      'font-family': design().style['fontFamily'],
+      background: design().style['background'],
+      color: design().style['color'],
+      'border-radius': design().style['borderRadius'],
+      'box-shadow': design().style['boxShadow'],
+      border: design().style['border'],
+      'letter-spacing': design().style['letterSpacing'],
+      'text-align': design().style['textAlign'] || 'center',
+      'line-height': design().style['lineHeight']
+    }"
+  >
+    <span class="board-design-card__preview-text">Sample</span>
+  </div>
+  <div class="board-design-card__meta">
+    <span class="board-design-card__name">{{ design().name }}</span>
+    <span class="board-design-card__vibe">{{ design().vibe }}</span>
+  </div>
+  @if (selected()) {
+    <span class="board-design-card__check" aria-hidden="true">Selected</span>
+  }
+</button>

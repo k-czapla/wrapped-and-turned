@@ -1,44 +1,43 @@
-<div class="relative">
-  <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-white to-rose-500/20"></div>
-  <div class="relative p-5">
-    <div class="text-xs font-semibold tracking-wide text-slate-600">WRAPPED & TURNED</div>
+<div class="assistant-board-card" [ngStyle]="cardStyle()">
+  <div class="assistant-board-card__inner">
+    <div class="assistant-board-card__brand">WRAPPED & TURNED</div>
 
-    <div class="mt-4 overflow-hidden rounded-2xl bg-slate-100">
+    <div class="assistant-board-card__image-wrap">
       @if (card()?.imageUrl) {
-        <img [src]="card()!.imageUrl" class="aspect-square w-full object-cover" alt="" />
+        <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
       } @else {
-        <div class="aspect-square w-full"></div>
+        <div class="assistant-board-card__image-placeholder"></div>
       }
     </div>
 
-    <div class="mt-4">
-      <div class="text-base font-bold text-slate-900">{{ card()?.patternName ?? card()?.projectName }}</div>
-      <div class="mt-1 text-sm text-slate-600">{{ card()?.designerName ?? ' ' }}</div>
+    <div class="assistant-board-card__title-block">
+      <div class="assistant-board-card__title">{{ card()?.patternName ?? card()?.projectName }}</div>
+      <div class="assistant-board-card__designer">{{ card()?.designerName ?? ' ' }}</div>
+    </div>
 
-      <div class="mt-4 grid gap-3">
-        <div class="rounded-2xl bg-slate-50 p-4">
-          <div class="text-[11px] font-semibold text-slate-500">PROJECT</div>
-          <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.projectName ?? '—' }}</div>
-        </div>
-        <div class="rounded-2xl bg-slate-50 p-4">
-          <div class="text-[11px] font-semibold text-slate-500">SIZE</div>
-          <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.sizeMade ?? '—' }}</div>
-        </div>
-        <div class="rounded-2xl bg-slate-50 p-4">
-          <div class="text-[11px] font-semibold text-slate-500">YARN</div>
-          <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.yarnUsed ?? '—' }}</div>
-        </div>
+    <div class="assistant-board-card__fields">
+      <div class="assistant-board-card__field">
+        <div class="assistant-board-card__field-label">PROJECT</div>
+        <div class="assistant-board-card__field-value">{{ card()?.projectName ?? '—' }}</div>
       </div>
+      <div class="assistant-board-card__field">
+        <div class="assistant-board-card__field-label">SIZE</div>
+        <div class="assistant-board-card__field-value">{{ card()?.sizeMade ?? '—' }}</div>
+      </div>
+      <div class="assistant-board-card__field">
+        <div class="assistant-board-card__field-label">YARN</div>
+        <div class="assistant-board-card__field-value">{{ card()?.yarnUsed ?? '—' }}</div>
+      </div>
+    </div>
 
-      <div class="mt-5 flex items-center justify-between text-xs text-slate-500">
-        <a
-          href="https://wrapped-turned.onrender.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-semibold text-indigo-600 underline decoration-indigo-300 underline-offset-2 transition hover:text-indigo-700 hover:decoration-indigo-500"
-          >wrapped-turned.onrender.com</a
-        >
-      </div>
+    <div class="assistant-board-card__footer">
+      <a
+        href="https://wrapped-turned.onrender.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="assistant-board-card__link"
+        >wrapped-turned.onrender.com</a
+      >
     </div>
   </div>
 </div>

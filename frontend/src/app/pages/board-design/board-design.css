@@ -1,0 +1,49 @@
+.board-design-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 56rem;
+}
+
+.board-design-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.board-design-page__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.board-design-page__intro {
+  font-size: 0.9375rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.board-design-page__back {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6366f1;
+  text-decoration: none;
+  margin-top: 0.25rem;
+}
+
+.board-design-page__back:hover {
+  text-decoration: underline;
+}
+
+.board-design-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.board-design-page__item {
+  min-width: 0;
+}

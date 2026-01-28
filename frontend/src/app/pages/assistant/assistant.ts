@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, computed } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { Api, type ProjectCard, type WrappedStats } from '../../services/api';
+import { BoardDesignService } from '../../services/board-design.service';
 import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
 import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
@@ -23,9 +24,12 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
+  protected selectedDesign = computed(() => this.boardDesign.selectedDesign());
+
   constructor(
     private api: Api,
     private cdr: ChangeDetectorRef,
+    private boardDesign: BoardDesignService,
   ) { }
 
   loadProjects() {
