@@ -15,3 +15,6 @@ npm-debug.log*
 
 # OS
 .DS_Store
+
+# Cursor rules
+.cursor/rules/render.mdc
