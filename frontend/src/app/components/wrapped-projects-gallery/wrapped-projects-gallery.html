@@ -1,40 +1,9 @@
 <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-  <div class="flex items-center justify-between gap-3">
-    <div>
-      <div class="text-sm font-semibold text-slate-900">Projects</div>
-      <div class="mt-1 text-xs text-slate-500">A quick gallery (uses the first photo when available)</div>
-    </div>
-  </div>
+  <app-wrapped-projects-gallery-header />
 
   <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     @for (p of projects(); track p.id) {
-      <div class="overflow-hidden rounded-2xl border border-slate-200">
-        <div class="aspect-[16/10] w-full bg-slate-100">
-          @if (p.imageUrl) {
-            <img [src]="p.imageUrl" class="h-full w-full object-cover" alt="" />
-          }
-        </div>
-        <div class="p-4">
-          <div class="line-clamp-1 text-sm font-semibold text-slate-900">{{ p.name }}</div>
-          <div class="mt-1 text-xs text-slate-500">
-            @if (p.patternName) {
-              <span>{{ p.patternName }}</span>
-            }
-            @if (p.designerName) {
-              <span> · {{ p.designerName }}</span>
-            }
-          </div>
-          <div class="mt-2 flex flex-wrap gap-2 text-xs">
-            <span class="rounded-full bg-slate-100 px-2 py-1 text-slate-700">{{ p.craft ?? 'Unknown craft' }}</span>
-            @if (p.yardage) {
-              <span class="rounded-full bg-amber-100 px-2 py-1 text-amber-900">{{ p.yardage }} yd</span>
-            }
-            @if (p.meterage) {
-              <span class="rounded-full bg-emerald-100 px-2 py-1 text-emerald-900">{{ p.meterage }} m</span>
-            }
-          </div>
-        </div>
-      </div>
+      <app-wrapped-project-card [project]="p" />
     }
   </div>
 </div>

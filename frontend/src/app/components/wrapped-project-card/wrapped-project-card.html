@@ -1,0 +1,27 @@
+<div class="overflow-hidden rounded-2xl border border-slate-200">
+  <div class="aspect-[16/10] w-full bg-slate-100">
+    @if (project().imageUrl) {
+      <img [src]="project().imageUrl" class="h-full w-full object-cover" alt="" />
+    }
+  </div>
+  <div class="p-4">
+    <div class="line-clamp-1 text-sm font-semibold text-slate-900">{{ project().name }}</div>
+    <div class="mt-1 text-xs text-slate-500">
+      @if (project().patternName) {
+        <span>{{ project().patternName }}</span>
+      }
+      @if (project().designerName) {
+        <span> · {{ project().designerName }}</span>
+      }
+    </div>
+    <div class="mt-2 flex flex-wrap gap-2 text-xs">
+      <span class="rounded-full bg-slate-100 px-2 py-1 text-slate-700">{{ project().craft ?? 'Unknown craft' }}</span>
+      @if (project().yardage) {
+        <span class="rounded-full bg-amber-100 px-2 py-1 text-amber-900">{{ project().yardage }} yd</span>
+      }
+      @if (project().meterage) {
+        <span class="rounded-full bg-emerald-100 px-2 py-1 text-emerald-900">{{ project().meterage }} m</span>
+      }
+    </div>
+  </div>
+</div>
