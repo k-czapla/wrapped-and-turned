@@ -1,22 +1,22 @@
 <div class="grid gap-4 md:grid-cols-4">
-  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="text-xs font-semibold text-slate-500">Projects</div>
-    <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ totals().projects }}</div>
-    <div class="mt-1 text-xs text-slate-500">In selected period</div>
-  </div>
-  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="text-xs font-semibold text-slate-500">Finished</div>
-    <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ totals().finishedProjects }}</div>
-    <div class="mt-1 text-xs text-slate-500">Completed projects</div>
-  </div>
-  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="text-xs font-semibold text-slate-500">Total yardage</div>
-    <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ totals().totalYardage | number }}</div>
-    <div class="mt-1 text-xs text-slate-500">yd</div>
-  </div>
-  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="text-xs font-semibold text-slate-500">Total meterage</div>
-    <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ totals().totalMeterage | number }}</div>
-    <div class="mt-1 text-xs text-slate-500">m</div>
-  </div>
+  <app-wrapped-stat-card
+    label="Projects"
+    [value]="totals().projects"
+    sublabel="In selected period"
+  />
+  <app-wrapped-stat-card
+    label="Finished"
+    [value]="totals().finishedProjects"
+    sublabel="Completed projects"
+  />
+  <app-wrapped-stat-card
+    label="Total yardage"
+    [value]="totals().totalYardage"
+    sublabel="yd"
+  />
+  <app-wrapped-stat-card
+    label="Total meterage"
+    [value]="totals().totalMeterage"
+    sublabel="m"
+  />
 </div>

@@ -1,11 +1,11 @@
-import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { Api } from '../../services/api';
+import { PageHeader } from '../page-header/page-header';
 
 @Component({
   selector: 'app-page-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, NgIf],
+  imports: [RouterOutlet, PageHeader],
   templateUrl: './page-shell.html',
   styleUrl: './page-shell.css',
 })

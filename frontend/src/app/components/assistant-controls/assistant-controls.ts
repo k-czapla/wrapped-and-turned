@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DateRangeForm } from '../date-range-form/date-range-form';
+import { ErrorAlert } from '../error-alert/error-alert';
 
 @Component({
   selector: 'app-assistant-controls',
-  imports: [FormsModule],
+  imports: [DateRangeForm, ErrorAlert],
   templateUrl: './assistant-controls.html',
   styleUrl: './assistant-controls.css',
 })

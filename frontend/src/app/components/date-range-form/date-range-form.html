@@ -1,0 +1,27 @@
+<div class="flex flex-wrap items-end gap-3">
+  <label class="block">
+    <div class="text-xs font-semibold text-slate-600">From</div>
+    <input
+      [ngModel]="from()"
+      (ngModelChange)="onFromChange($event)"
+      type="date"
+      class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+    />
+  </label>
+  <label class="block">
+    <div class="text-xs font-semibold text-slate-600">To</div>
+    <input
+      [ngModel]="to()"
+      (ngModelChange)="onToChange($event)"
+      type="date"
+      class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+    />
+  </label>
+  <button
+    (click)="onSubmit()"
+    [disabled]="loading()"
+    class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+  >
+    {{ loading() ? loadingLabel() : buttonLabel() }}
+  </button>
+</div>

@@ -1,9 +1,11 @@
 import { Component, ElementRef, input, ViewChild } from '@angular/core';
 import { toPng } from 'html-to-image';
 import type { ProjectCard } from '../../services/api';
+import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
 
 @Component({
   selector: 'app-assistant-board-preview',
+  imports: [AssistantBoardCard],
   templateUrl: './assistant-board-preview.html',
   styleUrl: './assistant-board-preview.css',
 })

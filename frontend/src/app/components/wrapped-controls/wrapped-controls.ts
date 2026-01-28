@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DateRangeForm } from '../date-range-form/date-range-form';
+import { ErrorAlert } from '../error-alert/error-alert';
 
 @Component({
   selector: 'app-wrapped-controls',
-  imports: [FormsModule],
+  imports: [DateRangeForm, ErrorAlert],
   templateUrl: './wrapped-controls.html',
   styleUrl: './wrapped-controls.css',
 })

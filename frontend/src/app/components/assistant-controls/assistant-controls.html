@@ -7,38 +7,19 @@
       </p>
     </div>
 
-    <div class="flex flex-wrap items-end gap-3">
-      <label class="block">
-        <div class="text-xs font-semibold text-slate-600">From</div>
-        <input
-          [ngModel]="from()"
-          (ngModelChange)="onFromChange($event)"
-          type="date"
-          class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-        />
-      </label>
-      <label class="block">
-        <div class="text-xs font-semibold text-slate-600">To</div>
-        <input
-          [ngModel]="to()"
-          (ngModelChange)="onToChange($event)"
-          type="date"
-          class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-        />
-      </label>
-      <button
-        (click)="onLoadProjects()"
-        [disabled]="loading()"
-        class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
-      >
-        {{ loading() ? 'Loading…' : 'Load projects' }}
-      </button>
-    </div>
+    <app-date-range-form
+      [from]="from()"
+      [to]="to()"
+      buttonLabel="Load projects"
+      loadingLabel="Loading…"
+      [loading]="loading()"
+      (fromChange)="onFromChange($event)"
+      (toChange)="onToChange($event)"
+      (submit)="onLoadProjects()"
+    />
   </div>
 
   @if (error()) {
-    <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-      {{ error() }}
-    </div>
+    <app-error-alert [message]="error()!" />
   }
 </div>

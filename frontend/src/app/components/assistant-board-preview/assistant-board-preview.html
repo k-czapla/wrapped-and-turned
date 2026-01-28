@@ -18,46 +18,7 @@
       #board
       class="w-[320px] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm"
     >
-      <div class="relative">
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-white to-rose-500/20"></div>
-        <div class="relative p-5">
-          <div class="text-xs font-semibold tracking-wide text-slate-600">WRAPPED & TURNED</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900">Project Board</div>
-
-          <div class="mt-4 overflow-hidden rounded-2xl bg-slate-100">
-            @if (card()?.imageUrl) {
-              <img [src]="card()!.imageUrl" class="aspect-square w-full object-cover" alt="" />
-            } @else {
-              <div class="aspect-square w-full"></div>
-            }
-          </div>
-
-          <div class="mt-4">
-            <div class="text-base font-bold text-slate-900">{{ card()?.patternName ?? 'Pick a project' }}</div>
-            <div class="mt-1 text-sm text-slate-600">{{ card()?.designerName ?? ' ' }}</div>
-
-            <div class="mt-4 grid gap-3">
-              <div class="rounded-2xl bg-slate-50 p-4">
-                <div class="text-[11px] font-semibold text-slate-500">PROJECT</div>
-                <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.projectName ?? '—' }}</div>
-              </div>
-              <div class="rounded-2xl bg-slate-50 p-4">
-                <div class="text-[11px] font-semibold text-slate-500">SIZE</div>
-                <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.sizeMade ?? '—' }}</div>
-              </div>
-              <div class="rounded-2xl bg-slate-50 p-4">
-                <div class="text-[11px] font-semibold text-slate-500">YARN</div>
-                <div class="mt-1 text-sm font-semibold text-slate-900">{{ card()?.yarnUsed ?? '—' }}</div>
-              </div>
-            </div>
-
-            <div class="mt-5 flex items-center justify-between text-xs text-slate-500">
-              <div>Share-ready</div>
-              <div class="font-semibold text-slate-700">wrappedandturned</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-assistant-board-card [card]="card()" />
     </div>
   </div>
 </div>
