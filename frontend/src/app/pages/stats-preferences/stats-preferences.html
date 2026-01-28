@@ -1,0 +1,22 @@
+<section class="flex flex-col gap-6">
+  <div>
+    <h1 class="text-xl font-semibold text-slate-900">Ravelry stats to analyze</h1>
+    <p class="mt-1 text-sm text-slate-600">
+      Choose which stats appear in your Wrapped view. Your selection is saved automatically.
+    </p>
+  </div>
+
+  @if (error) {
+    <app-error-alert [message]="error" />
+  }
+
+  @if (loading) {
+    <p class="text-sm text-slate-500">Loading preferences…</p>
+  } @else {
+    <app-stat-preferences-form
+      [prefs]="prefs"
+      [saving]="saving"
+      (preferenceChange)="onPreferenceChange($event)"
+    />
+  }
+</section>

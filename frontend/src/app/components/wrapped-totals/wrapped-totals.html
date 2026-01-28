@@ -1,22 +1,30 @@
 <div class="grid gap-4 md:grid-cols-4">
-  <app-wrapped-stat-card
-    label="Projects"
-    [value]="totals().projects"
-    sublabel="In selected period"
-  />
-  <app-wrapped-stat-card
-    label="Finished"
-    [value]="totals().finishedProjects"
-    sublabel="Completed projects"
-  />
-  <app-wrapped-stat-card
-    label="Total yardage"
-    [value]="totals().totalYardage"
-    sublabel="yd"
-  />
-  <app-wrapped-stat-card
-    label="Total meterage"
-    [value]="totals().totalMeterage"
-    sublabel="m"
-  />
+  @if (!statPreferences() || statPreferences()!['projects']) {
+    <app-wrapped-stat-card
+      label="Projects"
+      [value]="totals().projects"
+      sublabel="In selected period"
+    />
+  }
+  @if (!statPreferences() || statPreferences()!['finishedProjects']) {
+    <app-wrapped-stat-card
+      label="Finished"
+      [value]="totals().finishedProjects"
+      sublabel="Completed projects"
+    />
+  }
+  @if (!statPreferences() || statPreferences()!['totalYardage']) {
+    <app-wrapped-stat-card
+      label="Total yardage"
+      [value]="totals().totalYardage"
+      sublabel="yd"
+    />
+  }
+  @if (!statPreferences() || statPreferences()!['totalMeterage']) {
+    <app-wrapped-stat-card
+      label="Total meterage"
+      [value]="totals().totalMeterage"
+      sublabel="m"
+    />
+  }
 </div>

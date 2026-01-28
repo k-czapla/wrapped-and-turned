@@ -10,17 +10,25 @@
   />
 
   @if (stats; as s) {
-    <app-wrapped-totals [totals]="s.totals" />
+    <app-wrapped-totals [totals]="s.totals" [statPreferences]="statPreferences" />
 
-    <div class="grid gap-4 md:grid-cols-2">
-      <app-wrapped-craft-chart
-        [chartData]="craftChartData"
-        [chartOptions]="craftChartOptions"
-        [mostProductiveMonth]="s.highlights.mostProductiveMonth"
-      />
+    @if (showCraftSection()) {
+      <div class="grid gap-4 md:grid-cols-2">
+        <app-wrapped-craft-chart
+          [chartData]="craftChartData"
+          [chartOptions]="craftChartOptions"
+          [mostProductiveMonth]="s.highlights.mostProductiveMonth"
+        />
+        @if (showHighlights()) {
+          <app-wrapped-highlights [highlights]="s.highlights" [range]="s.range" />
+        }
+      </div>
+    } @else if (showHighlights()) {
       <app-wrapped-highlights [highlights]="s.highlights" [range]="s.range" />
-    </div>
+    }
 
-    <app-wrapped-projects-gallery [projects]="s.projects" />
+    @if (showProjectsGallery()) {
+      <app-wrapped-projects-gallery [projects]="s.projects" />
+    }
   }
 </section>

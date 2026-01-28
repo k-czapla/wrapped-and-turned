@@ -4,6 +4,22 @@ import { BehaviorSubject, catchError, map, of, shareReplay, tap } from 'rxjs';
 
 export type Me = { username: string };
 
+/** Stat keys that can be toggled for analysis. Matches backend STAT_PREFERENCE_KEYS. */
+export const STAT_PREFERENCE_KEYS = [
+  'projects',
+  'finishedProjects',
+  'totalYardage',
+  'totalMeterage',
+  'craftBreakdown',
+  'mostProductiveMonth',
+  'avgDurationDays',
+  'projectsGallery',
+] as const;
+
+export type StatPreferenceKey = (typeof STAT_PREFERENCE_KEYS)[number];
+
+export type StatPreferences = Record<StatPreferenceKey, boolean>;
+
 export type WrappedStats = {
   range: { from: string; to: string };
   totals: {
@@ -105,5 +121,19 @@ export class Api {
         withCredentials: true,
       })
       .pipe(shareReplay(1));
+  }
+
+  getStatPreferences() {
+    const backendBase = this.getBackendBase();
+    return this.http.get<StatPreferences>(this.join(backendBase, '/api/stat-preferences'), {
+      withCredentials: true,
+    });
+  }
+
+  saveStatPreferences(prefs: StatPreferences) {
+    const backendBase = this.getBackendBase();
+    return this.http.put<StatPreferences>(this.join(backendBase, '/api/stat-preferences'), prefs, {
+      withCredentials: true,
+    });
   }
 }

@@ -23,6 +23,14 @@
         class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >Podcaster's Assistant</a
       >
+      <ng-container *ngIf="(me$() | async) as me">
+        <a
+          routerLink="/stats-preferences"
+          routerLinkActive="bg-slate-900 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >Stats preferences</a
+        >
+      </ng-container>
     </nav>
 
     <div class="flex items-center gap-3">

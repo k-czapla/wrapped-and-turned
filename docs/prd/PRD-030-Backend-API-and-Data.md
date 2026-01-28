@@ -59,6 +59,18 @@ Returns basic identity info for UI (“logged in as”).
 { "username": "someUser" }
 ```
 
+### `GET /api/stat-preferences`
+
+Returns the logged-in user’s stat visibility preferences (which Ravelry stats to show in Wrapped). Requires auth.
+
+**Response**
+
+JSON object with keys: `projects`, `finishedProjects`, `totalYardage`, `totalMeterage`, `craftBreakdown`, `mostProductiveMonth`, `avgDurationDays`, `projectsGallery`. Values are booleans. Defaults to all `true` if not yet set.
+
+### `PUT /api/stat-preferences`
+
+Updates the logged-in user’s stat preferences. Body: same shape as GET response. Requires auth. Returns the merged preferences.
+
 ### `GET /api/wrapped?from=YYYY-MM-DD&to=YYYY-MM-DD`
 
 Returns Wrapped stats and a list of projects in range, enriched with optional details.

@@ -7,6 +7,22 @@ import { buildAuthorizeUrl, exchangeCodeForToken, makeState, refreshAccessToken 
 import { makeRavelryApi, type RavelryCurrentUserResponse, type RavelryProjectsListResponse } from './ravelryApi.js';
 import { computeBaseStats, mapWithConcurrency, safeDate } from './stats.js';
 
+/** Stat keys that can be toggled for analysis. Default: all true. */
+export const STAT_PREFERENCE_KEYS = [
+  'projects',
+  'finishedProjects',
+  'totalYardage',
+  'totalMeterage',
+  'craftBreakdown',
+  'mostProductiveMonth',
+  'avgDurationDays',
+  'projectsGallery',
+] as const;
+
+export type StatPreferenceKey = (typeof STAT_PREFERENCE_KEYS)[number];
+
+export type StatPreferences = Partial<Record<StatPreferenceKey, boolean>>;
+
 declare module 'express-session' {
   interface SessionData {
     ravelry?: {
@@ -16,6 +32,8 @@ declare module 'express-session' {
       expiresAt: number;
     };
     oauthState?: string;
+    /** Which Ravelry stats the user wants to be analyzed (shown). Default: all true. */
+    statPreferences?: StatPreferences;
   }
 }
 
@@ -206,6 +224,44 @@ app.get('/api/me', async (req, res) => {
     }
   }
   res.json({ username: username ?? 'ravelry-user' });
+});
+
+function defaultStatPreferences(): Record<StatPreferenceKey, boolean> {
+  const out = {} as Record<StatPreferenceKey, boolean>;
+  for (const k of STAT_PREFERENCE_KEYS) {
+    out[k] = true;
+  }
+  return out;
+}
+
+app.get('/api/stat-preferences', async (req, res) => {
+  if (!(await requireAuth(req, res))) return;
+  const defaults = defaultStatPreferences();
+  const stored = req.session.statPreferences ?? {};
+  const merged: Record<StatPreferenceKey, boolean> = { ...defaults };
+  for (const k of STAT_PREFERENCE_KEYS) {
+    if (typeof stored[k] === 'boolean') {
+      merged[k] = stored[k];
+    }
+  }
+  res.json(merged);
+});
+
+app.put('/api/stat-preferences', async (req, res) => {
+  if (!(await requireAuth(req, res))) return;
+  const body = req.body;
+  if (!body || typeof body !== 'object') {
+    res.status(400).json({ error: 'Expected JSON object' });
+    return;
+  }
+  const next: StatPreferences = { ...req.session.statPreferences };
+  for (const k of STAT_PREFERENCE_KEYS) {
+    if (typeof body[k] === 'boolean') {
+      next[k] = body[k];
+    }
+  }
+  req.session.statPreferences = next;
+  res.json(next);
 });
 
 function mockWrapped(from: string, to: string) {

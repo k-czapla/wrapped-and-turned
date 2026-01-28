@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import type { ChartConfiguration, ChartData } from 'chart.js';
-import { Api, type WrappedStats } from '../../services/api';
+import { Api, type StatPreferences, type WrappedStats } from '../../services/api';
 import { WrappedControls } from '../../components/wrapped-controls/wrapped-controls';
 import { WrappedTotals } from '../../components/wrapped-totals/wrapped-totals';
 import { WrappedCraftChart } from '../../components/wrapped-craft-chart/wrapped-craft-chart';
@@ -19,7 +19,7 @@ import { WrappedProjectsGallery } from '../../components/wrapped-projects-galler
   templateUrl: './wrapped.html',
   styleUrl: './wrapped.css',
 })
-export class Wrapped {
+export class Wrapped implements OnInit {
   protected loading = false;
   protected error: string | null = null;
 
@@ -27,6 +27,8 @@ export class Wrapped {
   protected to = defaultTo();
 
   protected stats: WrappedStats | null = null;
+  /** User's stat visibility preferences; null until loaded (then show all). */
+  protected statPreferences: StatPreferences | null = null;
 
   protected craftChartData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [] }] };
   protected craftChartOptions: ChartConfiguration<'doughnut'>['options'] = {
@@ -40,6 +42,34 @@ export class Wrapped {
     private api: Api,
     private cdr: ChangeDetectorRef,
   ) { }
+
+  ngOnInit() {
+    this.api.getStatPreferences().subscribe({
+      next: (p) => {
+        this.statPreferences = p;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.statPreferences = null;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  protected showCraftSection(): boolean {
+    const p = this.statPreferences;
+    return !p || p['craftBreakdown'] || p['mostProductiveMonth'];
+  }
+
+  protected showHighlights(): boolean {
+    const p = this.statPreferences;
+    return !p || p['avgDurationDays'];
+  }
+
+  protected showProjectsGallery(): boolean {
+    const p = this.statPreferences;
+    return !p || p['projectsGallery'];
+  }
 
   generate() {
     this.loading = true;

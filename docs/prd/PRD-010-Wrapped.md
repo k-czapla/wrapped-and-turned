@@ -17,6 +17,7 @@ As a fiber artist, I want to pick a time period and see a fun, clear summary of 
 ## Scope (v1)
 
 - Date range selection (**From**, **To**) and “Generate” action
+- **Stat preferences** (logged-in users): a dedicated “Stats preferences” page where the user can toggle which Ravelry stats are analyzed and shown in Wrapped (e.g. projects count, finished projects, yardage, meterage, craft breakdown, most productive month, average duration, projects gallery). Selection is saved in the backend (session) and applied when viewing Wrapped.
 - Stats tiles:
   - Total projects in range
   - Finished projects in range
