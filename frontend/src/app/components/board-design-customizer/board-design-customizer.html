@@ -1,7 +1,7 @@
 <div class="board-design-customizer">
   <h2 class="board-design-customizer__title">Customize design</h2>
   <p class="board-design-customizer__intro">
-    Override the selected design with your own font, colors, card shape, and border. Changes apply to the board cards when you generate and download.
+    Override the selected design with your own font, colors, and border. Changes apply to the board cards when you generate and download.
   </p>
 
   <div class="board-design-customizer__grid">
@@ -72,37 +72,6 @@
           type="button"
           class="board-design-customizer__reset"
           (click)="setTextColor('', 100)"
-        >
-          Use design default
-        </button>
-      </div>
-
-      <div class="board-design-customizer__group">
-        <span class="board-design-customizer__label">Card shape</span>
-        <div class="board-design-customizer__shape-options" role="group" aria-label="Card shape">
-          <label class="board-design-customizer__shape-option">
-            <input
-              type="radio"
-              name="cardShape"
-              [checked]="(userCustomization().cardShape ?? 'rounded') === 'rounded'"
-              (change)="setCardShape('rounded')"
-            />
-            <span>Rounded</span>
-          </label>
-          <label class="board-design-customizer__shape-option">
-            <input
-              type="radio"
-              name="cardShape"
-              [checked]="userCustomization().cardShape === 'square'"
-              (change)="setCardShape('square')"
-            />
-            <span>Square</span>
-          </label>
-        </div>
-        <button
-          type="button"
-          class="board-design-customizer__reset"
-          (click)="setCardShape(undefined)"
         >
           Use design default
         </button>

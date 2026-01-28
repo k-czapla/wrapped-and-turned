@@ -12,12 +12,11 @@ const CUSTOMIZATION_STORAGE_KEY = 'wrapped-and-turned-board-design-customization
 /** Id for the user's custom board (first in the list); selecting it opens the customizer. */
 export const USER_BOARD_DESIGN_ID = 'user';
 
-/** User overrides for the selected board design (font, colors, card shape, border). */
+/** User overrides for the selected board design (font, colors, border). */
 export interface BoardDesignCustomization {
   fontId?: string;
   backgroundColor?: string;
   textColor?: string;
-  cardShape?: 'rounded' | 'square';
   borderWidth?: number;
   borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'none';
   borderColor?: string;
@@ -36,8 +35,6 @@ export const BOARD_DESIGN_FONTS: { id: string; label: string; fontFamily: string
   { id: 'bebas-neue', label: 'Bebas Neue', fontFamily: "'Bebas Neue', 'Impact', sans-serif" },
   { id: 'fredoka', label: 'Fredoka', fontFamily: "'Fredoka', 'Nunito', sans-serif" },
 ];
-
-const DEFAULT_BORDER_RADIUS = '16px';
 
 @Injectable({ providedIn: 'root' })
 export class BoardDesignService {
@@ -65,7 +62,7 @@ export class BoardDesignService {
       ...withStyle,
       id: USER_BOARD_DESIGN_ID,
       name: "My design",
-      vibe: "Your font, colors, shape & border",
+      vibe: "Your font, colors & border",
     };
   });
 
@@ -90,8 +87,7 @@ export class BoardDesignService {
     }
     if (custom.backgroundColor != null) baseStyle['background'] = custom.backgroundColor;
     if (custom.textColor != null) baseStyle['color'] = custom.textColor;
-    if (custom.cardShape === 'square') baseStyle['borderRadius'] = '0';
-    else if (custom.cardShape === 'rounded') baseStyle['borderRadius'] = design.style?.['borderRadius'] ?? DEFAULT_BORDER_RADIUS;
+    baseStyle['borderRadius'] = '0';
 
     // Apply border customization
     if (custom.borderWidth != null || custom.borderStyle != null || custom.borderColor != null) {
@@ -162,7 +158,6 @@ export class BoardDesignService {
       if (typeof o['fontId'] === 'string') out.fontId = o['fontId'];
       if (typeof o['backgroundColor'] === 'string') out.backgroundColor = o['backgroundColor'];
       if (typeof o['textColor'] === 'string') out.textColor = o['textColor'];
-      if (o['cardShape'] === 'rounded' || o['cardShape'] === 'square') out.cardShape = o['cardShape'];
       if (typeof o['borderWidth'] === 'number') out.borderWidth = o['borderWidth'];
       if (o['borderStyle'] === 'solid' || o['borderStyle'] === 'dashed' || o['borderStyle'] === 'dotted' || o['borderStyle'] === 'double' || o['borderStyle'] === 'none') {
         out.borderStyle = o['borderStyle'];

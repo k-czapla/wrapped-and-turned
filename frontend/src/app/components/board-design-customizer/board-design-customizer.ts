@@ -96,10 +96,6 @@ export class BoardDesignCustomizer {
     });
   }
 
-  setCardShape(shape: 'rounded' | 'square' | undefined) {
-    this.boardDesign.setUserCustomization({ cardShape: shape });
-  }
-
   setBorderWidth(width: number | undefined) {
     this.boardDesign.setUserCustomization({ borderWidth: width });
   }

@@ -9,7 +9,6 @@ CSS style cues:
 font-family: 'Inter', 'Helvetica Neue', sans-serif;
 background: #F6F4F1;
 color: #2E2E2E;
-border-radius: 16px;
 box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 letter-spacing: 0.02em;
 
@@ -44,7 +43,6 @@ CSS style cues:
 font-family: 'Libre Baskerville', serif;
 background: #EFE8D8;
 color: #2B2B2B;
-border-radius: 12px;
 background-image: linear-gradient(#EFE8D8, #E5DCCB);
 
 
@@ -78,7 +76,6 @@ CSS style cues:
 font-family: 'Poppins', sans-serif;
 background: #FFF8EE;
 color: #333;
-border-radius: 24px;
 box-shadow: 0 12px 0 #FF6F61;
 
 
@@ -143,7 +140,6 @@ CSS style cues:
 font-family: 'Cormorant Garamond', serif;
 background: #F8F6F4;
 color: #5A4A4A;
-border-radius: 20px;
 
 
 Prompt hint: “Romantic crochet project board, lace textures, dreamy lighting”

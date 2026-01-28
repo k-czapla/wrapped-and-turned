@@ -21,7 +21,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - Date range (**From**, **To**) to load candidate projects
 - **Selectable project list**: user is presented with a checkmark list of projects in range; they select one or more projects to generate a visualisation for
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). The first option is “My design” (user’s customized version); the rest are predefined styles. Selected design is persisted in localStorage and applied to all generated boards.
-- **Board design customization** (optional): on the Board Design page, “My design” is the first option; selecting it opens the customizer (font, RGBA background/text colors, card shape, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
+- **Board design customization** (optional): on the Board Design page, “My design” is the first option; selecting it opens the customizer (font, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
 
 ### Output (board content)
 
@@ -41,14 +41,14 @@ The board should include (when available):
 
 ## Out of scope (v1)
 
-- Full design editor (Canva-like experience); basic customization (font, RGBA colors, card shape) is in scope.
+- Full design editor (Canva-like experience); basic customization (font, RGBA colors) is in scope.
 - User-uploaded fonts or custom images beyond the project photo
 - Data field selection (toggling which fields appear on the board) — see PRD-050 Idea 3
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations
 
-**Note:** The Board Design page lists “My design” first (user’s version with customizations), then 10 predefined designs. Selecting “My design” opens the customizer (font, RGBA colors, card shape, border); selecting a predefined design applies it without opening the customizer. Customizations persist across sessions.
+**Note:** The Board Design page lists “My design” first (user’s version with customizations), then 10 predefined designs. Selecting “My design” opens the customizer (font, RGBA colors, border); selecting a predefined design applies it without opening the customizer. Customizations persist across sessions.
 
 ## Requirements
 
@@ -64,7 +64,7 @@ The board should include (when available):
   - No size/yarn/designer: show “—” or hide the field.
 - **R5 — Mobile-friendly**: board should fit on smaller screens and still be readable.
 - **R12 — Board design selection**: users can access a Board Design page to browse and select from available visual styles. The first option is “My design” (user’s customized version); the rest are predefined styles. Selected design persists across sessions (localStorage) and applies to all generated boards (preview and PNG export).
-- **R12a — Board design customization**: “My design” is the first option; selecting it opens the customizer (font, RGBA background/text colors, card shape, border). Users can override the base design with a custom font (10 options), background and text colors (RGBA pickers), and card shape (rounded or square). Customizations persist in localStorage and apply together with the selected design to all generated boards.
+- **R12a — Board design customization**: “My design” is the first option; selecting it opens the customizer (font, RGBA background/text colors, border). Users can override the base design with a custom font (10 options), background and text colors (RGBA pickers). Customizations persist in localStorage and apply together with the selected design to all generated boards.
 - **R13 — Board design preview consistency**: On the Board Design page, each design option is shown in a preview that uses the same sample project data (pattern name, designer, size, yarn, image placeholder) and the same dimensions (320×480px) as the Podcaster’s Assistant board preview, so users can compare designs accurately and see how the board will look with real content. When “My design” is selected, a “Customize design” section (or modal) shows a preview with the effective design (base style plus user customizations).
 
 ### Functional requirements
@@ -102,7 +102,7 @@ The board should include (when available):
 - User can load projects for a date range.
 - User is presented with a selectable (checkmark) list of projects and can select one or more to generate visualisations for.
 - User can access the Board Design page to browse and select a visual style for their boards.
-- User can optionally customize the design (font, RGBA background/text colors, card shape); customizations persist and apply to all generated boards.
+- User can optionally customize the design (font, RGBA background/text colors); customizations persist and apply to all generated boards.
 - Selected board design (and any customizations) persists across sessions and applies to all generated boards.
 - User sees a vertical board preview for each selected project (using the selected design style).
 - User can export each board as a PNG (export matches the preview style).

@@ -115,25 +115,6 @@
   min-width: 2.5rem;
 }
 
-.board-design-customizer__shape-options {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.board-design-customizer__shape-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #334155;
-  cursor: pointer;
-}
-
-.board-design-customizer__shape-option input {
-  accent-color: #6366f1;
-}
-
 .board-design-customizer__reset {
   font-size: 0.8125rem;
   color: #6366f1;
