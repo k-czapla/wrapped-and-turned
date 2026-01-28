@@ -10,7 +10,7 @@
       </div>
     </a>
 
-    <nav class="hidden items-center gap-1 md:flex">
+    <nav *ngIf="(me$() | async) as me" class="hidden items-center gap-1 md:flex">
       <a
         routerLink="/wrapped"
         routerLinkActive="bg-slate-900 text-white"
