@@ -136,4 +136,29 @@ export class Api {
       withCredentials: true,
     });
   }
+
+  /**
+   * Proxies an image URL through the backend to avoid CORS issues.
+   * Returns a data URL that can be used in canvas operations.
+   */
+  async proxyImageToDataUrl(imageUrl: string): Promise<string> {
+    const backendBase = this.getBackendBase();
+    const proxyUrl = this.join(backendBase, `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`);
+
+    const response = await fetch(proxyUrl, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to proxy image: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 }
