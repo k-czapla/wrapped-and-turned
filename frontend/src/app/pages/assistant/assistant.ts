@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { Api, type ProjectCard, type WrappedStats } from '../../services/api';
 import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
@@ -23,7 +23,10 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
-  constructor(private api: Api) { }
+  constructor(
+    private api: Api,
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   loadProjects() {
     this.loading = true;
@@ -34,12 +37,22 @@ export class Assistant {
 
     this.api.getWrapped(this.from, this.to).subscribe({
       next: (s) => {
-        this.wrapped = s;
+        const normalized = normalizeWrapped(s);
+        if (normalized) {
+          this.wrapped = normalized;
+          this.error = null;
+        } else {
+          this.error = (s && typeof s === 'object' && typeof (s as Record<string, unknown>).error === 'string')
+            ? (s as { error: string }).error
+            : 'Invalid response from server.';
+        }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (e) => {
         this.loading = false;
         this.error = e?.error?.error ?? 'Failed to load projects. Are you logged in?';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -50,6 +63,7 @@ export class Assistant {
 
     if (ids.length === 0) {
       this.cards = [];
+      this.cdr.markForCheck();
       return;
     }
 
@@ -58,13 +72,35 @@ export class Assistant {
       next: (cardList) => {
         this.cards = cardList;
         this.cardsLoading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.cardsLoading = false;
         this.error = 'Failed to load project details for one or more projects.';
+        this.cdr.markForCheck();
       },
     });
   }
+}
+
+function normalizeWrapped(raw: unknown): WrappedStats | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const s = raw as Record<string, unknown>;
+  if (typeof s.error === 'string') return null;
+  const projects = Array.isArray(s.projects) ? s.projects : [];
+  const range = s.range && typeof s.range === 'object' && 'from' in s.range && 'to' in s.range
+    ? (s.range as WrappedStats['range'])
+    : { from: '', to: '' };
+  const totals = s.totals && typeof s.totals === 'object'
+    ? (s.totals as WrappedStats['totals'])
+    : { projects: 0, finishedProjects: 0, totalYardage: 0, totalMeterage: 0 };
+  const breakdowns = s.breakdowns && typeof s.breakdowns === 'object'
+    ? (s.breakdowns as WrappedStats['breakdowns'])
+    : { craft: {} };
+  const highlights = s.highlights && typeof s.highlights === 'object'
+    ? (s.highlights as WrappedStats['highlights'])
+    : {};
+  return { range, totals, breakdowns, highlights, projects: projects as WrappedStats['projects'] };
 }
 
 function isoDate(d: Date) {
