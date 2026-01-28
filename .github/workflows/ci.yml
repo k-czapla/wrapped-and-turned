@@ -43,7 +43,7 @@ jobs:
         run: npm ci --prefix frontend
 
       - name: Run frontend tests
-        run: npm --prefix frontend run test -- --run
+        run: npm --prefix frontend run test
 
   build:
     name: Build
