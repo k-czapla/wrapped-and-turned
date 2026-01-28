@@ -107,6 +107,66 @@
           Use design default
         </button>
       </div>
+
+      <div class="board-design-customizer__group">
+        <label for="customizer-border-width" class="board-design-customizer__label">Border width (px)</label>
+        <input
+          id="customizer-border-width"
+          type="number"
+          min="0"
+          max="20"
+          step="1"
+          class="board-design-customizer__select"
+          [value]="userCustomization().borderWidth ?? ''"
+          (input)="setBorderWidth($any($event.target).value ? +$any($event.target).value : undefined)"
+          placeholder="Use design default"
+        />
+      </div>
+
+      <div class="board-design-customizer__group">
+        <label for="customizer-border-style" class="board-design-customizer__label">Border style</label>
+        <select
+          id="customizer-border-style"
+          class="board-design-customizer__select"
+          [value]="userCustomization().borderStyle ?? ''"
+          (change)="setBorderStyle($any($event.target).value || undefined)"
+        >
+          <option value="">Use design default</option>
+          <option value="solid">Solid</option>
+          <option value="dashed">Dashed</option>
+          <option value="dotted">Dotted</option>
+          <option value="double">Double</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+
+      <div class="board-design-customizer__group">
+        <span class="board-design-customizer__label">Border color (RGBA)</span>
+        <div class="board-design-customizer__color-row">
+          <input
+            type="color"
+            class="board-design-customizer__color-swatch"
+            [value]="borderColorHex() || '#2e2e2e'"
+            (input)="onBorderColorChange($any($event.target).value, borderColorAlpha())"
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            class="board-design-customizer__alpha"
+            [value]="borderColorAlpha()"
+            (input)="onBorderColorChange(borderColorHex() || '#2e2e2e', +$any($event.target).value)"
+          />
+          <span class="board-design-customizer__alpha-value">{{ borderColorAlpha() }}%</span>
+        </div>
+        <button
+          type="button"
+          class="board-design-customizer__reset"
+          (click)="setBorderColor('', 100)"
+        >
+          Use design default
+        </button>
+      </div>
     </div>
 
     <div class="board-design-customizer__preview-wrap">

@@ -71,6 +71,14 @@ export class BoardDesignCustomizer {
     const tc = this.userCustomization().textColor;
     return tc ? rgbaToHexAndAlpha(tc).alpha : 100;
   });
+  protected borderColorHex = computed(() => {
+    const bc = this.userCustomization().borderColor;
+    return bc ? rgbaToHexAndAlpha(bc).hex : '';
+  });
+  protected borderColorAlpha = computed(() => {
+    const bc = this.userCustomization().borderColor;
+    return bc ? rgbaToHexAndAlpha(bc).alpha : 100;
+  });
 
   setFont(fontId: string) {
     this.boardDesign.setUserCustomization({ fontId: fontId || undefined });
@@ -92,10 +100,27 @@ export class BoardDesignCustomizer {
     this.boardDesign.setUserCustomization({ cardShape: shape });
   }
 
+  setBorderWidth(width: number | undefined) {
+    this.boardDesign.setUserCustomization({ borderWidth: width });
+  }
+
+  setBorderStyle(style: 'solid' | 'dashed' | 'dotted' | 'double' | 'none' | undefined) {
+    this.boardDesign.setUserCustomization({ borderStyle: style });
+  }
+
+  setBorderColor(hex: string, alpha: number) {
+    this.boardDesign.setUserCustomization({
+      borderColor: hex ? hexAndAlphaToRgba(hex, alpha) : undefined,
+    });
+  }
+
   onBackgroundColorChange(hex: string, alpha: number) {
     this.setBackgroundColor(hex, alpha);
   }
   onTextColorChange(hex: string, alpha: number) {
     this.setTextColor(hex, alpha);
+  }
+  onBorderColorChange(hex: string, alpha: number) {
+    this.setBorderColor(hex, alpha);
   }
 }

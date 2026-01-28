@@ -9,12 +9,15 @@ import {
 const STORAGE_KEY = 'wrapped-and-turned-board-design';
 const CUSTOMIZATION_STORAGE_KEY = 'wrapped-and-turned-board-design-customization';
 
-/** User overrides for the selected board design (font, colors, card shape). */
+/** User overrides for the selected board design (font, colors, card shape, border). */
 export interface BoardDesignCustomization {
   fontId?: string;
   backgroundColor?: string;
   textColor?: string;
   cardShape?: 'rounded' | 'square';
+  borderWidth?: number;
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'none';
+  borderColor?: string;
 }
 
 /** Ten font options for board card customization. */
@@ -50,7 +53,7 @@ export class BoardDesignService {
 
   readonly userCustomization = this.customization.asReadonly();
 
-  /** Selected design with user customization (font, colors, shape) applied to style. */
+  /** Selected design with user customization (font, colors, shape, border) applied to style. */
   readonly effectiveDesign = computed<ProjectBoardDesign>(() => {
     const design = this.selectedDesign();
     const custom = this.customization();
@@ -64,6 +67,32 @@ export class BoardDesignService {
     if (custom.textColor != null) baseStyle['color'] = custom.textColor;
     if (custom.cardShape === 'square') baseStyle['borderRadius'] = '0';
     else if (custom.cardShape === 'rounded') baseStyle['borderRadius'] = design.style?.['borderRadius'] ?? DEFAULT_BORDER_RADIUS;
+
+    // Apply border customization
+    if (custom.borderWidth != null || custom.borderStyle != null || custom.borderColor != null) {
+      // Remove individual border properties if they exist in the design
+      delete baseStyle['borderLeft'];
+      delete baseStyle['borderRight'];
+      delete baseStyle['borderTop'];
+      delete baseStyle['borderBottom'];
+      delete baseStyle['borderWidth'];
+      delete baseStyle['borderStyle'];
+      delete baseStyle['borderColor'];
+      
+      // Handle border style 'none' or width 0 - remove border completely
+      if (custom.borderStyle === 'none' || (custom.borderWidth != null && custom.borderWidth === 0)) {
+        baseStyle['border'] = 'none';
+      } else {
+        // Construct complete border value from user customization
+        // Use user values or sensible defaults
+        const width = custom.borderWidth != null ? `${custom.borderWidth}px` : '1px';
+        const style = custom.borderStyle ?? 'solid';
+        const color = custom.borderColor ?? (baseStyle['color'] || '#2e2e2e');
+        
+        // Use shorthand border property to override any existing border styles
+        baseStyle['border'] = `${width} ${style} ${color}`;
+      }
+    }
 
     return { ...design, style: baseStyle };
   });
@@ -114,6 +143,11 @@ export class BoardDesignService {
       if (typeof o['backgroundColor'] === 'string') out.backgroundColor = o['backgroundColor'];
       if (typeof o['textColor'] === 'string') out.textColor = o['textColor'];
       if (o['cardShape'] === 'rounded' || o['cardShape'] === 'square') out.cardShape = o['cardShape'];
+      if (typeof o['borderWidth'] === 'number') out.borderWidth = o['borderWidth'];
+      if (o['borderStyle'] === 'solid' || o['borderStyle'] === 'dashed' || o['borderStyle'] === 'dotted' || o['borderStyle'] === 'double' || o['borderStyle'] === 'none') {
+        out.borderStyle = o['borderStyle'];
+      }
+      if (typeof o['borderColor'] === 'string') out.borderColor = o['borderColor'];
       return out;
     } catch {
       return {};
