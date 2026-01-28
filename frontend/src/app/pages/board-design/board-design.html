@@ -2,7 +2,7 @@
   <div class="board-design-page__header">
     <h1 class="board-design-page__title">Project board design</h1>
     <p class="board-design-page__intro">
-      Choose a visual style for your Podcaster's Assistant project board. Customize font, colors, and card shape below.
+      Choose a visual style for your Podcaster's Assistant project board. Click on a design to customize it.
       The selected design and your customizations will be used when you generate and download boards.
     </p>
     <a routerLink="/assistant" class="board-design-page__back">← Back to Podcaster's Assistant</a>
@@ -20,5 +20,7 @@
     }
   </div>
 
-  <app-board-design-customizer />
+  <app-modal [isOpen]="isCustomizerModalOpen()" (closeModal)="closeCustomizerModal()">
+    <app-board-design-customizer />
+  </app-modal>
 </section>

@@ -1,0 +1,22 @@
+@if (isOpen()) {
+  <div
+    class="modal-backdrop"
+    (click)="onBackdropClick($event)"
+    (keydown)="onEscapeKey($event)"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="modal-close"
+        (click)="onCloseClick()"
+        aria-label="Close modal"
+      >
+        ×
+      </button>
+      <ng-content />
+    </div>
+  </div>
+}

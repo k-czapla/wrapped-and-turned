@@ -1,12 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BoardDesignService } from '../../services/board-design.service';
 import { BoardDesignCard } from '../../components/board-design-card/board-design-card';
 import { BoardDesignCustomizer } from '../../components/board-design-customizer/board-design-customizer';
+import { Modal } from '../../components/modal/modal';
 
 @Component({
   selector: 'app-board-design',
-  imports: [RouterLink, BoardDesignCard, BoardDesignCustomizer],
+  imports: [RouterLink, BoardDesignCard, BoardDesignCustomizer, Modal],
   templateUrl: './board-design.html',
   styleUrl: './board-design.css',
 })
@@ -14,8 +15,14 @@ export class BoardDesign {
   protected boardDesign = inject(BoardDesignService);
   protected designs = this.boardDesign.designs;
   protected selectedDesignId = this.boardDesign.selectedDesignId;
+  protected isCustomizerModalOpen = signal(false);
 
   selectDesign(id: string) {
     this.boardDesign.setSelectedDesignId(id);
+    this.isCustomizerModalOpen.set(true);
+  }
+
+  closeCustomizerModal() {
+    this.isCustomizerModalOpen.set(false);
   }
 }
