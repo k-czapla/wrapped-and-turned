@@ -7,7 +7,7 @@
 
 ## Purpose
 
-This document describes two planned feature ideas that extend the current Wrapped and Podcaster’s Assistant experiences. It is intended as a **base for further development**—no implementation is specified here; the goal is to capture scope, user value, and requirements so that future work can be scoped and estimated.
+This document describes planned feature ideas that extend the current Wrapped and Podcaster’s Assistant experiences. It is intended as a **base for further development**—no implementation is specified here; the goal is to capture scope, user value, and requirements so that future work can be scoped and estimated.
 
 ---
 
@@ -135,10 +135,81 @@ As a fiber artist viewing my Wrapped summary, I want to click on a stat like “
 
 ---
 
+## Idea 3: Project Board style customization and data selection (Podcaster's Assistant)
+
+### Summary
+
+Extend the Podcaster's Assistant feature so that users can **choose from multiple visual styles** for their Project Board and **customize which data fields are displayed**. This adds a style selection page and a data preferences interface, allowing users to personalize their shareable boards to match their brand or aesthetic preferences.
+
+### User story
+
+As a fiber arts content creator, I want to choose a visual style for my Project Board from several design options, and I want to control which project details (e.g., yarn, size, designer) appear on the board, so I can create boards that match my personal brand and include only the information relevant to my audience.
+
+### Scope
+
+- **Style selection page**: A dedicated page or modal where users can browse and preview different Project Board design styles (e.g., minimal, colorful, elegant, modern). Each style should show a preview example.
+- **Style application**: Once a style is selected, it applies to all Project Boards generated in the current session (or can be saved as a user preference).
+- **Data field selection**: Users can specify which data fields to display on the Project Board:
+  - Project photo (always included, but style may vary)
+  - Pattern name
+  - Designer name
+  - Project name
+  - Size made
+  - Yarn used
+  - App branding ("Wrapped & Turned")
+  - Additional fields (e.g., date completed, craft type) if available
+- **Preview update**: The board preview updates in real-time as users change style or toggle data fields.
+
+### Style options (initial set)
+
+The initial version should include at least 3–4 distinct styles:
+
+1. **Minimal**: Clean, simple layout with subtle colors and ample whitespace.
+2. **Colorful**: Bold colors, vibrant backgrounds, playful typography.
+3. **Elegant**: Sophisticated design with refined typography and muted color palette.
+4. **Modern**: Contemporary design with geometric elements and current design trends.
+
+Each style should maintain readability and ensure the exported PNG remains high quality.
+
+### Out of scope (for initial version)
+
+- Custom color picker or full design editor (Canva-like experience).
+- User-uploaded fonts or custom images beyond the project photo.
+- Multiple styles per board (one style applies to all boards in a session).
+- Style templates created by users or community.
+- Advanced layout customization (e.g., repositioning elements, resizing).
+
+### Requirements (to be refined in implementation)
+
+- **R1 — Style selection UI**: A clear interface (page or modal) where users can browse available styles with preview examples. Selection is intuitive and accessible.
+- **R2 — Data field toggles**: Checkboxes or toggle switches for each available data field (pattern name, designer, size, yarn, etc.). At least one field beyond the photo must be selectable.
+- **R3 — Live preview**: Board preview updates immediately when style or data fields change, without requiring a regeneration step.
+- **R4 — Style persistence**: Selected style and data preferences can be saved as user preferences (stored locally or in user account) so they persist across sessions.
+- **R5 — Export consistency**: Exported PNG matches the preview exactly (same style, same selected fields).
+- **R6 — Graceful field handling**: If a selected data field is missing for a project (e.g., no yarn information), the board layout adjusts gracefully without breaking (field is omitted, layout remains stable).
+
+### Edge cases
+
+- User deselects all optional fields → board should still display at minimum the project photo and app branding (or show a warning that at least one field should be selected).
+- Style preview fails to load → fallback to default style with clear indication.
+- Very long text in selected fields → same handling as current implementation (clamp/wrap to avoid overflow).
+- User changes style mid-session → all subsequent boards use the new style; previously generated boards are not affected.
+
+### Acceptance criteria (target)
+
+- User can access a style selection page/modal from the Podcaster's Assistant flow.
+- User can preview and select from multiple Project Board styles.
+- User can toggle which data fields appear on the board.
+- Board preview updates in real-time when style or data selections change.
+- Exported PNG matches the selected style and includes only the selected data fields.
+- Style and data preferences can be saved and persist across sessions.
+
+---
+
 ## Cross-cutting notes
 
-- **Backend**: Idea 1 may require a new backend endpoint or use of an external AI API; Idea 2 may be frontend-only if Wrapped already returns enough data to compute monthly aggregates.
-- **Dependencies**: Idea 1 depends on choosing an AI provider and handling API keys/usage. Idea 2 depends on the existing charting library supporting export (e.g., canvas-to-PNG or SVG export).
+- **Backend**: Idea 1 may require a new backend endpoint or use of an external AI API; Idea 2 may be frontend-only if Wrapped already returns enough data to compute monthly aggregates; Idea 3 is primarily frontend-focused but may require storing user preferences (localStorage or user account).
+- **Dependencies**: Idea 1 depends on choosing an AI provider and handling API keys/usage. Idea 2 depends on the existing charting library supporting export (e.g., canvas-to-PNG or SVG export). Idea 3 depends on the existing Project Board generation system and may require CSS/styling framework updates.
 - **Priority**: These ideas are not sequenced; each can be developed and released independently once prioritized by the team.
 
 ---
