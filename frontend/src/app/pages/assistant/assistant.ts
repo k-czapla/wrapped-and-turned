@@ -97,8 +97,8 @@ function normalizeWrapped(raw: unknown): WrappedStats | null {
   const breakdowns = s.breakdowns && typeof s.breakdowns === 'object'
     ? (s.breakdowns as WrappedStats['breakdowns'])
     : { craft: {} };
-  const highlights = s.highlights && typeof s.highlights === 'object'
-    ? (s.highlights as WrappedStats['highlights'])
+  const highlights = s['highlights'] && typeof s['highlights'] === 'object'
+    ? (s['highlights'] as WrappedStats['highlights'])
     : {};
   return { range, totals, breakdowns, highlights, projects: projects as WrappedStats['projects'] };
 }
