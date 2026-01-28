@@ -1,0 +1,8 @@
+---
+name: cleanup
+description: Cleanup after changes
+---
+
+# Overview
+
+Whenever making any changes to existing features, make sure to clean up - remove obsolete code, unused methods and refactor the code to keep it clean and simple

@@ -92,6 +92,14 @@ Do not store secrets in frontend env or build-time substitutions.
 
 Prefer calling backend via relative paths (`/api/...`) when frontend and backend share a domain. If hosted on different domains, ensure the backend CORS config uses the exact `FRONTEND_URL` and requests include credentials.
 
+For this repo’s Render setup (separate Static Site + Web Service), the frontend supports an injected backend origin:
+
+- Set a **frontend build-time env var** `WT_BACKEND_URL` (or `BACKEND_URL` / `PUBLIC_BACKEND_URL`) to your backend public origin (e.g., `https://<service>.onrender.com`).
+- The frontend build runs `frontend/scripts/inject-backend-url.mjs`, which replaces a placeholder in `dist/index.html` (`<meta name="wt-backend-url" ...>`).
+- At runtime, the app uses that value for:
+  - OAuth start: `GET <backend>/auth/ravelry/start`
+  - API calls: `GET <backend>/api/...` (with credentials enabled)
+
 ## Deployment pipeline (Render)
 
 ### Frontend (Render Static Site)

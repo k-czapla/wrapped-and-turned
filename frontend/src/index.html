@@ -5,6 +5,12 @@
   <title>Frontend</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    Backend base URL for production deployments where frontend and backend are on different origins.
+    This placeholder is replaced at build time by `scripts/inject-backend-url.mjs`.
+    When empty, the app falls back to same-origin paths (local dev proxy or shared-domain hosting).
+  -->
+  <meta name="wt-backend-url" content="__WT_BACKEND_URL__">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>

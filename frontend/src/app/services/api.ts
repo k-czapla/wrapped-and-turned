@@ -51,10 +51,23 @@ export class Api {
   private meState = new BehaviorSubject<Me | null | undefined>(undefined);
   readonly me$ = this.meState.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  private getBackendBase(): string {
+    const meta = document.querySelector('meta[name="wt-backend-url"]') as HTMLMetaElement | null;
+    const raw = meta?.content?.trim() ?? '';
+    if (!raw || raw === '__WT_BACKEND_URL__') return '';
+    return raw.replace(/\/+$/, '');
+  }
+
+  private join(base: string, path: string): string {
+    if (!base) return path;
+    return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
 
   refreshMe() {
-    return this.http.get<Me>('/api/me').pipe(
+    const backendBase = this.getBackendBase();
+    return this.http.get<Me>(this.join(backendBase, '/api/me'), { withCredentials: true }).pipe(
       catchError(() => of(null)),
       tap((me) => this.meState.next(me)),
       map(() => void 0)
@@ -62,11 +75,13 @@ export class Api {
   }
 
   loginWithRavelry() {
-    window.location.href = '/auth/ravelry/start';
+    const backendBase = this.getBackendBase();
+    window.location.assign(this.join(backendBase, '/auth/ravelry/start'));
   }
 
   logout() {
-    return this.http.post('/auth/logout', {}).pipe(
+    const backendBase = this.getBackendBase();
+    return this.http.post(this.join(backendBase, '/auth/logout'), {}, { withCredentials: true }).pipe(
       catchError(() => of(null)),
       tap(() => this.meState.next(null)),
       map(() => void 0)
@@ -74,14 +89,21 @@ export class Api {
   }
 
   getWrapped(from: string, to: string) {
+    const backendBase = this.getBackendBase();
     return this.http
-      .get<WrappedStats>('/api/wrapped', {
+      .get<WrappedStats>(this.join(backendBase, '/api/wrapped'), {
+        withCredentials: true,
         params: { from, to },
       })
       .pipe(shareReplay(1));
   }
 
   getProjectCard(projectId: number) {
-    return this.http.get<ProjectCard>(`/api/project-card/${projectId}`).pipe(shareReplay(1));
+    const backendBase = this.getBackendBase();
+    return this.http
+      .get<ProjectCard>(this.join(backendBase, `/api/project-card/${projectId}`), {
+        withCredentials: true,
+      })
+      .pipe(shareReplay(1));
   }
 }

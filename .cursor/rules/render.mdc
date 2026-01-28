@@ -1,0 +1,8 @@
+---
+name: render
+description: Show Render adjustments
+---
+
+# Overview
+
+Inform me whenever I need to make changes to my Render configuration. I have a web service running for the /backend folder, and a static site for /frontend.

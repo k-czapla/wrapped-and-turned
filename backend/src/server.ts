@@ -26,6 +26,18 @@ const ravelryEnabled =
 const app = express();
 app.use(express.json());
 
+// Render (and most managed hosts) run behind a proxy. Trusting it ensures:
+// - req.protocol reflects HTTPS (when configured)
+// - secure cookies work correctly
+const isProd = env.FRONTEND_URL.startsWith('https://');
+if (isProd) {
+  app.set('trust proxy', 1);
+}
+
+const isCrossSite =
+  !!env.PUBLIC_BACKEND_URL &&
+  new URL(env.PUBLIC_BACKEND_URL).origin !== new URL(env.FRONTEND_URL).origin;
+
 app.use(
   cors({
     origin: env.FRONTEND_URL,
@@ -40,8 +52,10 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
+      // If frontend and backend are on different origins (common on Render),
+      // session cookies must be SameSite=None and Secure to be sent on XHR/fetch.
+      sameSite: isCrossSite ? 'none' : 'lax',
+      secure: isCrossSite || isProd,
     },
   })
 );
@@ -354,9 +368,9 @@ app.get('/api/project-card/:id', async (req, res) => {
 
   const yarnUsed = Array.isArray(proj?.packs)
     ? proj.packs
-        .map((p: any) => p?.yarn_name ?? p?.yarn?.name)
-        .filter(Boolean)
-        .join(', ')
+      .map((p: any) => p?.yarn_name ?? p?.yarn?.name)
+      .filter(Boolean)
+      .join(', ')
     : undefined;
 
   res.json({
