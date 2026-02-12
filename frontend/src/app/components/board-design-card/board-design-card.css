@@ -21,10 +21,10 @@
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
 }
 
-/* Same size as Podcaster's Assistant board (320×480) so preview matches real output. */
+/* Same size as Podcaster's Assistant board so preview matches real output. */
 .board-design-card__preview {
-  width: 320px;
-  height: 480px;
+  width: var(--board-width);
+  height: var(--board-height);
   margin: 0 auto;
   overflow: hidden;
 }

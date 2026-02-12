@@ -144,8 +144,8 @@
 }
 
 .board-design-customizer__preview {
-  width: 320px;
-  height: 480px;
+  width: var(--board-width);
+  height: var(--board-height);
   overflow: hidden;
 }
 
