@@ -5,7 +5,7 @@
 - **Status**: Draft
 - **Last updated**: 2026-01-28
 
-**Implemented:** Idea 3 (Project Board style customization) — style selection page, 10 board designs, persistence via localStorage; data field selection is not yet implemented.
+**Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus Canva style option, persistence via localStorage; data field selection is not yet implemented.
 
 **Evaluated (2026-02-12):** Canva API for board design — see [Canva API board design assessment](../assessments/canva-api-board-design.md). Summary: Connect API cannot replace in-app board rendering (create design is blank; layout/text/colors not programmable). Viable options: optional “Open in Canva” (export PNG then user edits in Canva) or, for Enterprise, Autofill with a Canva-built template. Current in-app design + html-to-image remains recommended.
 

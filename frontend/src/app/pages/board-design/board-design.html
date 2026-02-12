@@ -20,30 +20,6 @@
     }
   </div>
 
-  @if (selectedDesignId() === canvaReferenceDesignId) {
-    <div class="board-design-page__canva-ref">
-      <h2 class="board-design-page__canva-ref-title">Canva reference (Option B PoC)</h2>
-      <p class="board-design-page__canva-ref-intro">
-        To match your Canva board: export it as PNG from Canva, then save the file as
-        <code class="board-design-page__canva-ref-code">canva-reference-board.png</code>
-        in <code class="board-design-page__canva-ref-code">frontend/public/</code>.
-        Your image will appear below so we can tune the “Canva style” design to match.
-      </p>
-      <div class="board-design-page__canva-ref-image-wrap">
-        @if (!canvaReferenceImageError()) {
-          <img
-            [src]="canvaReferenceImagePath"
-            alt="Your Canva board reference — add canva-reference-board.png to public/ to display"
-            class="board-design-page__canva-ref-image"
-            (error)="canvaReferenceImageError.set(true)"
-          />
-        } @else {
-          <p class="board-design-page__canva-ref-placeholder">Add <code>canva-reference-board.png</code> to <code>frontend/public/</code> to see your reference here.</p>
-        }
-      </div>
-    </div>
-  }
-
   <app-modal [isOpen]="isCustomizerModalOpen()" (closeModal)="closeCustomizerModal()">
     <app-board-design-customizer />
   </app-modal>

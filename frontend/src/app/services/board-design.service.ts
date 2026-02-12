@@ -67,7 +67,7 @@ export class BoardDesignService {
     };
   });
 
-  /** All board options: user's design first, then Canva style (PoC), then other predefined designs. */
+  /** All board options: user's design first, then Canva style, then other predefined designs. */
   readonly designList = computed<ProjectBoardDesign[]>(() => {
     const canvaStyle = getProjectBoardDesignById(CANVA_REFERENCE_DESIGN_ID);
     const rest = PROJECT_BOARD_DESIGNS.filter((d) => d.id !== CANVA_REFERENCE_DESIGN_ID);
