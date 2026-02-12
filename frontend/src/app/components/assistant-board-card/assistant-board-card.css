@@ -42,13 +42,13 @@
 }
 
 .assistant-board-card__fields {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: grid;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .assistant-board-card__field {
-  padding: 1rem;
+  padding: 0.5rem;
   background: rgba(0, 0, 0, 0.05);
 }
 
