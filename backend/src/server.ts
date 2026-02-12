@@ -504,6 +504,8 @@ app.get('/api/project-card/:id', async (req, res) => {
     sizeMade: proj?.size,
     yarnUsed,
     projectUrl,
+    /** Full Ravelry API response – visible in DevTools → Network → project-card → Response */
+    _debugRavelryResponse: detail,
   });
 });
 
