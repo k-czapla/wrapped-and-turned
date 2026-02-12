@@ -6,33 +6,43 @@
   <div class="assistant-board-card__inner">
     <div class="assistant-board-card__brand">WRAPPED & TURNED</div>
 
-    <div class="assistant-board-card__image-wrap">
-      @if (card()?.imageUrl) {
-        <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
-      } @else {
-        <div class="assistant-board-card__image-placeholder"></div>
-      }
-    </div>
+    @if (opts().showPhoto) {
+      <div class="assistant-board-card__image-wrap">
+        @if (card()?.imageUrl) {
+          <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
+        } @else {
+          <div class="assistant-board-card__image-placeholder"></div>
+        }
+      </div>
+    }
 
-    <div class="assistant-board-card__title-block">
-      <div class="assistant-board-card__title">{{ card()?.patternName ?? card()?.projectName }}</div>
-      <div class="assistant-board-card__designer">{{ card()?.designerName ?? ' ' }}</div>
-    </div>
+    @if (opts().showPatternName || opts().showDesignerName) {
+      <div class="assistant-board-card__title-block">
+        @if (opts().showPatternName) {
+          <div class="assistant-board-card__title">{{ card()?.patternName ?? card()?.projectName }}</div>
+        }
+        @if (opts().showDesignerName) {
+          <div class="assistant-board-card__designer">{{ card()?.designerName ?? ' ' }}</div>
+        }
+      </div>
+    }
 
-    <div class="assistant-board-card__fields">
-      <div class="assistant-board-card__field">
-        <div class="assistant-board-card__field-label">PROJECT</div>
-        <div class="assistant-board-card__field-value">{{ card()?.projectName ?? '—' }}</div>
+    @if (opts().showYarnUsed || opts().showSizeMade) {
+      <div class="assistant-board-card__fields">
+        @if (opts().showSizeMade) {
+          <div class="assistant-board-card__field">
+            <div class="assistant-board-card__field-label">SIZE</div>
+            <div class="assistant-board-card__field-value">{{ card()?.sizeMade ?? '—' }}</div>
+          </div>
+        }
+        @if (opts().showYarnUsed) {
+          <div class="assistant-board-card__field">
+            <div class="assistant-board-card__field-label">YARN</div>
+            <div class="assistant-board-card__field-value">{{ card()?.yarnUsed ?? '—' }}</div>
+          </div>
+        }
       </div>
-      <div class="assistant-board-card__field">
-        <div class="assistant-board-card__field-label">SIZE</div>
-        <div class="assistant-board-card__field-value">{{ card()?.sizeMade ?? '—' }}</div>
-      </div>
-      <div class="assistant-board-card__field">
-        <div class="assistant-board-card__field-label">YARN</div>
-        <div class="assistant-board-card__field-value">{{ card()?.yarnUsed ?? '—' }}</div>
-      </div>
-    </div>
+    }
 
     <div class="assistant-board-card__footer">
       <a

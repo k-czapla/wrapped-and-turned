@@ -5,7 +5,7 @@
 - **Status**: Draft
 - **Last updated**: 2026-01-28
 
-**Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus multiple Canva PNG-based designs (canva-reference-board.png and canva-2.png through canva-10.png in `frontend/public`), persistence via localStorage; data field selection is not yet implemented.
+**Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus multiple Canva PNG-based designs (canva-reference-board.png and canva-2.png through canva-10.png in `frontend/public`), persistence via localStorage. **Data field selection** (2026-02-12): Board display options on the Podcaster’s Assistant page let users toggle Photo, Pattern name, Designer, Yarn + color, and Size made (all on by default); options apply to preview and PNG export.
 
 **Evaluated (2026-02-12):** Canva API for board design — see [Canva API board design assessment](../assessments/canva-api-board-design.md). Summary: Connect API cannot replace in-app board rendering (create design is blank; layout/text/colors not programmable). Viable options: optional “Open in Canva” (export PNG then user edits in Canva) or, for Enterprise, Autofill with a Canva-built template. Current in-app design + html-to-image remains recommended.
 
@@ -141,7 +141,7 @@ As a fiber artist viewing my Wrapped summary, I want to click on a stat like “
 
 ## Idea 3: Project Board style customization and data selection (Podcaster's Assistant)
 
-**Implementation status (2026-01-28):** Partially implemented. Delivered: dedicated Board Design page (`/board-design`) where users can browse and select from 10 visual styles (from `project-board-prompts`); selected design is persisted in localStorage and applied to all Podcaster's Assistant project boards (preview and PNG export). **Design customization** added: users can override the selected design with (1) font choice (10 options: Inter, Playfair Display, Libre Baskerville, Poppins, Noto Sans JP, Merriweather, IBM Plex Sans, Cormorant Garamond, Bebas Neue, Fredoka), (2) RGBA color pickers for background and text. Customizations persist in localStorage and apply to preview and PNG export. Board Design previews use the same sample project data and dimensions (320×480px) as the Assistant view; a live “Customize design” section shows the effective design. Not yet implemented: data field selection (R2, toggles for which fields appear on the board).
+**Implementation status (2026-02-12):** Implemented. Delivered: dedicated Board Design page (`/board-design`) where users can browse and select from 10 visual styles (from `project-board-prompts`); selected design is persisted in localStorage and applied to all Podcaster's Assistant project boards (preview and PNG export). **Design customization**: users can override the selected design with (1) font choice (10 options), (2) RGBA color pickers for background and text. **Data field selection (R2)**: On the Podcaster’s Assistant page, a “Show on board” control section (below the main controls) provides checkboxes for Photo, Pattern name, Designer, Yarn + color, and Size made (all on by default); the board preview and PNG export respect these options. Board Design previews use the same sample project data and dimensions (320×480px) as the Assistant view; a live “Customize design” section shows the effective design.
 
 ### Summary
 

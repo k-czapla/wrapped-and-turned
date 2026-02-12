@@ -1,0 +1,51 @@
+<div class="assistant-board-options rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <h3 class="text-sm font-semibold text-slate-900">Show on board</h3>
+  <p class="mt-0.5 text-xs text-slate-600">Choose which information from your Ravelry projects to display.</p>
+  <div class="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showPhoto"
+        (change)="toggle('showPhoto')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Photo</span>
+    </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showPatternName"
+        (change)="toggle('showPatternName')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Pattern name</span>
+    </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showDesignerName"
+        (change)="toggle('showDesignerName')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Designer</span>
+    </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showYarnUsed"
+        (change)="toggle('showYarnUsed')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Yarn + color</span>
+    </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showSizeMade"
+        (change)="toggle('showSizeMade')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Size made</span>
+    </label>
+  </div>
+</div>

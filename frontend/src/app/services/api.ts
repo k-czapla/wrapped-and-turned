@@ -60,6 +60,23 @@ export type ProjectCard = {
   yarnUsed?: string;
 };
 
+/** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
+export type BoardDisplayOptions = {
+  showPhoto: boolean;
+  showPatternName: boolean;
+  showDesignerName: boolean;
+  showYarnUsed: boolean;
+  showSizeMade: boolean;
+};
+
+export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
+  showPhoto: true,
+  showPatternName: true,
+  showDesignerName: true,
+  showYarnUsed: true,
+  showSizeMade: true,
+};
+
 @Injectable({
   providedIn: 'root',
 })

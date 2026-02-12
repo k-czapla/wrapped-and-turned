@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, input, QueryList, ViewChildren } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
-import type { ProjectCard } from '../../services/api';
+import type { BoardDisplayOptions, ProjectCard } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { Api } from '../../services/api';
 import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
@@ -17,6 +17,7 @@ export class AssistantBoardPreview {
   cards = input<ProjectCard[]>([]);
   cardsLoading = input<boolean>(false);
   design = input<ProjectBoardDesign | null>(null);
+  displayOptions = input<BoardDisplayOptions | null>(null);
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 

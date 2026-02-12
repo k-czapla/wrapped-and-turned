@@ -4,7 +4,7 @@
 - **Feature**: Podcaster’s Assistant
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-01-28
+- **Last updated**: 2026-02-12
 
 ## Summary
 
@@ -22,18 +22,19 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Selectable project list**: user is presented with a checkmark list of projects in range; they select one or more projects to generate a visualisation for
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). The first option is “My design” (user’s customized version); the rest are predefined styles. Selected design is persisted in localStorage and applied to all generated boards.
 - **Board design customization** (optional): on the Board Design page, “My design” is the first option; selecting it opens the customizer (font, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
+- **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. All options are selected by default: **Photo**, **Pattern name**, **Designer**, **Yarn + color**, **Size made**. Choices apply to all generated board previews and PNG exports.
 
 ### Output (board content)
 
-The board should include (when available):
+The board shows only the fields the user has enabled in **Board display options**. When a field is enabled, it is included (when available from Ravelry):
 
-- First project photo from Ravelry
-- Pattern name
-- Designer name
-- Project name
-- Size made
-- Yarn used (free text or list)
-- App branding: “Wrapped & Turned”
+- **Photo**: first project photo from Ravelry (or placeholder if none)
+- **Pattern name**: from Ravelry project/pattern
+- **Designer**: designer name from Ravelry pattern
+- **Yarn + color**: yarn used (from Ravelry packs)
+- **Size made**: size made (from Ravelry project)
+
+App branding (“Wrapped & Turned”) and footer link remain on the board.
 
 ### Export
 
@@ -43,7 +44,7 @@ The board should include (when available):
 
 - Full design editor (Canva-like experience); basic customization (font, RGBA colors) is in scope.
 - User-uploaded fonts or custom images beyond the project photo
-- Data field selection (toggling which fields appear on the board) — see PRD-050 Idea 3
+- ~~Data field selection (toggling which fields appear on the board)~~ — implemented: Board display options (Photo, Pattern name, Designer, Yarn + color, Size made)
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations

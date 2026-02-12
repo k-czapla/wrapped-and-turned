@@ -1,14 +1,15 @@
 import { ChangeDetectorRef, Component, computed } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { Api, type ProjectCard, type WrappedStats } from '../../services/api';
+import { Api, DEFAULT_BOARD_DISPLAY_OPTIONS, type BoardDisplayOptions, type ProjectCard, type WrappedStats } from '../../services/api';
 import { BoardDesignService } from '../../services/board-design.service';
 import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
+import { AssistantBoardOptions } from '../../components/assistant-board-options/assistant-board-options';
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
 import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
 
 @Component({
   selector: 'app-assistant',
-  imports: [AssistantControls, AssistantProjectPicker, AssistantBoardPreview],
+  imports: [AssistantControls, AssistantBoardOptions, AssistantProjectPicker, AssistantBoardPreview],
   templateUrl: './assistant.html',
   styleUrl: './assistant.css',
 })
@@ -24,6 +25,7 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
+  protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
   constructor(
