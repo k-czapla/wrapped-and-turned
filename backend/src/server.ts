@@ -357,8 +357,6 @@ app.get('/api/wrapped', async (req, res) => {
     const meterage: number | undefined = typeof proj?.meterage === 'number' ? proj.meterage : undefined;
 
     const patternName: string | undefined = proj?.pattern_name ?? p.pattern_name;
-    const designerName: string | undefined =
-      proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name;
 
     return {
       id: p.id,
@@ -369,7 +367,6 @@ app.get('/api/wrapped', async (req, res) => {
       yardage,
       meterage,
       patternName,
-      designerName,
       imageUrl,
       url: p.permalink,
       _durationDays: (() => {
@@ -474,8 +471,7 @@ app.get('/api/project-card/:id', async (req, res) => {
       ? `https://www.ravelry.com/projects/${encodeURIComponent(username)}/${encodeURIComponent(slug)}`
       : undefined;
 
-  let designerName: string | undefined =
-    proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name;
+  let designerName: string | undefined;
   let patternName: string | undefined =
     proj?.pattern_name ?? proj?.pattern?.name;
 
@@ -483,13 +479,13 @@ app.get('/api/project-card/:id', async (req, res) => {
     const pat =
       patternDetail?.pattern ??
       (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : {});
-    if (designerName == null || designerName === '') {
-      designerName =
-        pat?.designer?.name ?? pat?.designer_name ?? undefined;
-    }
+    designerName =
+      patternDetail?.pattern_author?.name ?? pat?.pattern_author?.name ?? undefined;
     if (patternName == null || patternName === '') {
       patternName = pat?.name ?? undefined;
     }
+  } else {
+    designerName = undefined;
   }
 
   const debugLog = {
