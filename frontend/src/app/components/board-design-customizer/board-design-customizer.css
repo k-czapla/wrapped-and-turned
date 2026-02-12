@@ -145,7 +145,6 @@
 
 .board-design-customizer__preview {
   width: var(--board-width);
-  height: var(--board-height);
   overflow: hidden;
 }
 
