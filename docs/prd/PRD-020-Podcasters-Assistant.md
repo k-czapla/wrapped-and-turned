@@ -24,12 +24,13 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Board design customization** (optional): on the Board Design page, “My design” is the last option; selecting it opens the customizer (font, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
 - **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, a **Project / Pattern** toggle lets the user choose whether the board uses photos from the project or from the pattern. Choices apply to all generated board previews and PNG exports.
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
+- **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
 
 ### Output (board content)
 
 The board shows **Pattern name** and **Designer** always, and only the other fields the user has enabled in **Board display options**. When a field is enabled, it is included (when available from Ravelry):
 
-- **Photo**: selected project or pattern photo from Ravelry (user chooses source via Project/Pattern toggle and picks one from the gallery; medium-sized images; placeholder if none)
+- **Photo**: selected project or pattern photo from Ravelry, or a user-uploaded photo (user chooses source via Project/Pattern toggle and picks one from the gallery, or uploads from computer; medium-sized images; placeholder if none)
 - **Pattern name**: from Ravelry project/pattern (always shown)
 - **Designer**: designer name from Ravelry pattern (always shown)
 - **Yarn + color**: yarn used (from Ravelry packs)
@@ -45,7 +46,7 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
 ## Out of scope (v1)
 
 - Full design editor (Canva-like experience); basic customization (font, RGBA colors) is in scope.
-- User-uploaded fonts or custom images beyond the project photo
+- User-uploaded fonts (user-uploaded project/board photo is in scope)
 - ~~Data field selection (toggling which fields appear on the board)~~ — implemented: Board display options (Photo, Pattern name, Designer always on; Yarn + color, Size made, Start date, Completed date)
 - Export to PDF
 - Multi-project boards / carousel generation

@@ -22,12 +22,13 @@
         (selectionChange)="onSelectionChange($event)"
       />
       <app-assistant-board-preview
-        [cards]="cards"
+        [cards]="cardsWithUploadedPhotos"
         [cardsLoading]="cardsLoading"
         [design]="selectedDesign()"
         [displayOptions]="displayOptions"
         [selectedPhotoIndexByProjectId]="selectedPhotoIndexByProjectId"
         (selectedPhotoIndexChange)="onSelectedPhotoIndexChange($event.projectId, $event.index)"
+        (photoUpload)="onPhotoUpload($event.projectId, $event.dataUrl)"
       />
     </div>
   }

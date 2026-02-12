@@ -14,22 +14,36 @@
     <div class="mt-4 flex flex-col gap-6">
       @for (card of cards(); track card.id; let i = $index) {
         <div class="flex flex-col items-center gap-3">
-          @if (displayOptions()?.showPhoto && photosForCard(card).length > 0) {
+          @if (displayOptions()?.showPhoto) {
             <div class="assistant-board-preview__gallery">
-              <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
-                @for (photo of photosForCard(card); track $index) {
-                  <button
-                    type="button"
-                    role="option"
-                    [attr.aria-selected]="selectedIndex(card) === $index"
-                    (click)="selectedPhotoIndexChange.emit({ projectId: card.id, index: $index })"
-                    class="assistant-board-preview__gallery-thumb"
-                    [class.assistant-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
-                  >
-                    <img [src]="photo" alt="" />
-                  </button>
-                }
+              <div class="assistant-board-preview__gallery-actions">
+                <input
+                  [id]="'photo-upload-' + card.id"
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileSelected(card, $event)"
+                  class="assistant-board-preview__file-input"
+                />
+                <label [for]="'photo-upload-' + card.id" class="assistant-board-preview__upload-label">
+                  Upload photo from computer
+                </label>
               </div>
+              @if (photosForCard(card).length > 0) {
+                <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
+                  @for (photo of photosForCard(card); track $index) {
+                    <button
+                      type="button"
+                      role="option"
+                      [attr.aria-selected]="selectedIndex(card) === $index"
+                      (click)="selectedPhotoIndexChange.emit({ projectId: card.id, index: $index })"
+                      class="assistant-board-preview__gallery-thumb"
+                      [class.assistant-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
+                    >
+                      <img [src]="photo" alt="" />
+                    </button>
+                  }
+                </div>
+              }
             </div>
           }
           <div

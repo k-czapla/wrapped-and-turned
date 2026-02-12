@@ -47,3 +47,31 @@
   object-fit: cover;
   display: block;
 }
+
+.assistant-board-preview__gallery-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.assistant-board-preview__file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.assistant-board-preview__upload-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(99 102 241);
+  cursor: pointer;
+  text-underline-offset: 2px;
+}
+
+.assistant-board-preview__upload-label:hover {
+  text-decoration: underline;
+}

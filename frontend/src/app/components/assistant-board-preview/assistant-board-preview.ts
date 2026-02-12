@@ -21,6 +21,8 @@ export class AssistantBoardPreview {
   /** Per-project selected photo index (for project/pattern photo gallery). */
   selectedPhotoIndexByProjectId = input<Record<number, number>>({});
   selectedPhotoIndexChange = output<{ projectId: number; index: number }>();
+  /** Emitted when the user uploads a photo from their computer for a project board. */
+  photoUpload = output<{ projectId: number; dataUrl: string }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 
@@ -38,6 +40,19 @@ export class AssistantBoardPreview {
     const map = this.selectedPhotoIndexByProjectId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  protected onFileSelected(card: ProjectCard, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file?.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      this.photoUpload.emit({ projectId: card.id, dataUrl });
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
   }
 
   async downloadBoard(index: number) {

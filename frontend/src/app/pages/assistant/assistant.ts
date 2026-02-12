@@ -28,6 +28,9 @@ export class Assistant {
   /** Per-project selected photo index (within project or pattern photos list). */
   protected selectedPhotoIndexByProjectId: Record<number, number> = {};
 
+  /** User-uploaded photo data URLs per project id (prepended to project photos in preview). */
+  protected uploadedPhotosByProjectId: Record<number, string[]> = {};
+
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
@@ -93,6 +96,30 @@ export class Assistant {
 
   onSelectedPhotoIndexChange(projectId: number, index: number) {
     this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: index };
+    this.cdr.markForCheck();
+  }
+
+  /** Cards with user-uploaded photos prepended to project and pattern photos for display. */
+  get cardsWithUploadedPhotos(): ProjectCard[] {
+    return this.cards.map((card) => {
+      const uploaded = this.uploadedPhotosByProjectId[card.id];
+      if (!uploaded?.length) return card;
+      const projectPhotos = [...uploaded, ...(card.projectPhotos ?? (card.imageUrl ? [card.imageUrl] : []))];
+      const patternPhotos = card.patternPhotos?.length
+        ? [...uploaded, ...card.patternPhotos]
+        : undefined;
+      return { ...card, projectPhotos, ...(patternPhotos && { patternPhotos }) };
+    });
+  }
+
+  onPhotoUpload(projectId: number, dataUrl: string) {
+    const list = this.uploadedPhotosByProjectId[projectId] ?? [];
+    const newList = [...list, dataUrl];
+    this.uploadedPhotosByProjectId = {
+      ...this.uploadedPhotosByProjectId,
+      [projectId]: newList,
+    };
+    this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: newList.length - 1 };
     this.cdr.markForCheck();
   }
 }
