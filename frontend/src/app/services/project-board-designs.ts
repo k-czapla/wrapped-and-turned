@@ -208,7 +208,25 @@ export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
     },
     promptHint: 'Pop art knitting board, Lichtenstein-style dots, bold primary colors, comic typography',
   },
+  {
+    id: 'canva-style',
+    name: 'Canva style',
+    vibe: 'Matches your Canva board export (PoC)',
+    colors: 'Neutral base — tune to match your reference image',
+    layout: 'Same structure (brand, photo, pattern, designer, fields); style can be adjusted from reference',
+    style: {
+      fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+      background: '#FAFAF9',
+      color: '#1C1917',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+      letterSpacing: '0.02em',
+    },
+    promptHint: 'Board style replicated from Canva reference PNG (Option B PoC)',
+  },
 ];
+
+/** Id for the Canva reference PoC design; used to show reference image on Board Design page. */
+export const CANVA_REFERENCE_DESIGN_ID = 'canva-style';
 
 export const DEFAULT_BOARD_DESIGN_ID = PROJECT_BOARD_DESIGNS[0].id;
 
