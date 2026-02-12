@@ -16,6 +16,16 @@ export class AssistantBoardOptions {
     this.optionsChange.emit({ ...current, [key]: !current[key] });
   }
 
+  protected toggleDates() {
+    const current = this.options();
+    const showBoth = current.showStartDate && current.showCompletedDate;
+    this.optionsChange.emit({
+      ...current,
+      showStartDate: !showBoth,
+      showCompletedDate: !showBoth,
+    });
+  }
+
   protected setPhotoSource(source: 'project' | 'pattern') {
     const current = this.options();
     this.optionsChange.emit({ ...current, photoSource: source });
