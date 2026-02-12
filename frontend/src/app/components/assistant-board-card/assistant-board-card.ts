@@ -30,6 +30,28 @@ export class AssistantBoardCard {
   /** Ravelry project page URL for the QR code; only set when card has projectUrl */
   protected projectUrl = computed(() => this.card()?.projectUrl ?? null);
 
+  /** One-line date text for bottom of card: only shown when start date is available and dates are enabled. */
+  protected dateLine = computed(() => {
+    const c = this.card();
+    const opts = this.opts();
+    if (!c || (!opts.showStartDate && !opts.showCompletedDate)) return null;
+    const start = this.parseAndFormatDate(c.started);
+    if (!start) return null;
+    const end = this.parseAndFormatDate(c.completed);
+    if (end) return `${start} – ${end}`;
+    return `${start} – In progress`;
+  });
+
+  private parseAndFormatDate(iso?: string): string | null {
+    if (!iso || typeof iso !== 'string') return null;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return null;
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}.${month}.${year}`;
+  }
+
   /** Image URL to display: from project/pattern photos by selected index, or fallback to card.imageUrl. */
   protected displayImageUrl = computed(() => {
     const c = this.card();

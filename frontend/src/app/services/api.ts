@@ -64,6 +64,10 @@ export type ProjectCard = {
   yarnUsed?: string;
   /** Ravelry project page URL for QR code / link */
   projectUrl?: string;
+  /** ISO-ish date when project was started */
+  started?: string;
+  /** ISO-ish date when project was completed */
+  completed?: string;
 };
 
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
@@ -75,6 +79,8 @@ export type BoardDisplayOptions = {
   showDesignerName: boolean;
   showYarnUsed: boolean;
   showSizeMade: boolean;
+  showStartDate: boolean;
+  showCompletedDate: boolean;
 };
 
 export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
@@ -84,6 +90,8 @@ export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
   showDesignerName: true,
   showYarnUsed: true,
   showSizeMade: true,
+  showStartDate: true,
+  showCompletedDate: true,
 };
 
 @Injectable({

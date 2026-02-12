@@ -39,6 +39,10 @@
       </div>
     }
 
+    @if (dateLine()) {
+      <div class="assistant-board-card__date-line">{{ dateLine() }}</div>
+    }
+
     @if (projectUrl()) {
       <div class="assistant-board-card__footer">
         <a

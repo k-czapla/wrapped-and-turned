@@ -16,9 +16,6 @@
         <div class="flex flex-col items-center gap-3">
           @if (displayOptions()?.showPhoto && photosForCard(card).length > 0) {
             <div class="assistant-board-preview__gallery">
-              <span class="assistant-board-preview__gallery-label">
-                {{ displayOptions()?.photoSource === 'pattern' ? 'Pattern' : 'Project' }} photo
-              </span>
               <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
                 @for (photo of photosForCard(card); track $index) {
                   <button

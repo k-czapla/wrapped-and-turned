@@ -427,6 +427,8 @@ app.get('/api/project-card/:id', async (req, res) => {
       projectUrl: 'https://www.ravelry.com/projects/demo/example-project',
       projectPhotos: [],
       patternPhotos: [],
+      started: '2025-01-15',
+      completed: '2025-03-01',
     });
     return;
   }
@@ -519,6 +521,19 @@ app.get('/api/project-card/:id', async (req, res) => {
     ravelryPatternResponse: patternDetail,
   };
 
+  const started =
+    typeof proj?.started === 'string'
+      ? proj.started
+      : typeof proj?.started_at === 'string'
+        ? proj.started_at
+        : undefined;
+  const completed =
+    typeof proj?.completed === 'string'
+      ? proj.completed
+      : typeof proj?.completed_at === 'string'
+        ? proj.completed_at
+        : undefined;
+
   res.json({
     id: projectId,
     imageUrl,
@@ -530,6 +545,8 @@ app.get('/api/project-card/:id', async (req, res) => {
     sizeMade: proj?.size,
     yarnUsed,
     projectUrl,
+    started: started || undefined,
+    completed: completed || undefined,
     debugLog,
   });
 });

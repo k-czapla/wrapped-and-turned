@@ -64,8 +64,14 @@
   font-weight: 600;
 }
 
+.assistant-board-card__date-line {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
 .assistant-board-card__footer {
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   font-size: 0.75rem;
   opacity: 0.85;
   display: flex;
