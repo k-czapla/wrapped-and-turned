@@ -465,20 +465,33 @@ app.get('/api/project-card/:id', async (req, res) => {
 
   let designerName: string | undefined =
     proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name;
-  if (designerName == null || designerName === '') {
-    const patternId =
-      proj?.pattern_id ?? proj?.pattern?.id ?? proj?.pattern?.pattern_id;
-    if (typeof patternId === 'number' && Number.isFinite(patternId)) {
-      try {
-        const patternDetail = await api.getJson<any>(
-          `/patterns/${patternId}.json`
-        );
-        const pat = patternDetail?.pattern ?? {};
+  let patternName: string | undefined =
+    proj?.pattern_name ?? proj?.pattern?.name;
+  const patternId =
+    proj?.pattern_id ?? proj?.pattern?.id ?? proj?.pattern?.pattern_id;
+
+  if (
+    typeof patternId === 'number' &&
+    Number.isFinite(patternId) &&
+    (designerName == null ||
+      designerName === '' ||
+      patternName == null ||
+      patternName === '')
+  ) {
+    try {
+      const patternDetail = await api.getJson<any>(
+        `/patterns/${patternId}.json`
+      );
+      const pat = patternDetail?.pattern ?? {};
+      if (designerName == null || designerName === '') {
         designerName =
           pat?.designer?.name ?? pat?.designer_name ?? undefined;
-      } catch {
-        // Leave designerName undefined if pattern fetch fails
       }
+      if (patternName == null || patternName === '') {
+        patternName = pat?.name ?? undefined;
+      }
+    } catch {
+      // Leave designerName/patternName as-is if pattern fetch fails
     }
   }
 
@@ -486,7 +499,7 @@ app.get('/api/project-card/:id', async (req, res) => {
     id: projectId,
     imageUrl,
     projectName: proj?.name ?? `Project #${projectId}`,
-    patternName: proj?.pattern_name,
+    patternName,
     designerName,
     sizeMade: proj?.size,
     yarnUsed,
