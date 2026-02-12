@@ -9,13 +9,6 @@
   box-sizing: border-box;
 }
 
-.assistant-board-card__brand {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  opacity: 0.85;
-}
-
 .assistant-board-card__image-wrap {
   margin-top: 1rem;
   overflow: hidden;

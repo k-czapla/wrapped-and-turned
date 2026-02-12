@@ -7,7 +7,7 @@
   /* Board content size (excluding padding); outer size = content + 2×padding */
   --board-content-width: 320px;
   --board-content-height: 480px;
-  --board-padding: 1.25rem;
+  --board-padding: 0.75rem;
   --board-width: calc(var(--board-content-width) + 2 * var(--board-padding));
   --board-height: calc(var(--board-content-height) + 2 * var(--board-padding));
 }
