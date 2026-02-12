@@ -448,8 +448,19 @@ app.get('/api/project-card/:id', async (req, res) => {
   }
 
   const firstPhoto = proj?.photos?.[0];
-  const imageUrl: string | undefined =
+  let imageUrl: string | undefined =
     firstPhoto?.medium_url ?? firstPhoto?.small_url ?? firstPhoto?.thumbnail_url;
+
+  if (imageUrl == null && patternDetail != null) {
+    const pat =
+      patternDetail?.pattern ??
+      (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : {});
+    const patternFirstPhoto = pat?.photos?.[0];
+    imageUrl =
+      patternFirstPhoto?.medium_url ??
+      patternFirstPhoto?.small_url ??
+      patternFirstPhoto?.thumbnail_url;
+  }
 
   const yarnUsed = Array.isArray(proj?.packs)
     ? proj.packs
