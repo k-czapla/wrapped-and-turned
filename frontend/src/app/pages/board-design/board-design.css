@@ -3,12 +3,29 @@
   flex-direction: column;
   gap: 2rem;
   max-width: 56rem;
+  position: relative;
+}
+
+.board-design-page__placeholder {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12rem;
+  height: 12rem;
+  background: rgba(99, 102, 241, 0.08);
+  border: 2px dashed rgba(99, 102, 241, 0.4);
+  border-radius: 0.25rem;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .board-design-page__header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .board-design-page__title {
@@ -42,6 +59,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .board-design-page__item {

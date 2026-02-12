@@ -22,6 +22,10 @@
       </div>
     }
 
+    @if (dateLine()) {
+      <div class="assistant-board-card__date-line">{{ dateLine() }}</div>
+    }
+
     @if (opts().showYarnUsed || opts().showSizeMade) {
       <div class="assistant-board-card__fields">
         @if (opts().showSizeMade) {
@@ -37,10 +41,6 @@
           </div>
         }
       </div>
-    }
-
-    @if (dateLine()) {
-      <div class="assistant-board-card__date-line">{{ dateLine() }}</div>
     }
 
     @if (projectUrl()) {
