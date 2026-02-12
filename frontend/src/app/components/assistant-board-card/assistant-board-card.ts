@@ -1,7 +1,6 @@
 import { NgStyle } from '@angular/common';
 import { Component, input, computed } from '@angular/core';
 import type { ProjectCard } from '../../services/api';
-import { CANVA_REFERENCE_DESIGN_ID } from '../../services/project-board-designs';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 
 const DEFAULT_CARD_STYLE: Record<string, string> = {
@@ -21,7 +20,7 @@ export class AssistantBoardCard {
   card = input<ProjectCard | null>(null);
   design = input<ProjectBoardDesign | null>(null);
 
-  protected isCanvaStyle = computed(() => this.design()?.id === CANVA_REFERENCE_DESIGN_ID);
+  protected isCanvaStyle = computed(() => this.design()?.canvaLayout === true);
 
   protected cardStyle = computed(() => {
     const d = this.design();

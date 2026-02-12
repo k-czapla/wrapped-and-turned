@@ -11,6 +11,8 @@ export interface ProjectBoardDesign {
   /** CSS custom properties and key styles to apply to the board card */
   style: Record<string, string>;
   promptHint: string;
+  /** When true, card uses Canva PNG background layout (inner backdrop, field styling). */
+  canvaLayout?: boolean;
 }
 
 function slug(name: string): string {
@@ -18,6 +20,33 @@ function slug(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+/** Generates Canva PNG-based design entries for canva-{from} through canva-{to} (e.g. canva-2.png … canva-10.png). */
+function canvaPngDesigns(from: number, to: number): ProjectBoardDesign[] {
+  const designs: ProjectBoardDesign[] = [];
+  for (let i = from; i <= to; i++) {
+    const id = `canva-${i}`;
+    designs.push({
+      id,
+      name: `Canva style ${i}`,
+      vibe: 'Clean layout with your Canva image as background',
+      colors: 'Your Canva reference image as background',
+      layout: 'Same structure (brand, photo, pattern, designer, fields); your design frames the content',
+      style: {
+        fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+        background: 'transparent',
+        backgroundImage: `url(/${id}.png)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: '#1C1917',
+        letterSpacing: '0.02em',
+      },
+      promptHint: `Board style using Canva design ${id}.png as background`,
+      canvaLayout: true,
+    });
+  }
+  return designs;
 }
 
 export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
@@ -69,7 +98,7 @@ export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
   {
     id: 'canva-style',
     name: 'Canva style',
-    vibe: 'Your Canva board as background; clean layout with lavender and lime accents',
+    vibe: 'Clean layout with lavender and lime accents',
     colors: 'Your Canva reference image as background; lavender & lime accents',
     layout: 'Same structure (brand, photo, pattern, designer, fields); your design frames the content',
     style: {
@@ -82,7 +111,9 @@ export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
       letterSpacing: '0.02em',
     },
     promptHint: 'Board style using your Canva reference image as background',
+    canvaLayout: true,
   },
+  ...canvaPngDesigns(2, 10),
 ];
 
 /** Id for the Canva-style board design. */
