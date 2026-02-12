@@ -6,13 +6,9 @@
   <div class="assistant-board-card__inner">
     <div class="assistant-board-card__brand">WRAPPED & TURNED</div>
 
-    @if (opts().showPhoto) {
+    @if (opts().showPhoto && card()?.imageUrl) {
       <div class="assistant-board-card__image-wrap">
-        @if (card()?.imageUrl) {
-          <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
-        } @else {
-          <div class="assistant-board-card__image-placeholder"></div>
-        }
+        <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
       </div>
     }
 
@@ -21,8 +17,8 @@
         @if (opts().showPatternName) {
           <div class="assistant-board-card__title">{{ card()?.patternName ?? card()?.projectName }}</div>
         }
-        @if (opts().showDesignerName) {
-          <div class="assistant-board-card__designer">{{ card()?.designerName ?? ' ' }}</div>
+        @if (opts().showDesignerName && card()?.designerName) {
+          <div class="assistant-board-card__designer">{{ card()!.designerName }}</div>
         }
       </div>
     }

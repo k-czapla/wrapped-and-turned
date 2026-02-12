@@ -456,12 +456,31 @@ app.get('/api/project-card/:id', async (req, res) => {
       ? `https://www.ravelry.com${permalink.startsWith('/') ? '' : '/'}${permalink}`
       : undefined;
 
+  let designerName: string | undefined =
+    proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name;
+  if (designerName == null || designerName === '') {
+    const patternId =
+      proj?.pattern_id ?? proj?.pattern?.id ?? proj?.pattern?.pattern_id;
+    if (typeof patternId === 'number' && Number.isFinite(patternId)) {
+      try {
+        const patternDetail = await api.getJson<any>(
+          `/patterns/${patternId}.json`
+        );
+        const pat = patternDetail?.pattern ?? {};
+        designerName =
+          pat?.designer?.name ?? pat?.designer_name ?? undefined;
+      } catch {
+        // Leave designerName undefined if pattern fetch fails
+      }
+    }
+  }
+
   res.json({
     id: projectId,
     imageUrl,
     projectName: proj?.name ?? `Project #${projectId}`,
     patternName: proj?.pattern_name,
-    designerName: proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name,
+    designerName,
     sizeMade: proj?.size,
     yarnUsed,
     projectUrl,
