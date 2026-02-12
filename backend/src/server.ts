@@ -450,10 +450,17 @@ app.get('/api/project-card/:id', async (req, res) => {
       .join(', ')
     : undefined;
 
+  const username = req.session.ravelry!.username ?? '';
   const permalink = proj?.permalink;
-  const projectUrl =
+  const slug =
     typeof permalink === 'string' && permalink
-      ? `https://www.ravelry.com${permalink.startsWith('/') ? '' : '/'}${permalink}`
+      ? permalink.includes('/')
+        ? permalink.replace(/^.*\//, '')
+        : permalink
+      : undefined;
+  const projectUrl =
+    username && slug
+      ? `https://www.ravelry.com/projects/${encodeURIComponent(username)}/${encodeURIComponent(slug)}`
       : undefined;
 
   let designerName: string | undefined =
