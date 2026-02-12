@@ -15,4 +15,9 @@ export class AssistantBoardOptions {
     const current = this.options();
     this.optionsChange.emit({ ...current, [key]: !current[key] });
   }
+
+  protected setPhotoSource(source: 'project' | 'pattern') {
+    const current = this.options();
+    this.optionsChange.emit({ ...current, photoSource: source });
+  }
 }

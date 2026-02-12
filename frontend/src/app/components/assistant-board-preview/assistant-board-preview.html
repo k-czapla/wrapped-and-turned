@@ -14,12 +14,38 @@
     <div class="mt-4 flex flex-col gap-6">
       @for (card of cards(); track card.id; let i = $index) {
         <div class="flex flex-col items-center gap-3">
+          @if (displayOptions()?.showPhoto && photosForCard(card).length > 0) {
+            <div class="assistant-board-preview__gallery">
+              <span class="assistant-board-preview__gallery-label">
+                {{ displayOptions()?.photoSource === 'pattern' ? 'Pattern' : 'Project' }} photo
+              </span>
+              <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
+                @for (photo of photosForCard(card); track $index) {
+                  <button
+                    type="button"
+                    role="option"
+                    [attr.aria-selected]="selectedIndex(card) === $index"
+                    (click)="selectedPhotoIndexChange.emit({ projectId: card.id, index: $index })"
+                    class="assistant-board-preview__gallery-thumb"
+                    [class.assistant-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
+                  >
+                    <img [src]="photo" alt="" />
+                  </button>
+                }
+              </div>
+            </div>
+          }
           <div
             #board
             class="overflow-hidden border border-slate-200 bg-white shadow-sm"
-style="width: var(--board-width);"
+            style="width: var(--board-width);"
           >
-            <app-assistant-board-card [card]="card" [design]="design()" [displayOptions]="displayOptions()" />
+            <app-assistant-board-card
+              [card]="card"
+              [design]="design()"
+              [displayOptions]="displayOptions()"
+              [selectedPhotoIndex]="selectedIndex(card)"
+            />
           </div>
           <button
             type="button"

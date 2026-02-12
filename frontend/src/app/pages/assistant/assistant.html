@@ -26,6 +26,8 @@
         [cardsLoading]="cardsLoading"
         [design]="selectedDesign()"
         [displayOptions]="displayOptions"
+        [selectedPhotoIndexByProjectId]="selectedPhotoIndexByProjectId"
+        (selectedPhotoIndexChange)="onSelectedPhotoIndexChange($event.projectId, $event.index)"
       />
     </div>
   }

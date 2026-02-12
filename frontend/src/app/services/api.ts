@@ -53,6 +53,10 @@ export type WrappedStats = {
 export type ProjectCard = {
   id: number;
   imageUrl?: string;
+  /** Project photos (medium preferred). Used when photo source is "project". */
+  projectPhotos?: string[];
+  /** Pattern photos (medium preferred). Used when photo source is "pattern". */
+  patternPhotos?: string[];
   projectName: string;
   patternName?: string;
   designerName?: string;
@@ -65,6 +69,8 @@ export type ProjectCard = {
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
 export type BoardDisplayOptions = {
   showPhoto: boolean;
+  /** When showPhoto is true: use project's photos or pattern's photos. */
+  photoSource: 'project' | 'pattern';
   showPatternName: boolean;
   showDesignerName: boolean;
   showYarnUsed: boolean;
@@ -73,6 +79,7 @@ export type BoardDisplayOptions = {
 
 export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
   showPhoto: true,
+  photoSource: 'project',
   showPatternName: true,
   showDesignerName: true,
   showYarnUsed: true,

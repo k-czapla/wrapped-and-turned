@@ -1,1 +1,49 @@
 /* Presentational */
+
+.assistant-board-preview__gallery {
+  width: 100%;
+  max-width: var(--board-width, 320px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.assistant-board-preview__gallery-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--tw-slate-600, #475569);
+}
+
+.assistant-board-preview__gallery-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.assistant-board-preview__gallery-thumb {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.assistant-board-preview__gallery-thumb:hover {
+  border-color: rgb(203 213 225);
+}
+
+.assistant-board-preview__gallery-thumb--selected {
+  border-color: rgb(99 102 241);
+  box-shadow: 0 0 0 1px rgb(99 102 241);
+}
+
+.assistant-board-preview__gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

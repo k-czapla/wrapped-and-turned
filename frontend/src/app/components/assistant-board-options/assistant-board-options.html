@@ -11,6 +11,31 @@
       />
       <span class="text-sm text-slate-700">Photo</span>
     </label>
+    @if (options().showPhoto) {
+      <div class="assistant-board-options__photo-source flex items-center gap-3">
+        <span class="text-xs text-slate-500">Source:</span>
+        <label class="inline-flex cursor-pointer items-center gap-1.5">
+          <input
+            type="radio"
+            name="photoSource"
+            [checked]="options().photoSource === 'project'"
+            (change)="setPhotoSource('project')"
+            class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+          />
+          <span class="text-sm text-slate-700">Project</span>
+        </label>
+        <label class="inline-flex cursor-pointer items-center gap-1.5">
+          <input
+            type="radio"
+            name="photoSource"
+            [checked]="options().photoSource === 'pattern'"
+            (change)="setPhotoSource('pattern')"
+            class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+          />
+          <span class="text-sm text-slate-700">Pattern</span>
+        </label>
+      </div>
+    }
     <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
       <input
         type="checkbox"

@@ -25,6 +25,9 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
+  /** Per-project selected photo index (within project or pattern photos list). */
+  protected selectedPhotoIndexByProjectId: Record<number, number> = {};
+
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
@@ -65,6 +68,7 @@ export class Assistant {
   onSelectionChange(ids: number[]) {
     this.selectedProjectIds = ids;
     this.error = null;
+    this.selectedPhotoIndexByProjectId = {};
 
     if (ids.length === 0) {
       this.cards = [];
@@ -85,6 +89,11 @@ export class Assistant {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  onSelectedPhotoIndexChange(projectId: number, index: number) {
+    this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: index };
+    this.cdr.markForCheck();
   }
 }
 

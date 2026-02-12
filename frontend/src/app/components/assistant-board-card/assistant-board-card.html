@@ -5,9 +5,9 @@
 >
   <div class="assistant-board-card__inner">
 
-    @if (opts().showPhoto && card()?.imageUrl) {
+    @if (opts().showPhoto && displayImageUrl()) {
       <div class="assistant-board-card__image-wrap">
-        <img [src]="card()!.imageUrl" class="assistant-board-card__image" alt="" />
+        <img [src]="displayImageUrl()" class="assistant-board-card__image" alt="" />
       </div>
     }
 

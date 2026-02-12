@@ -425,6 +425,8 @@ app.get('/api/project-card/:id', async (req, res) => {
       sizeMade: 'One size',
       yarnUsed: 'Demo Yarn',
       projectUrl: 'https://www.ravelry.com/projects/demo/example-project',
+      projectPhotos: [],
+      patternPhotos: [],
     });
     return;
   }
@@ -447,14 +449,22 @@ app.get('/api/project-card/:id', async (req, res) => {
     }
   }
 
+  const projectPhotos = (Array.isArray(proj?.photos) ? proj.photos : []).map((ph: any) =>
+    ph?.medium_url ?? ph?.small_url ?? ph?.thumbnail_url
+  ).filter(Boolean);
+
+  const pat =
+    patternDetail?.pattern ??
+    (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : null);
+  const patternPhotos = (pat && Array.isArray(pat?.photos) ? pat.photos : []).map((ph: any) =>
+    ph?.medium_url ?? ph?.small_url ?? ph?.thumbnail_url
+  ).filter(Boolean);
+
   const firstPhoto = proj?.photos?.[0];
   let imageUrl: string | undefined =
     firstPhoto?.medium_url ?? firstPhoto?.small_url ?? firstPhoto?.thumbnail_url;
 
   if (imageUrl == null && patternDetail != null) {
-    const pat =
-      patternDetail?.pattern ??
-      (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : {});
     const patternFirstPhoto = pat?.photos?.[0];
     imageUrl =
       patternFirstPhoto?.medium_url ??
@@ -507,6 +517,8 @@ app.get('/api/project-card/:id', async (req, res) => {
   res.json({
     id: projectId,
     imageUrl,
+    projectPhotos: projectPhotos.length ? projectPhotos : undefined,
+    patternPhotos: patternPhotos.length ? patternPhotos : undefined,
     projectName: proj?.name ?? `Project #${projectId}`,
     patternName,
     designerName,

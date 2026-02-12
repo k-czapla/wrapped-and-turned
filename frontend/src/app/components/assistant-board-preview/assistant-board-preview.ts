@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, input, output, QueryList, ViewChildren } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
 import type { BoardDisplayOptions, ProjectCard } from '../../services/api';
@@ -18,8 +18,27 @@ export class AssistantBoardPreview {
   cardsLoading = input<boolean>(false);
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<BoardDisplayOptions | null>(null);
+  /** Per-project selected photo index (for project/pattern photo gallery). */
+  selectedPhotoIndexByProjectId = input<Record<number, number>>({});
+  selectedPhotoIndexChange = output<{ projectId: number; index: number }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
+
+  /** Photos to show in gallery for the current source (project or pattern). */
+  protected photosForCard(card: ProjectCard): string[] {
+    const opts = this.displayOptions();
+    if (!opts?.showPhoto) return [];
+    const source = opts.photoSource ?? 'project';
+    return source === 'pattern'
+      ? (card.patternPhotos ?? [])
+      : (card.projectPhotos ?? (card.imageUrl ? [card.imageUrl] : []));
+  }
+
+  protected selectedIndex(card: ProjectCard): number {
+    const map = this.selectedPhotoIndexByProjectId();
+    const idx = map[card.id];
+    return typeof idx === 'number' ? idx : 0;
+  }
 
   async downloadBoard(index: number) {
     const el = this.boardEls?.get(index)?.nativeElement;
