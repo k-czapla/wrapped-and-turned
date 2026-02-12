@@ -5,7 +5,7 @@
 - **Status**: Draft
 - **Last updated**: 2026-01-28
 
-**Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus multiple Canva PNG-based designs (canva-reference-board.png and canva-2.png through canva-10.png in `frontend/public`), persistence via localStorage. **Data field selection** (2026-02-12): Board display options on the Podcaster’s Assistant page let users toggle Photo, Pattern name, Designer, Yarn + color, and Size made (all on by default); options apply to preview and PNG export.
+**Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus multiple Canva PNG-based designs (canva-reference-board.png and canva-2.png through canva-9.png in `frontend/public`), persistence via localStorage. **Data field selection** (2026-02-12): Board display options on the Podcaster’s Assistant page let users toggle Photo, Pattern name, Designer, Yarn + color, and Size made (all on by default); options apply to preview and PNG export.
 
 **Evaluated (2026-02-12):** Canva API for board design — see [Canva API board design assessment](../assessments/canva-api-board-design.md). Summary: Connect API cannot replace in-app board rendering (create design is blank; layout/text/colors not programmable). Viable options: optional “Open in Canva” (export PNG then user edits in Canva) or, for Enterprise, Autofill with a Canva-built template. Current in-app design + html-to-image remains recommended.
 

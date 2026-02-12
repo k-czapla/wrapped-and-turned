@@ -9,7 +9,7 @@ import {
 const STORAGE_KEY = 'wrapped-and-turned-board-design';
 const CUSTOMIZATION_STORAGE_KEY = 'wrapped-and-turned-board-design-customization';
 
-/** Id for the user's custom board (first in the list); selecting it opens the customizer. */
+/** Id for the user's custom board (last in the list); selecting it opens the customizer. */
 export const USER_BOARD_DESIGN_ID = 'user';
 
 /** User overrides for the selected board design (font, colors, border). */
@@ -54,7 +54,7 @@ export class BoardDesignService {
 
   readonly userCustomization = this.customization.asReadonly();
 
-  /** User's design card (first in the list): base design + customization. */
+  /** User's design card (last in the list): base design + customization. */
   readonly userDesignCard = computed<ProjectBoardDesign>(() => {
     const base = PROJECT_BOARD_DESIGNS[0];
     const withStyle = this.applyCustomization(base);
@@ -66,11 +66,11 @@ export class BoardDesignService {
     };
   });
 
-  /** All board options: user's design first, then all Canva PNG designs, then other predefined designs. */
+  /** All board options: Canva PNG designs, then other predefined designs, then user's design last. */
   readonly designList = computed<ProjectBoardDesign[]>(() => {
     const canvaDesigns = PROJECT_BOARD_DESIGNS.filter((d) => d.canvaLayout === true);
     const rest = PROJECT_BOARD_DESIGNS.filter((d) => d.canvaLayout !== true);
-    return [this.userDesignCard(), ...canvaDesigns, ...rest];
+    return [...canvaDesigns, ...rest, this.userDesignCard()];
   });
 
   /** Selected design; user customization applied only when "My design" is selected. */

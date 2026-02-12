@@ -22,7 +22,7 @@ function slug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-/** Generates Canva PNG-based design entries for canva-{from} through canva-{to} (e.g. canva-2.png … canva-10.png). */
+/** Generates Canva PNG-based design entries for canva-{from} through canva-{to} (e.g. canva-2.png … canva-9.png). */
 function canvaPngDesigns(from: number, to: number): ProjectBoardDesign[] {
   const designs: ProjectBoardDesign[] = [];
   for (let i = from; i <= to; i++) {
@@ -113,7 +113,7 @@ export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
     promptHint: 'Board style using your Canva reference image as background',
     canvaLayout: true,
   },
-  ...canvaPngDesigns(2, 10),
+  ...canvaPngDesigns(2, 9),
 ];
 
 /** Id for the Canva-style board design. */
