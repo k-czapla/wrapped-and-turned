@@ -85,17 +85,3 @@
 .assistant-board-card__link:hover {
   opacity: 0.9;
 }
-
-/* Canva style: reference image as background; light inner backdrop so content stays readable */
-.assistant-board-card--canva-style .assistant-board-card__inner {
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 0.5rem;
-  margin: 0.5rem;
-  padding: 1rem;
-  min-height: calc(100% - 1rem);
-  box-sizing: border-box;
-}
-
-.assistant-board-card--canva-style .assistant-board-card__field {
-  background: rgba(224, 187, 228, 0.25);
-}

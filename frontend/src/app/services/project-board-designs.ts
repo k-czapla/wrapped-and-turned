@@ -22,15 +22,32 @@ function slug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
+/** Name and vibe for each Canva PNG design (canva-2 … canva-10); name is derived from the vibe. */
+const CANVA_DESIGN_META: Record<
+  number,
+  { name: string; vibe: string }
+> = {
+  2: { name: 'Soft Minimal', vibe: 'Soft and minimal — plenty of white space, gentle typography' },
+  3: { name: 'Warm & Crafty', vibe: 'Warm and crafty — cozy textures, earth tones' },
+  4: { name: 'Bold Graphic', vibe: 'Bold and graphic — strong shapes, high contrast' },
+  5: { name: 'Elegant Editorial', vibe: 'Elegant and editorial — refined layout, subtle accents' },
+  6: { name: 'Playful & Colorful', vibe: 'Playful and colorful — bright palette, friendly feel' },
+  7: { name: 'Natural Organic', vibe: 'Natural and organic — botanical touches, muted greens' },
+  8: { name: 'Modern Sleek', vibe: 'Modern and sleek — clean lines, cool neutrals' },
+  9: { name: 'Vintage Nostalgic', vibe: 'Vintage and nostalgic — retro type, muted palette' },
+  10: { name: 'Structured Professional', vibe: 'Structured and professional — grid-led, business-like' },
+};
+
 /** Generates Canva PNG-based design entries for canva-{from} through canva-{to} (e.g. canva-2.png … canva-10.png). */
 function canvaPngDesigns(from: number, to: number): ProjectBoardDesign[] {
   const designs: ProjectBoardDesign[] = [];
   for (let i = from; i <= to; i++) {
     const id = `canva-${i}`;
+    const meta = CANVA_DESIGN_META[i];
     designs.push({
       id,
-      name: `Canva style ${i}`,
-      vibe: 'Clean layout with your Canva image as background',
+      name: meta?.name ?? `Canva ${i}`,
+      vibe: meta?.vibe ?? 'Your Canva image as background',
       colors: 'Your Canva reference image as background',
       layout: 'Same structure (brand, photo, pattern, designer, fields); your design frames the content',
       style: {
@@ -97,7 +114,7 @@ export const PROJECT_BOARD_DESIGNS: ProjectBoardDesign[] = [
   },
   {
     id: 'canva-style',
-    name: 'Canva style',
+    name: 'Lavender & Lime',
     vibe: 'Clean layout with lavender and lime accents',
     colors: 'Your Canva reference image as background; lavender & lime accents',
     layout: 'Same structure (brand, photo, pattern, designer, fields); your design frames the content',
