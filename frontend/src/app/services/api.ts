@@ -58,6 +58,8 @@ export type ProjectCard = {
   designerName?: string;
   sizeMade?: string;
   yarnUsed?: string;
+  /** Ravelry project page URL for QR code / link */
+  projectUrl?: string;
 };
 
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */

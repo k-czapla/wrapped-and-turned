@@ -74,15 +74,20 @@
 .assistant-board-card__footer {
   margin-top: 1.25rem;
   font-size: 0.75rem;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
-.assistant-board-card__link {
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.assistant-board-card__qr-wrap {
+  display: inline-block;
+  line-height: 0;
 }
 
-.assistant-board-card__link:hover {
+.assistant-board-card__qr-wrap:hover {
   opacity: 0.9;
+}
+
+.assistant-board-card__qr-wrap qrcode ::ng-deep canvas,
+.assistant-board-card__qr-wrap qrcode ::ng-deep img {
+  display: block;
+  border-radius: 4px;
 }

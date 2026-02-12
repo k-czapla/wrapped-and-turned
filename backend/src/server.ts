@@ -427,6 +427,7 @@ app.get('/api/project-card/:id', async (req, res) => {
       designerName: 'Demo Designer',
       sizeMade: 'One size',
       yarnUsed: 'Demo Yarn',
+      projectUrl: 'https://www.ravelry.com/projects/demo/example-project',
     });
     return;
   }
@@ -449,6 +450,12 @@ app.get('/api/project-card/:id', async (req, res) => {
       .join(', ')
     : undefined;
 
+  const permalink = proj?.permalink;
+  const projectUrl =
+    typeof permalink === 'string' && permalink
+      ? `https://www.ravelry.com${permalink.startsWith('/') ? '' : '/'}${permalink}`
+      : undefined;
+
   res.json({
     id: projectId,
     imageUrl,
@@ -457,6 +464,7 @@ app.get('/api/project-card/:id', async (req, res) => {
     designerName: proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name,
     sizeMade: proj?.size,
     yarnUsed,
+    projectUrl,
   });
 });
 
