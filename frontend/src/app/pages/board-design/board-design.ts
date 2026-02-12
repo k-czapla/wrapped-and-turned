@@ -6,15 +6,15 @@ import { BoardDesignCard } from '../../components/board-design-card/board-design
 import { BoardDesignCustomizer } from '../../components/board-design-customizer/board-design-customizer';
 import { Modal } from '../../components/modal/modal';
 
+/** Path to optional Canva reference PNG (Option B PoC). Place file in frontend/public/. */
+const CANVA_REFERENCE_IMAGE_PATH = '/canva-reference-board.png';
+
 @Component({
   selector: 'app-board-design',
   imports: [RouterLink, BoardDesignCard, BoardDesignCustomizer, Modal],
   templateUrl: './board-design.html',
   styleUrl: './board-design.css',
 })
-/** Path to optional Canva reference PNG (Option B PoC). Place file in frontend/public/. */
-export const CANVA_REFERENCE_IMAGE_PATH = '/canva-reference-board.png';
-
 export class BoardDesign {
   protected boardDesign = inject(BoardDesignService);
   protected designList = this.boardDesign.designList;
