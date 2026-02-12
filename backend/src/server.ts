@@ -474,7 +474,12 @@ app.get('/api/project-card/:id', async (req, res) => {
 
   const yarnUsed = Array.isArray(proj?.packs)
     ? proj.packs
-      .map((p: any) => p?.yarn_name ?? p?.yarn?.name)
+      .map((p: any) => {
+        const name = p?.yarn_name ?? p?.yarn?.name;
+        const colorway = p?.colorway ?? p?.colorway_name ?? p?.yarn?.colorway;
+        const parts = [name, colorway].filter(Boolean);
+        return parts.length ? parts.join(' ') : null;
+      })
       .filter(Boolean)
       .join(', ')
     : undefined;

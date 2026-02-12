@@ -125,12 +125,13 @@ Returns a minimal set of data needed to render the Assistant board for one proje
   "patternName": "Pattern",
   "designerName": "Designer",
   "sizeMade": "M",
-  "yarnUsed": "Brand A Yarn, Brand B Yarn",
+  "yarnUsed": "Brand A Yarn Colorway1, Brand B Yarn Colorway2",
   "projectUrl": "https://www.ravelry.com/projects/username/project-slug"
 }
 ```
 
 - `projectUrl` (optional): Ravelry project page URL, used for the board card footer QR code. Omitted if the Ravelry project detail does not include a permalink.
+- `yarnUsed` (optional): For each project pack, yarn name and colorway are combined (e.g. "YarnName Colorway"); multiple packs are comma-separated.
 
 ## Data sourcing notes
 
