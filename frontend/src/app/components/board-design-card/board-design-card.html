@@ -4,14 +4,10 @@
   class="board-design-card"
   [class.board-design-card--selected]="selected()"
   [attr.aria-pressed]="selected()"
-  [attr.aria-label]="'Select ' + design().name + ' board design'"
+  aria-label="Select board design"
 >
   <div class="board-design-card__preview">
     <app-assistant-board-card [card]="sampleCard" [design]="design()" />
-  </div>
-  <div class="board-design-card__meta">
-    <span class="board-design-card__name">{{ design().name }}</span>
-    <span class="board-design-card__vibe">{{ design().vibe }}</span>
   </div>
   @if (selected()) {
     <span class="board-design-card__check" aria-hidden="true">Selected</span>
