@@ -439,6 +439,17 @@ app.get('/api/project-card/:id', async (req, res) => {
   );
   const proj = detail?.project ?? {};
 
+  const patternIdFromProject =
+    proj?.pattern_id ?? proj?.pattern?.id ?? proj?.pattern?.pattern_id;
+  let patternDetail: any = null;
+  if (typeof patternIdFromProject === 'number' && Number.isFinite(patternIdFromProject)) {
+    try {
+      patternDetail = await api.getJson<any>(`/patterns/${patternIdFromProject}.json`);
+    } catch {
+      // Leave patternDetail null if pattern fetch fails
+    }
+  }
+
   const firstPhoto = proj?.photos?.[0];
   const imageUrl: string | undefined =
     firstPhoto?.medium_url ?? firstPhoto?.small_url ?? firstPhoto?.thumbnail_url;
@@ -467,33 +478,24 @@ app.get('/api/project-card/:id', async (req, res) => {
     proj?.pattern?.designer?.name ?? proj?.pattern?.designer_name;
   let patternName: string | undefined =
     proj?.pattern_name ?? proj?.pattern?.name;
-  const patternId =
-    proj?.pattern_id ?? proj?.pattern?.id ?? proj?.pattern?.pattern_id;
 
-  if (
-    typeof patternId === 'number' &&
-    Number.isFinite(patternId) &&
-    (designerName == null ||
-      designerName === '' ||
-      patternName == null ||
-      patternName === '')
-  ) {
-    try {
-      const patternDetail = await api.getJson<any>(
-        `/patterns/${patternId}.json`
-      );
-      const pat = patternDetail?.pattern ?? {};
-      if (designerName == null || designerName === '') {
-        designerName =
-          pat?.designer?.name ?? pat?.designer_name ?? undefined;
-      }
-      if (patternName == null || patternName === '') {
-        patternName = pat?.name ?? undefined;
-      }
-    } catch {
-      // Leave designerName/patternName as-is if pattern fetch fails
+  if (patternDetail != null) {
+    const pat =
+      patternDetail?.pattern ??
+      (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : {});
+    if (designerName == null || designerName === '') {
+      designerName =
+        pat?.designer?.name ?? pat?.designer_name ?? undefined;
+    }
+    if (patternName == null || patternName === '') {
+      patternName = pat?.name ?? undefined;
     }
   }
+
+  const debugLog = {
+    ravelryProjectResponse: detail,
+    ravelryPatternResponse: patternDetail,
+  };
 
   res.json({
     id: projectId,
@@ -504,8 +506,7 @@ app.get('/api/project-card/:id', async (req, res) => {
     sizeMade: proj?.size,
     yarnUsed,
     projectUrl,
-    /** Full Ravelry API response – visible in DevTools → Network → project-card → Response */
-    _debugRavelryResponse: detail,
+    debugLog,
   });
 });
 
