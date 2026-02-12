@@ -3,6 +3,7 @@ import {
   PROJECT_BOARD_DESIGNS,
   DEFAULT_BOARD_DESIGN_ID,
   getProjectBoardDesignById,
+  CANVA_REFERENCE_DESIGN_ID,
   type ProjectBoardDesign,
 } from './project-board-designs';
 
@@ -66,11 +67,12 @@ export class BoardDesignService {
     };
   });
 
-  /** All board options: user's design first, then predefined designs. */
-  readonly designList = computed<ProjectBoardDesign[]>(() => [
-    this.userDesignCard(),
-    ...PROJECT_BOARD_DESIGNS,
-  ]);
+  /** All board options: user's design first, then Canva style (PoC), then other predefined designs. */
+  readonly designList = computed<ProjectBoardDesign[]>(() => {
+    const canvaStyle = getProjectBoardDesignById(CANVA_REFERENCE_DESIGN_ID);
+    const rest = PROJECT_BOARD_DESIGNS.filter((d) => d.id !== CANVA_REFERENCE_DESIGN_ID);
+    return [this.userDesignCard(), ...(canvaStyle ? [canvaStyle] : []), ...rest];
+  });
 
   /** Selected design; user customization applied only when "My design" is selected. */
   readonly effectiveDesign = computed<ProjectBoardDesign>(() => {

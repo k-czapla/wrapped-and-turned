@@ -1,4 +1,8 @@
-<div class="assistant-board-card" [ngStyle]="cardStyle()">
+<div
+  class="assistant-board-card"
+  [class.assistant-board-card--canva-style]="isCanvaStyle()"
+  [ngStyle]="cardStyle()"
+>
   <div class="assistant-board-card__inner">
     <div class="assistant-board-card__brand">WRAPPED & TURNED</div>
 
