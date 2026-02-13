@@ -27,6 +27,29 @@
                 <label [for]="'photo-upload-' + card.id" class="assistant-board-preview__upload-label">
                   Upload photo from computer
                 </label>
+                <div class="assistant-board-preview__photo-source flex items-center gap-3 mt-2">
+                  <span class="text-xs text-slate-500">Source:</span>
+                  <label class="inline-flex cursor-pointer items-center gap-1.5">
+                    <input
+                      type="radio"
+                  [name]="'photoSource-' + card.id"
+                  [checked]="photoSourceForCard(card) === 'project'"
+                  (change)="photoSourceChange.emit({ projectId: card.id, source: 'project' })"
+                      class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span class="text-sm text-slate-700">Project</span>
+                  </label>
+                  <label class="inline-flex cursor-pointer items-center gap-1.5">
+                    <input
+                      type="radio"
+                  [name]="'photoSource-' + card.id"
+                  [checked]="photoSourceForCard(card) === 'pattern'"
+                  (change)="photoSourceChange.emit({ projectId: card.id, source: 'pattern' })"
+                      class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span class="text-sm text-slate-700">Pattern</span>
+                  </label>
+                </div>
               </div>
               @if (photosForCard(card).length > 0) {
                 <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
@@ -54,7 +77,7 @@
             <app-assistant-board-card
               [card]="card"
               [design]="design()"
-              [displayOptions]="displayOptions()"
+              [displayOptions]="displayOptionsForCard(card)"
               [selectedPhotoIndex]="selectedIndex(card)"
             />
           </div>

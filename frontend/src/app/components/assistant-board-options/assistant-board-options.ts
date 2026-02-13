@@ -25,9 +25,4 @@ export class AssistantBoardOptions {
       showCompletedDate: !showBoth,
     });
   }
-
-  protected setPhotoSource(source: 'project' | 'pattern') {
-    const current = this.options();
-    this.optionsChange.emit({ ...current, photoSource: source });
-  }
 }

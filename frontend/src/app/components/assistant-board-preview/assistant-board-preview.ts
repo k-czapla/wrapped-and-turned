@@ -18,19 +18,37 @@ export class AssistantBoardPreview {
   cardsLoading = input<boolean>(false);
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<BoardDisplayOptions | null>(null);
+  /** Photo source (project vs pattern) per project board. */
+  photoSourceByProjectId = input<Record<number, 'project' | 'pattern'>>({});
   /** Per-project selected photo index (for project/pattern photo gallery). */
   selectedPhotoIndexByProjectId = input<Record<number, number>>({});
+  photoSourceChange = output<{ projectId: number; source: 'project' | 'pattern' }>();
   selectedPhotoIndexChange = output<{ projectId: number; index: number }>();
   /** Emitted when the user uploads a photo from their computer for a project board. */
   photoUpload = output<{ projectId: number; dataUrl: string }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 
+  /** Photo source for a given card (per-board). */
+  protected photoSourceForCard(card: ProjectCard): 'project' | 'pattern' {
+    const byId = this.photoSourceByProjectId();
+    const source = byId[card.id];
+    if (source) return source;
+    return this.displayOptions()?.photoSource ?? 'project';
+  }
+
+  /** Display options for a given card (global options with per-board photo source). */
+  protected displayOptionsForCard(card: ProjectCard): BoardDisplayOptions | null {
+    const opts = this.displayOptions();
+    if (!opts) return null;
+    return { ...opts, photoSource: this.photoSourceForCard(card) };
+  }
+
   /** Photos to show in gallery for the current source (project or pattern). */
   protected photosForCard(card: ProjectCard): string[] {
     const opts = this.displayOptions();
     if (!opts?.showPhoto) return [];
-    const source = opts.photoSource ?? 'project';
+    const source = this.photoSourceForCard(card);
     return source === 'pattern'
       ? (card.patternPhotos ?? [])
       : (card.projectPhotos ?? (card.imageUrl ? [card.imageUrl] : []));

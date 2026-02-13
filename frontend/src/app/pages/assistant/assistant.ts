@@ -31,6 +31,9 @@ export class Assistant {
   /** User-uploaded photo data URLs per project id (prepended to project photos in preview). */
   protected uploadedPhotosByProjectId: Record<number, string[]> = {};
 
+  /** Photo source (project vs pattern) per project board. */
+  protected photoSourceByProjectId: Record<number, 'project' | 'pattern'> = {};
+
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
@@ -72,6 +75,7 @@ export class Assistant {
     this.selectedProjectIds = ids;
     this.error = null;
     this.selectedPhotoIndexByProjectId = {};
+    this.photoSourceByProjectId = {};
 
     if (ids.length === 0) {
       this.cards = [];
@@ -110,6 +114,11 @@ export class Assistant {
         : undefined;
       return { ...card, projectPhotos, ...(patternPhotos && { patternPhotos }) };
     });
+  }
+
+  onPhotoSourceChange(projectId: number, source: 'project' | 'pattern') {
+    this.photoSourceByProjectId = { ...this.photoSourceByProjectId, [projectId]: source };
+    this.cdr.markForCheck();
   }
 
   onPhotoUpload(projectId: number, dataUrl: string) {
