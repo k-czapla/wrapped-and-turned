@@ -46,6 +46,21 @@ const env = getEnv();
 const ravelryEnabled =
   !env.MOCK_RAVELRY && !!env.RAVELRY_CLIENT_ID && !!env.RAVELRY_CLIENT_SECRET;
 
+/** Prefer medium2_url when non-empty, else medium_url, small_url, thumbnail_url. */
+function ravelryPhotoUrl(ph: {
+  medium2_url?: string;
+  medium_url?: string;
+  small_url?: string;
+  thumbnail_url?: string;
+} | null | undefined): string | undefined {
+  if (!ph) return undefined;
+  const url =
+    ph.medium2_url?.trim()
+      ? ph.medium2_url
+      : ph.medium_url ?? ph.small_url ?? ph.thumbnail_url;
+  return url ?? undefined;
+}
+
 const app = express();
 app.use(express.json());
 
@@ -354,8 +369,7 @@ app.get('/api/wrapped', async (req, res) => {
     const proj = detail?.project ?? {};
 
     const firstPhoto = proj?.photos?.[0];
-    const imageUrl: string | undefined =
-      firstPhoto?.medium_url ?? firstPhoto?.small_url ?? firstPhoto?.thumbnail_url;
+    const imageUrl: string | undefined = ravelryPhotoUrl(firstPhoto);
 
     const yardage: number | undefined = typeof proj?.yardage === 'number' ? proj.yardage : undefined;
     const meterage: number | undefined = typeof proj?.meterage === 'number' ? proj.meterage : undefined;
@@ -456,26 +470,22 @@ app.get('/api/project-card/:id', async (req, res) => {
   }
 
   const projectPhotos = (Array.isArray(proj?.photos) ? proj.photos : []).map((ph: any) =>
-    ph?.medium_url ?? ph?.small_url ?? ph?.thumbnail_url
+    ravelryPhotoUrl(ph)
   ).filter(Boolean);
 
   const pat =
     patternDetail?.pattern ??
     (Array.isArray(patternDetail?.patterns) ? patternDetail.patterns[0] : null);
   const patternPhotos = (pat && Array.isArray(pat?.photos) ? pat.photos : []).map((ph: any) =>
-    ph?.medium_url ?? ph?.small_url ?? ph?.thumbnail_url
+    ravelryPhotoUrl(ph)
   ).filter(Boolean);
 
   const firstPhoto = proj?.photos?.[0];
-  let imageUrl: string | undefined =
-    firstPhoto?.medium_url ?? firstPhoto?.small_url ?? firstPhoto?.thumbnail_url;
+  let imageUrl: string | undefined = ravelryPhotoUrl(firstPhoto);
 
   if (imageUrl == null && patternDetail != null) {
     const patternFirstPhoto = pat?.photos?.[0];
-    imageUrl =
-      patternFirstPhoto?.medium_url ??
-      patternFirstPhoto?.small_url ??
-      patternFirstPhoto?.thumbnail_url;
+    imageUrl = ravelryPhotoUrl(patternFirstPhoto);
   }
 
   const yarnUsed = Array.isArray(proj?.packs)
