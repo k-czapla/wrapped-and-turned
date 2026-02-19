@@ -19,7 +19,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 ### Inputs
 
 - Date range (**From**, **To**) to load candidate projects
-- **Selectable project list**: user is presented with a checkmark list of projects in range; they select one or more projects to generate a visualisation for
+- **Selectable project list**: user is presented with a checkmark list of **all projects in the date range** (projects that were started or completed within the range). They select one or more projects to generate a visualisation for. The **finished object (FO) count** (projects completed in the range) is used only in the Generate Description section for title/description wording (e.g. “3 FOs in this period”), not for filtering the list.
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). The last option is “My design” (user’s customized version); the rest are predefined styles. Selected design is persisted in localStorage and applied to all generated boards.
 - **Board design customization** (optional): on the Board Design page, “My design” is the last option; selecting it opens the customizer (font, optional board background image upload, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
 - **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
@@ -30,7 +30,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 When the user has selected **one or more projects** (same selection as for the board), a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**.
 
-**UI:** The description section shows the **count of finished objects** in the loaded date range (from Wrapped stats) and uses “finished objects” wording (e.g. “3 finished objects selected (of 12 in this period)”). Only projects with a **completed date** within the range count as finished objects; projects with only a started date are excluded. The section title is catchy and uses light emoji (e.g. “✨ Show notes & YouTube description”).
+**UI:** The description section shows the **count of finished objects (FOs)** in the loaded date range (from Wrapped stats) for **title/description wording only** (e.g. “3 finished objects in this period (for title/description wording)” and “(of 3 FOs in this period)”). Only projects with a **completed date** within the range count as FOs. The project list above shows all projects in range (started or completed), not only FOs. The section title uses light emoji (e.g. “✨ Show notes & YouTube description”).
 
 **Output structure (order matters for YouTube):**
 
@@ -108,7 +108,7 @@ The **Generate Description** feature requires an LLM/text-generation capability.
 ### Functional requirements
 
 - **R6 — Uses authenticated data**: feature requires Ravelry login (or mock mode in development).
-- **R7 — Project list reuse**: use the same underlying “projects in range” query as Wrapped to populate a selectable (checkmark) list of projects.
+- **R7 — Project list in range**: the assistant shows **all projects** in the selected date range (started or completed within the range) in a selectable (checkmark) list. The FO (finished object) count—projects completed in the range—is used only for the Generate Description section (title/description wording), not for filtering the list.
 - **R8 — Per-project detail fetch**: when one or more projects are selected, backend fetches the details needed for each board:
   - Project photos and pattern photos (medium URLs) for photo selection
   - Pattern + designer

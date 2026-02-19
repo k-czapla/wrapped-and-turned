@@ -361,8 +361,9 @@ app.get('/api/wrapped', async (req, res) => {
   );
 
   const base = computeBaseStats({ from, to, items: list.projects ?? [] });
+  const finishedIds = new Set(base.finishedInRange.map((p) => p.id));
 
-  const detailed = await mapWithConcurrency(base.inRange, 6, async (p) => {
+  const detailed = await mapWithConcurrency(base.projectsInRange, 6, async (p) => {
     const detail = await api.getJson<any>(
       `/projects/${encodeURIComponent(req.session.ravelry!.username ?? '')}/${p.id}.json`
     );
@@ -396,10 +397,11 @@ app.get('/api/wrapped', async (req, res) => {
     };
   });
 
-  const totalYardage = detailed.reduce((sum, p) => sum + (p.yardage ?? 0), 0);
-  const totalMeterage = detailed.reduce((sum, p) => sum + (p.meterage ?? 0), 0);
+  const finishedDetailed = detailed.filter((p) => finishedIds.has(p.id));
+  const totalYardage = finishedDetailed.reduce((sum, p) => sum + (p.yardage ?? 0), 0);
+  const totalMeterage = finishedDetailed.reduce((sum, p) => sum + (p.meterage ?? 0), 0);
 
-  const durations = detailed
+  const durations = finishedDetailed
     .map((p) => p._durationDays)
     .filter((v): v is number => typeof v === 'number');
   const avgDurationDays = durations.length
@@ -409,8 +411,8 @@ app.get('/api/wrapped', async (req, res) => {
   res.json({
     range: { from, to },
     totals: {
-      projects: base.inRange.length,
-      finishedProjects: base.inRange.filter((p) => !!p.completed).length,
+      projects: base.projectsInRange.length,
+      finishedProjects: base.finishedInRange.length,
       totalYardage,
       totalMeterage,
     },

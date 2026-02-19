@@ -6,6 +6,7 @@
   @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined) {
     <p class="mt-1 text-sm font-medium text-slate-600">
       📊 {{ totalFinishedInRange() }} finished object{{ totalFinishedInRange() === 1 ? '' : 's' }} in this period
+      <span class="font-normal text-slate-500">(for title/description wording)</span>
     </p>
   }
 
@@ -41,7 +42,7 @@
         <span class="text-sm text-slate-500">{{ cards().length }} finished objects selected</span>
       }
       @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined && cards().length > 0) {
-        <span class="text-sm text-slate-400">(of {{ totalFinishedInRange() }} in this period)</span>
+        <span class="text-sm text-slate-400">(of {{ totalFinishedInRange() }} FOs in this period)</span>
       }
     </div>
   } @else {

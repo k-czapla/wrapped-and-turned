@@ -58,16 +58,26 @@ export function computeBaseStats(args: {
   const fromD = new Date(args.from);
   const toD = new Date(args.to);
 
-  // Only projects with a completed date in range count as finished objects (FOs)
-  const inRange = args.items.filter((p) => {
+  // Finished objects (FOs): only projects with completed date in range. Used for FO count, yardage, highlights.
+  const finishedInRange = args.items.filter((p) => {
     const completed = safeDate(p.completed);
     return completed ? withinRange(completed, fromD, toD) : false;
+  });
+
+  // All projects in range: started in range OR completed in range. Used for the assistant project list.
+  const projectsInRange = args.items.filter((p) => {
+    const started = safeDate(p.started);
+    const completed = safeDate(p.completed);
+    return (
+      (started && withinRange(started, fromD, toD)) ||
+      (completed && withinRange(completed, fromD, toD))
+    );
   });
 
   const craft: Record<string, number> = {};
   const byMonth: Record<string, number> = {};
 
-  for (const p of inRange) {
+  for (const p of finishedInRange) {
     inc(craft, p.craft_name ?? 'Unknown');
     const d = safeDate(p.completed);
     if (d) inc(byMonth, monthKey(d));
@@ -76,7 +86,10 @@ export function computeBaseStats(args: {
   const mostProductiveMonth = Object.entries(byMonth).sort((a, b) => b[1] - a[1])[0]?.[0];
 
   return {
-    inRange,
+    /** Projects completed in range (FOs). For totals.finishedProjects, yardage, highlights. */
+    finishedInRange,
+    /** All projects with started or completed in range. For assistant project list. */
+    projectsInRange,
     craft,
     mostProductiveMonth,
   };

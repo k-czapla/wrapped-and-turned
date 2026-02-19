@@ -134,15 +134,18 @@ describe('stats', () => {
       },
     ];
 
-    it('should filter projects within date range', () => {
+    it('should filter finished projects (FOs) and all projects in range', () => {
       const result = computeBaseStats({
         from: '2025-01-01',
         to: '2025-12-31',
         items: mockProjects,
       });
 
-      expect(result.inRange).toHaveLength(3);
-      expect(result.inRange.map((p) => p.id)).toEqual([1, 2, 3]);
+      expect(result.finishedInRange).toHaveLength(3);
+      expect(result.finishedInRange.map((p) => p.id)).toEqual([1, 2, 3]);
+      // projectsInRange = started OR completed in range: 1,2,3 (completed), 5 (started 2025-12-01)
+      expect(result.projectsInRange).toHaveLength(4);
+      expect(result.projectsInRange.map((p) => p.id)).toEqual([1, 2, 3, 5]);
     });
 
     it('should count crafts correctly', () => {
@@ -187,7 +190,7 @@ describe('stats', () => {
       expect(result.mostProductiveMonth).toBe('2025-03');
     });
 
-    it('should exclude projects without completed date (only started does not count as FO)', () => {
+    it('should exclude projects without completed date from FOs (only started does not count as FO)', () => {
       const projects: RavelryProjectListItem[] = [
         {
           id: 1,
@@ -203,7 +206,8 @@ describe('stats', () => {
         items: projects,
       });
 
-      expect(result.inRange).toHaveLength(0);
+      expect(result.finishedInRange).toHaveLength(0);
+      expect(result.projectsInRange).toHaveLength(1);
       expect(result.craft.Knitting ?? 0).toBe(0);
     });
 
@@ -214,7 +218,8 @@ describe('stats', () => {
         items: [],
       });
 
-      expect(result.inRange).toHaveLength(0);
+      expect(result.finishedInRange).toHaveLength(0);
+      expect(result.projectsInRange).toHaveLength(0);
       expect(result.craft).toEqual({});
       expect(result.mostProductiveMonth).toBeUndefined();
     });
