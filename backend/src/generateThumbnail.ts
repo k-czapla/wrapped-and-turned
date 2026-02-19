@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import axios from 'axios';
 
 export type ThumbnailMood = 'cozy' | 'bold' | 'minimal';
 
@@ -8,7 +8,7 @@ const MOOD_PROMPT_MAP: Record<ThumbnailMood, string> = {
   minimal: 'Minimal and clean: simple layout, plenty of white space, elegant typography. Professional and modern.',
 };
 
-/** Build the image prompt for DALL-E 3 from project context, mood, and optional user prompt. */
+/** Build the image prompt from project context, mood, and optional user prompt. */
 export function buildThumbnailPrompt(
   projectNames: string[],
   mood: ThumbnailMood,
@@ -23,38 +23,35 @@ export function buildThumbnailPrompt(
   return `A fun, click-worthy YouTube thumbnail image for a knitting or fiber-arts podcast episode. ${moodDesc} ${projectList}${userPart} Style: suitable for YouTube thumbnail, 16:9 aspect ratio, no text in the image, high quality, appealing to craft and yarn enthusiasts.`;
 }
 
+const POLLINATIONS_IMAGE_BASE = 'https://image.pollinations.ai/prompt';
+
 /**
- * Generate a single thumbnail image using OpenAI DALL-E 3.
- * Returns base64 PNG data or null if API key missing or request fails.
+ * Generate a thumbnail image using Pollinations AI (free, no API key).
+ * Returns image buffer and content-type or null on failure.
  */
-export async function generateThumbnailWithOpenAI(
-  apiKey: string,
+export async function generateThumbnail(
   projectNames: string[],
   mood: ThumbnailMood,
   userPrompt?: string
 ): Promise<{ imageBase64: string; contentType: string } | null> {
-  const openai = new OpenAI({ apiKey });
   const prompt = buildThumbnailPrompt(projectNames, mood, userPrompt);
+  // Keep URL under common limits; Pollinations accepts the prompt in the path
+  const encoded = encodeURIComponent(prompt.slice(0, 2000));
+  const width = 1792;
+  const height = 1024;
+  const url = `${POLLINATIONS_IMAGE_BASE}/${encoded}?width=${width}&height=${height}&nologo=true`;
 
   try {
-    const response = await openai.images.generate({
-      model: 'dall-e-3',
-      prompt,
-      n: 1,
-      size: '1792x1024', // YouTube-thumbnail-friendly landscape
-      quality: 'standard',
-      style: 'vivid',
-      response_format: 'b64_json',
+    const response = await axios.get(url, {
+      responseType: 'arraybuffer',
+      timeout: 120_000,
+      maxContentLength: 10 * 1024 * 1024,
     });
-
-    const first = response.data?.[0];
-    const b64 = first?.b64_json;
-    if (!b64 || typeof b64 !== 'string') return null;
-
-    return {
-      imageBase64: b64,
-      contentType: 'image/png',
-    };
+    const data = response.data as ArrayBuffer;
+    if (!data || data.byteLength === 0) return null;
+    const contentType = (response.headers['content-type'] as string) || 'image/png';
+    const base64 = Buffer.from(data).toString('base64');
+    return { imageBase64: base64, contentType };
   } catch {
     return null;
   }
