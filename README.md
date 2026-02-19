@@ -36,7 +36,8 @@ cp backend/.env.example backend/.env
 
 - `RAVELRY_CLIENT_ID`
 - `RAVELRY_CLIENT_SECRET`
-- (Optional) `GROQ_API_KEY` for AI-generated show notes in Podcaster’s Assistant ([Groq console](https://console.groq.com))
+- (Optional) `GROQ_API_KEY` for AI-generated show notes in Podcaster's Assistant ([Groq console](https://console.groq.com))
+- (Optional) `OPENAI_API_KEY` for AI-generated YouTube thumbnail in Podcaster’s Assistant ([Groq console](https://console.groq.com))
 
 ### Run locally
 
@@ -55,7 +56,7 @@ npm run dev
 - **Wrapped**: pick a date range → generate stats + charts
   - Current stats: total projects, finished projects, total yardage/meterage, craft breakdown, average duration, most productive month
   - Easy additions: top designers, yarn weights, yarn brands, biggest project
-- **Podcaster’s Assistant**: load projects → pick one or more → download a vertical board as PNG; **Generate Description** for a YouTube/show-notes title, description, Ravelry links, and hashtags (optional Groq API key for AI; fallback if unset)
+- **Podcaster’s Assistant**: load projects → pick one or more → download a vertical board as PNG; **Generate Description** for a YouTube/show-notes title, description, Ravelry links, and hashtags (optional Groq API key for AI; fallback if unset); **Generate thumbnail** for a fun YouTube thumbnail from selected projects, mood, and up to 3 photos (optional OpenAI API key)
 
 ### Notes / next upgrades
 

@@ -17,6 +17,9 @@ const envSchema = z.object({
 
   // Groq API key for Generate Description (Podcaster's Assistant). If unset, fallback description only.
   GROQ_API_KEY: z.string().min(1).optional(),
+
+  // OpenAI API key for AI-generated YouTube thumbnail (Podcaster's Assistant). If unset, thumbnail generation returns an error.
+  OPENAI_API_KEY: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
