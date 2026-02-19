@@ -26,18 +26,18 @@
       <div class="assistant-board-card__date-line">{{ dateLine() }}</div>
     }
 
-    @if (opts().showYarnUsed || opts().showSizeMade) {
+    @if ((opts().showSizeMade && card()?.sizeMade?.trim()) || (opts().showYarnUsed && card()?.yarnUsed?.trim())) {
       <div class="assistant-board-card__fields">
-        @if (opts().showSizeMade) {
+        @if (opts().showSizeMade && (card()?.sizeMade?.trim())) {
           <div class="assistant-board-card__field">
             <div class="assistant-board-card__field-label">SIZE</div>
-            <div class="assistant-board-card__field-value">{{ card()?.sizeMade ?? '—' }}</div>
+            <div class="assistant-board-card__field-value">{{ card()!.sizeMade }}</div>
           </div>
         }
-        @if (opts().showYarnUsed) {
+        @if (opts().showYarnUsed && (card()?.yarnUsed?.trim())) {
           <div class="assistant-board-card__field">
             <div class="assistant-board-card__field-label">YARN</div>
-            <div class="assistant-board-card__field-value">{{ card()?.yarnUsed ?? '—' }}</div>
+            <div class="assistant-board-card__field-value">{{ card()!.yarnUsed }}</div>
           </div>
         }
       </div>
