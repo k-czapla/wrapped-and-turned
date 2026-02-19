@@ -4,11 +4,11 @@
 - **Feature**: Podcaster’s Assistant
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-02-12
+- **Last updated**: 2026-02-19
 
 ## Summary
 
-Podcaster’s Assistant generates a **vertical, share-ready board** for a chosen Ravelry project and lets the user **download it as a PNG** for use in podcast show notes, Instagram Stories, and similar formats. Users can select from multiple visual design styles to personalize their boards.
+Podcaster’s Assistant generates a **vertical, share-ready board** for a chosen Ravelry project and lets the user **download it as a PNG** for use in podcast show notes, Instagram Stories, and similar formats. Users can select from multiple visual design styles to personalize their boards. When one or more projects are selected, users can also **generate an AI-assisted YouTube/show-notes description** (title, short description, Ravelry links list, hashtags) for use in the show notes box and video title.
 
 ## User story
 
@@ -25,6 +25,21 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
 - **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
+
+### Generate YouTube / show notes description (AI-assisted)
+
+When the user has selected **one or more projects** (same selection as for the board), a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**.
+
+**Output structure (order matters for YouTube):**
+
+1. **Title** — Generated first; concise, keyword-aware, suitable as the video title. Important for search and “first impression” in recommendations.
+2. **Short description** — A brief (2–4 lines) summary of the episode/video, visible before “Show more” on YouTube. Hook the viewer and state what the video covers.
+3. **List of Ravelry links** — For each selected project: project/pattern name and a clickable link to the Ravelry project (and optionally pattern) page. Clear list format for easy scanning.
+4. **Hashtags** — At the end; relevant fiber-arts and craft hashtags (e.g. #knitting, #crochet, #handmade, #ravelry, #fiberarts) plus project-specific tags where sensible.
+
+**Design goals:** Concise, scannable, and aligned with what YouTube’s algorithm favors: strong first lines, clear keywords, no keyword stuffing, and structure that supports discovery (see [YouTube description and title guidance](https://support.google.com/youtube/answer/12948449)).
+
+The generated text is displayed in a **show notes box** (or similar) so the user can copy it into YouTube (or another platform). Implementation uses **Groq** (see “AI tools (no-cost options)” below).
 
 ### Output (board content)
 
@@ -51,8 +66,22 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations
+- For **Generate Description**: in-app editing of AI output (beyond copy/paste), multiple description templates, YouTube API upload/scheduling, or other platform-specific exports unless added later.
 
 **Note:** The Board Design page lists predefined designs first, then “My design” last (user’s version with customizations). Selecting “My design” opens the customizer (font, RGBA colors, border); selecting a predefined design applies it without opening the customizer. Customizations persist across sessions.
+
+## AI tools (no-cost options)
+
+The **Generate Description** feature requires an LLM/text-generation capability. The following options can be utilized **at no cost** (free tier or open source). Choice will depend on rate limits, reliability, and whether the app runs backend-only (recommended for API keys) or also supports local inference.
+
+| Option | Type | Notes |
+|--------|------|--------|
+| **Groq** | Cloud API | Free tier at [console.groq.com](https://console.groq.com), no credit card required. Access to Llama models (e.g. Llama 3.1 8B, Llama 3.3 70B). Rate limits (e.g. 30 RPM, 6K TPM for Llama 3.1 8B). Well-suited for low-volume, server-side calls. |
+| **Hugging Face Inference API** | Cloud API | Free tier: limited requests/hour (e.g. 300/hr for registered users); small monthly credits. Use a Hugging Face token and models such as Mixtral 8x7b or Gemma. Good for experimentation; check [pricing and limits](https://huggingface.co/docs/api-inference/en/pricing). |
+| **GPT4Free** | Open source / community | [g4f](https://github.com/gpt4free/gpt4free) provides free access to various models (e.g. GPT-4–level, DeepSeek) via Python/JS/HTTP. No usage fees; reliability and terms of use of upstream providers may vary. Use with appropriate caution and fallbacks. |
+| **Ollama / llama.cpp (self-hosted)** | Local | Run models (e.g. Llama, Mistral) on the host machine; no per-request cost. Requires backend or desktop environment where models can run. No rate limits from a third party; good for privacy and offline use. |
+
+**Chosen for v1: Groq.** The Generate Description feature uses the **Groq** API (free tier at [console.groq.com](https://console.groq.com), no credit card required; Llama models; rate limits apply). Other options in the table remain available for reference or future use. Ensure graceful degradation (clear error, optional non-AI fallback such as title + Ravelry links only) if Groq is unavailable.
 
 ## Requirements
 
@@ -70,6 +99,9 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
 - **R12 — Board design selection**: users can access a Board Design page to browse and select from available visual styles. The last option is “My design” (user’s customized version); the rest are predefined styles. Selected design persists across sessions (localStorage) and applies to all generated boards (preview and PNG export).
 - **R12a — Board design customization**: “My design” is the last option; selecting it opens the customizer (font, RGBA background/text colors, border). Users can override the base design with a custom font (10 options), background and text colors (RGBA pickers). Customizations persist in localStorage and apply only when "My design" is selected; predefined designs are used as-is in the Assistant preview and PNG export.
 - **R13 — Board design preview consistency**: On the Board Design page, each design option is shown in a preview that uses the same sample project data (pattern name, designer, size, yarn, image placeholder) and the same dimensions (320×480px) as the Podcaster’s Assistant board preview, so users can compare designs accurately and see how the board will look with real content. When “My design” is selected, a “Customize design” section (or modal) shows a preview with the effective design (base style plus user customizations).
+- **R14 — Generate Description visibility**: When at least one project is selected, a “Generate Description” button is visible. When no project is selected, the button is disabled or hidden, with a short prompt to select one or more projects.
+- **R14a — Optional prompt to enrich description**: The user can optionally enter a free-text prompt (e.g. episode theme, tone, or extra context) before generating. The UI exposes this as an optional field (e.g. text area or input) near the “Generate Description” action. If provided, it is sent to the AI to enrich the title and description; if left empty, generation uses only the selected projects and Ravelry data.
+- **R15 — Show notes box**: Generated text (title, description, Ravelry links, hashtags) is shown in a dedicated area (e.g. “Show notes” box) so the user can copy it into YouTube or elsewhere. Copy-to-clipboard (full text or by section) is recommended.
 
 ### Functional requirements
 
@@ -82,6 +114,7 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
   - Size
   - Yarn used (derived from yarn packs when present)
   - Started and completed dates (when available from Ravelry)
+- **R16 — Generate Description (AI)**: When the user clicks “Generate Description”, the app calls the **Groq** API with context: selected project names, pattern names, designers, Ravelry project (and pattern) URLs, and any **optional user prompt** (if provided) to enrich the description. The service returns or the app composes: (1) title, (2) short description, (3) list of Ravelry links, (4) hashtags. Ravelry links must use canonical project/pattern URLs already available from the project-card API. If Groq is unavailable or fails, show a clear error and optionally a non-AI fallback (e.g. title from project list + Ravelry links only).
 
 ### Export requirements
 
@@ -101,6 +134,7 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
 - Images fail to load due to network/CORS → board should still export with placeholder.
 - Yarn packs are present but inconsistent → render best-effort yarn list; avoid “undefined”.
 - Very long pattern/yarn names → clamp/wrap to avoid overflowing the board.
+- **Generate Description:** No projects selected → disable or hide “Generate Description”; prompt to select at least one. AI unavailable or timeout → show clear error; offer non-AI fallback (e.g. title + Ravelry links only). Very long project list → keep description concise; consider truncating hashtags or list if near platform length limits.
 
 ## Acceptance criteria
 
@@ -112,4 +146,5 @@ App branding (“Wrapped & Turned”) and footer link remain on the board.
 - User sees a vertical board preview for each selected project (using the selected design style).
 - User can export each board as a PNG (export matches the preview style).
 - Board remains readable and visually stable when optional fields are missing.
+- **Generate Description:** When one or more projects are selected, user sees “Generate Description” and can optionally enter a prompt to enrich the description. Clicking it produces text with title, short description, Ravelry links list, and hashtags, shown in a show-notes–style box for copy/paste. If AI fails, user sees a clear error and optionally a non-AI fallback.
 

@@ -70,6 +70,14 @@ export type ProjectCard = {
   completed?: string;
 };
 
+/** Result of Generate Description (YouTube/show notes). */
+export type GenerateDescriptionResult = {
+  title: string;
+  description: string;
+  ravelryLinks: string;
+  hashtags: string;
+};
+
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
 export type BoardDisplayOptions = {
   showPhoto: boolean;
@@ -155,6 +163,28 @@ export class Api {
         withCredentials: true,
       })
       .pipe(shareReplay(1));
+  }
+
+  /**
+   * Generate YouTube/show-notes description for selected projects.
+   * Sends card summaries (from existing ProjectCard[]) and optional prompt; returns title, description, Ravelry links, hashtags.
+   */
+  generateDescription(cards: ProjectCard[], optionalPrompt?: string) {
+    const backendBase = this.getBackendBase();
+    const body = {
+      cards: cards.map((c) => ({
+        projectName: c.projectName,
+        patternName: c.patternName,
+        designerName: c.designerName,
+        projectUrl: c.projectUrl,
+      })),
+      ...(optionalPrompt?.trim() && { optionalPrompt: optionalPrompt.trim() }),
+    };
+    return this.http.post<GenerateDescriptionResult>(
+      this.join(backendBase, '/api/generate-description'),
+      body,
+      { withCredentials: true }
+    );
   }
 
   getStatPreferences() {

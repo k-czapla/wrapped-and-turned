@@ -6,10 +6,17 @@ import { AssistantControls } from '../../components/assistant-controls/assistant
 import { AssistantBoardOptions } from '../../components/assistant-board-options/assistant-board-options';
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
 import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
+import { AssistantGenerateDescription } from '../../components/assistant-generate-description/assistant-generate-description';
 
 @Component({
   selector: 'app-assistant',
-  imports: [AssistantControls, AssistantBoardOptions, AssistantProjectPicker, AssistantBoardPreview],
+  imports: [
+    AssistantControls,
+    AssistantBoardOptions,
+    AssistantProjectPicker,
+    AssistantBoardPreview,
+    AssistantGenerateDescription,
+  ],
   templateUrl: './assistant.html',
   styleUrl: './assistant.css',
 })

@@ -133,6 +133,45 @@ Returns a minimal set of data needed to render the Assistant board for one proje
 - `projectUrl` (optional): Ravelry project page URL, used for the board card footer QR code. Omitted if the Ravelry project detail does not include a permalink.
 - `yarnUsed` (optional): For each project pack, yarn name and colorway are combined (e.g. "YarnName Colorway"); multiple packs are comma-separated.
 
+### `POST /api/generate-description`
+
+Generates a YouTube/show-notes description (title, short description, Ravelry links, hashtags) for the given projects using Groq. Requires auth. If `GROQ_API_KEY` is not set or Groq fails, returns a non-AI fallback with the same shape.
+
+**Request body**
+
+```json
+{
+  "cards": [
+    {
+      "projectName": "string",
+      "patternName": "string (optional)",
+      "designerName": "string (optional)",
+      "projectUrl": "string (optional)"
+    }
+  ],
+  "optionalPrompt": "string (optional)"
+}
+```
+
+- `cards`: at least one item; typically the same data as returned by `GET /api/project-card/:id` for each selected project.
+- `optionalPrompt`: optional user text to enrich the description (e.g. episode theme, tone).
+
+**Response**
+
+```json
+{
+  "title": "string",
+  "description": "string",
+  "ravelryLinks": "string (newline-separated list of links)",
+  "hashtags": "string (space-separated)"
+}
+```
+
+**Error cases**
+
+- `400` if body is missing or `cards` is not a non-empty array.
+- `401` if not authenticated.
+
 ## Data sourcing notes
 
 - `/api/wrapped` typically requires:

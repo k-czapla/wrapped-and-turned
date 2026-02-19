@@ -3,7 +3,9 @@
 - **Product**: Wrapped and Turned
 - **Doc type**: PRD (future / backlog)
 - **Status**: Draft
-- **Last updated**: 2026-01-28
+- **Last updated**: 2026-02-19
+
+**In PRD-020 (scope v1):** Idea 1 (AI-driven YouTube/show notes description) — detailed in [PRD-020 § Generate YouTube / show notes description](PRD-020-Podcasters-Assistant.md) with output order: title first, short description, Ravelry links list, hashtags; show notes box; **Groq** as the AI provider; and an **optional user prompt** to enrich the description. See [PRD-020 AI tools](PRD-020-Podcasters-Assistant.md#ai-tools-no-cost-options) for reference.
 
 **Implemented:** Idea 3 (Project Board style customization) — style selection page, 3 CSS-based designs (Scandinavian Calm, Technical Pattern Sheet, Neon Yarn Party) plus multiple Canva PNG-based designs (canva-reference-board.png and canva-2.png through canva-9.png in `frontend/public`), persistence via localStorage. **Data field selection** (2026-02-12): Board display options on the Podcaster’s Assistant page let users toggle Photo, Pattern name, Designer, Yarn + color, and Size made (all on by default); options apply to preview and PNG export.
 
@@ -27,24 +29,27 @@ As a fiber arts content creator who publishes podcast episodes or YouTube videos
 
 ### Scope
 
-- **Input**: Same as current Podcaster’s Assistant—date range and **selected project(s)** from the checkmark list. The description is generated for the set of projects the user has selected for the board (or a dedicated “Generate description” action with the same selection).
+- **Input**: Same as current Podcaster’s Assistant—date range and **selected project(s)** from the checkmark list. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description. The description is generated for the set of projects the user has selected for the board (or a dedicated “Generate description” action with the same selection).
 - **Output**: A generated text block (YouTube description) that the user can copy or download. Optionally: one-click copy to clipboard; optional export as `.txt` or markdown.
 
 ### Description structure (required elements)
 
-The generated description must include:
+*Canonical order and UX are in [PRD-020](PRD-020-Podcasters-Assistant.md).*
 
-1. **Short, catchy introduction**
+The generated description must include (in this order):
+
+1. **Title** — Generated first; used for the video title and show notes. Concise, keyword-aware.
+2. **Short, catchy introduction**
    - A few sentences that hook the viewer and summarize what the video/episode is about (e.g., “In this episode I’m sharing the projects I finished this season…”).
    - Tone should be consistent with creator/fiber-arts content (friendly, inclusive).
    - Length: suitable for the first visible lines in YouTube (roughly 2–4 lines before “Show more”).
 
-2. **List of projects mentioned, with links to Ravelry**
+3. **List of projects mentioned, with links to Ravelry**
    - For each selected project: project name, pattern name, designer (when available).
    - Each project or pattern should link to its Ravelry project/pattern page (URLs).
    - Format: clear list (bullets or numbered) so it’s easy to scan and click.
 
-3. **Algorithm- and discoverability-friendly elements**
+4. **Algorithm- and discoverability-friendly elements**
    - **Hashtags**: relevant fiber-arts and craft hashtags (e.g., #knitting, #crochet, #handmade, #ravelry, #fiberarts, plus pattern/project-specific tags where sensible).
    - **Keywords**: natural inclusion of terms that help search (e.g., “knit”, “crochet”, “pattern”, “yarn”, “finished object”).
    - Structure that works well with YouTube’s “Show more” and search indexing (clear sections, line breaks, no keyword stuffing).
@@ -61,7 +66,7 @@ The generated description must include:
 - **R1 — Same project selection as board**: description generation uses the same selected projects as the Podcaster’s Assistant board (or an explicit “Generate description” action with same selection model).
 - **R2 — Ravelry links**: every listed project/pattern must have a correct, clickable Ravelry URL (project page and/or pattern page as appropriate).
 - **R3 — Copy/download**: user can copy the full description to clipboard and/or download it as a file.
-- **R4 — AI provider**: implementation will need an AI/LLM integration (e.g., OpenAI, Anthropic, or self-hosted). Cost, rate limits, and privacy must be evaluated; no PII should be sent beyond what’s needed for the description.
+- **R4 — AI provider**: **Groq** is chosen for v1 (see [PRD-020](PRD-020-Podcasters-Assistant.md)). No PII should be sent beyond what’s needed for the description (selected project data and optional user prompt).
 - **R5 — Graceful degradation**: if AI is unavailable or fails, show a clear error and optionally a non-AI fallback (e.g., plain list with links only).
 
 ### Edge cases

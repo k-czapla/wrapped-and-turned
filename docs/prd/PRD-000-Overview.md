@@ -3,7 +3,7 @@
 - **Product**: Wrapped and Turned
 - **Doc type**: PRD (overview)
 - **Status**: Draft
-- **Last updated**: 2026-01-28
+- **Last updated**: 2026-02-19
 
 ## Summary
 
@@ -11,6 +11,8 @@
 
 - Generate a “Spotify Wrapped”-style view of their making over a selected date range (**Wrapped**)
 - Create a **share-ready vertical project board** for podcasts / Instagram Stories / social posts (**Podcaster’s Assistant**)
+
+- Generate an **AI-assisted YouTube/show-notes description** (title, description, Ravelry links, hashtags) for selected projects
 
 The app is intentionally simple: no paid services, minimal infrastructure, and no need to support high request volume at this stage.
 

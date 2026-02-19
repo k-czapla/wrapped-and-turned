@@ -87,6 +87,7 @@ Do not store secrets in frontend env or build-time substitutions.
   - `RAVELRY_SCOPES` (default: `offline`)
 - **Optional**
   - `MOCK_RAVELRY=false` in production
+  - `GROQ_API_KEY`: for Podcaster’s Assistant “Generate Description” (AI). If unset, a non-AI fallback description is returned.
 
 ### Frontend configuration (production)
 
