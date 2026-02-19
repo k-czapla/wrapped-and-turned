@@ -1,6 +1,7 @@
 import { Component, inject, computed } from '@angular/core';
 import { BoardDesignService, BOARD_DESIGN_FONTS } from '../../services/board-design.service';
 import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
+import { BoardBackgroundUpload } from '../board-background-upload/board-background-upload';
 import type { ProjectCard } from '../../services/api';
 
 const SAMPLE_PROJECT_CARD: ProjectCard = {
@@ -43,7 +44,7 @@ function hexAndAlphaToRgba(hex: string, alpha: number): string {
 @Component({
   selector: 'app-board-design-customizer',
   standalone: true,
-  imports: [AssistantBoardCard],
+  imports: [AssistantBoardCard, BoardBackgroundUpload],
   templateUrl: './board-design-customizer.html',
   styleUrl: './board-design-customizer.css',
 })
@@ -88,6 +89,12 @@ export class BoardDesignCustomizer {
   setBackgroundColor(hex: string, alpha: number) {
     this.boardDesign.setUserCustomization({
       backgroundColor: hex ? hexAndAlphaToRgba(hex, alpha) : undefined,
+    });
+  }
+
+  setBackgroundImage(dataUrl: string | undefined) {
+    this.boardDesign.setUserCustomization({
+      backgroundImageDataUrl: dataUrl,
     });
   }
 

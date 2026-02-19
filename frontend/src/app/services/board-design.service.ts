@@ -12,10 +12,12 @@ const CUSTOMIZATION_STORAGE_KEY = 'wrapped-and-turned-board-design-customization
 /** Id for the user's custom board (last in the list); selecting it opens the customizer. */
 export const USER_BOARD_DESIGN_ID = 'user';
 
-/** User overrides for the selected board design (font, colors, border). */
+/** User overrides for the selected board design (font, colors, border, background image). */
 export interface BoardDesignCustomization {
   fontId?: string;
   backgroundColor?: string;
+  /** Data URL of user-uploaded board background image (persisted in localStorage). */
+  backgroundImageDataUrl?: string;
   textColor?: string;
   borderWidth?: number;
   borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'none';
@@ -91,7 +93,14 @@ export class BoardDesignService {
       const font = BOARD_DESIGN_FONTS.find((f) => f.id === custom.fontId);
       if (font) baseStyle['fontFamily'] = font.fontFamily;
     }
-    if (custom.backgroundColor != null) baseStyle['background'] = custom.backgroundColor;
+    if (custom.backgroundImageDataUrl) {
+      baseStyle['background'] = 'transparent';
+      baseStyle['backgroundImage'] = `url(${custom.backgroundImageDataUrl})`;
+      baseStyle['backgroundSize'] = 'cover';
+      baseStyle['backgroundPosition'] = 'center';
+    } else if (custom.backgroundColor != null) {
+      baseStyle['background'] = custom.backgroundColor;
+    }
     if (custom.textColor != null) baseStyle['color'] = custom.textColor;
     baseStyle['borderRadius'] = '0';
 
@@ -163,6 +172,7 @@ export class BoardDesignService {
       const out: BoardDesignCustomization = {};
       if (typeof o['fontId'] === 'string') out.fontId = o['fontId'];
       if (typeof o['backgroundColor'] === 'string') out.backgroundColor = o['backgroundColor'];
+      if (typeof o['backgroundImageDataUrl'] === 'string') out.backgroundImageDataUrl = o['backgroundImageDataUrl'];
       if (typeof o['textColor'] === 'string') out.textColor = o['textColor'];
       if (typeof o['borderWidth'] === 'number') out.borderWidth = o['borderWidth'];
       if (o['borderStyle'] === 'solid' || o['borderStyle'] === 'dashed' || o['borderStyle'] === 'dotted' || o['borderStyle'] === 'double' || o['borderStyle'] === 'none') {

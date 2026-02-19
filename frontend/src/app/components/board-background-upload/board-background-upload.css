@@ -1,0 +1,91 @@
+.board-background-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.board-background-upload__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.board-background-upload__input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.board-background-upload__preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 20rem;
+}
+
+.board-background-upload__preview {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 120px;
+  background-size: cover;
+  background-position: center;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.board-background-upload__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.board-background-upload__btn {
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+}
+
+.board-background-upload__btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.board-background-upload__btn--change {
+  color: #6366f1;
+  border-color: #6366f1;
+}
+
+.board-background-upload__btn--change:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.board-background-upload__choose {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.board-background-upload__choose:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+.board-background-upload__hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}

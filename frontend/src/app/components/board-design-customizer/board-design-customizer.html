@@ -1,7 +1,7 @@
 <div class="board-design-customizer">
   <h2 class="board-design-customizer__title">Customize design</h2>
   <p class="board-design-customizer__intro">
-    Override the selected design with your own font, colors, and border. Changes apply to the board cards when you generate and download.
+    Override the selected design with your own font, colors, border, and optional background image. Changes apply to the board cards when you generate and download.
   </p>
 
   <div class="board-design-customizer__grid">
@@ -19,6 +19,13 @@
             <option [value]="font.id" [style.fontFamily]="font.fontFamily">{{ font.label }}</option>
           }
         </select>
+      </div>
+
+      <div class="board-design-customizer__group">
+        <app-board-background-upload
+          [dataUrl]="userCustomization().backgroundImageDataUrl"
+          (dataUrlChange)="setBackgroundImage($event)"
+        />
       </div>
 
       <div class="board-design-customizer__group">

@@ -1,0 +1,45 @@
+<div class="board-background-upload">
+  <span class="board-background-upload__label">Board background image</span>
+  <input
+    #fileInput
+    type="file"
+    accept="image/*"
+    class="board-background-upload__input"
+    (change)="onFileSelected($event)"
+  />
+  @if (dataUrl()) {
+    <div class="board-background-upload__preview-wrap">
+      <div
+        class="board-background-upload__preview"
+        [style.backgroundImage]="'url(' + dataUrl() + ')'"
+        role="img"
+        aria-label="Uploaded board background preview"
+      ></div>
+      <div class="board-background-upload__actions">
+        <button
+          type="button"
+          class="board-background-upload__btn board-background-upload__btn--change"
+          (click)="triggerFileInput(fileInput)"
+        >
+          Change image
+        </button>
+        <button
+          type="button"
+          class="board-background-upload__btn board-background-upload__btn--remove"
+          (click)="remove()"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  } @else {
+    <button
+      type="button"
+      class="board-background-upload__choose"
+      (click)="triggerFileInput(fileInput)"
+    >
+      Choose image
+    </button>
+  }
+  <p class="board-background-upload__hint">Upload an image to use as the board card background. It will be scaled to cover the card.</p>
+</div>
