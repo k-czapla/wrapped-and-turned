@@ -11,82 +11,127 @@
   } @else if (cards().length === 0) {
     <p class="mt-4 text-sm text-slate-500">Select one or more projects to generate a visualisation.</p>
   } @else {
-    <div class="mt-4 flex flex-col gap-6">
-      @for (card of cards(); track card.id; let i = $index) {
-        <div class="flex flex-col items-center gap-3">
-          @if (displayOptions()?.showPhoto) {
-            <div class="assistant-board-preview__gallery">
-              <div class="assistant-board-preview__gallery-actions">
-                <input
-                  [id]="'photo-upload-' + card.id"
-                  type="file"
-                  accept="image/*"
-                  (change)="onFileSelected(card, $event)"
-                  class="assistant-board-preview__file-input"
-                />
-                <label [for]="'photo-upload-' + card.id" class="assistant-board-preview__upload-label">
-                  Upload photo from computer
-                </label>
-                <div class="assistant-board-preview__photo-source flex items-center gap-3 mt-2">
-                  <span class="text-xs text-slate-500">Source:</span>
-                  <label class="inline-flex cursor-pointer items-center gap-1.5">
-                    <input
-                      type="radio"
-                  [name]="'photoSource-' + card.id"
-                  [checked]="photoSourceForCard(card) === 'project'"
-                  (change)="photoSourceChange.emit({ projectId: card.id, source: 'project' })"
-                      class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <span class="text-sm text-slate-700">Project</span>
-                  </label>
-                  <label class="inline-flex cursor-pointer items-center gap-1.5">
-                    <input
-                      type="radio"
-                  [name]="'photoSource-' + card.id"
-                  [checked]="photoSourceForCard(card) === 'pattern'"
-                  (change)="photoSourceChange.emit({ projectId: card.id, source: 'pattern' })"
-                      class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <span class="text-sm text-slate-700">Pattern</span>
-                  </label>
+    <div class="mt-4 assistant-board-preview__carousel">
+      <div class="assistant-board-preview__carousel-viewport">
+        <div
+          class="assistant-board-preview__carousel-track"
+          [style.transform]="'translateX(-' + currentSlideIndex() * 100 + '%)'"
+        >
+          @for (card of cards(); track card.id; let i = $index) {
+            <div class="assistant-board-preview__carousel-slide">
+              <div class="flex flex-col items-center gap-3">
+                @if (displayOptions()?.showPhoto) {
+                  <div class="assistant-board-preview__gallery">
+                    <div class="assistant-board-preview__gallery-actions">
+                      <input
+                        [id]="'photo-upload-' + card.id"
+                        type="file"
+                        accept="image/*"
+                        (change)="onFileSelected(card, $event)"
+                        class="assistant-board-preview__file-input"
+                      />
+                      <label [for]="'photo-upload-' + card.id" class="assistant-board-preview__upload-label">
+                        Upload photo from computer
+                      </label>
+                      <div class="assistant-board-preview__photo-source flex items-center gap-3 mt-2">
+                        <span class="text-xs text-slate-500">Source:</span>
+                        <label class="inline-flex cursor-pointer items-center gap-1.5">
+                          <input
+                            type="radio"
+                            [name]="'photoSource-' + card.id"
+                            [checked]="photoSourceForCard(card) === 'project'"
+                            (change)="photoSourceChange.emit({ projectId: card.id, source: 'project' })"
+                            class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                          />
+                          <span class="text-sm text-slate-700">Project</span>
+                        </label>
+                        <label class="inline-flex cursor-pointer items-center gap-1.5">
+                          <input
+                            type="radio"
+                            [name]="'photoSource-' + card.id"
+                            [checked]="photoSourceForCard(card) === 'pattern'"
+                            (change)="photoSourceChange.emit({ projectId: card.id, source: 'pattern' })"
+                            class="h-3.5 w-3.5 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                          />
+                          <span class="text-sm text-slate-700">Pattern</span>
+                        </label>
+                      </div>
+                    </div>
+                    @if (photosForCard(card).length > 0) {
+                      <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
+                        @for (photo of photosForCard(card); track $index) {
+                          <button
+                            type="button"
+                            role="option"
+                            [attr.aria-selected]="selectedIndex(card) === $index"
+                            (click)="selectedPhotoIndexChange.emit({ projectId: card.id, index: $index })"
+                            class="assistant-board-preview__gallery-thumb"
+                            [class.assistant-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
+                          >
+                            <img [src]="photo" alt="" />
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+                <div
+                  #board
+                  class="overflow-hidden border border-slate-200 bg-white shadow-sm"
+                  style="width: var(--board-width);"
+                >
+                  <app-assistant-board-card
+                    [card]="card"
+                    [design]="design()"
+                    [displayOptions]="displayOptionsForCard(card)"
+                    [selectedPhotoIndex]="selectedIndex(card)"
+                  />
                 </div>
+                <button
+                  type="button"
+                  (click)="downloadBoard(i)"
+                  class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                >
+                  Download PNG
+                </button>
               </div>
-              @if (photosForCard(card).length > 0) {
-                <div class="assistant-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
-                  @for (photo of photosForCard(card); track $index) {
-                    <button
-                      type="button"
-                      role="option"
-                      [attr.aria-selected]="selectedIndex(card) === $index"
-                      (click)="selectedPhotoIndexChange.emit({ projectId: card.id, index: $index })"
-                      class="assistant-board-preview__gallery-thumb"
-                      [class.assistant-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
-                    >
-                      <img [src]="photo" alt="" />
-                    </button>
-                  }
-                </div>
-              }
             </div>
           }
-          <div
-            #board
-            class="overflow-hidden border border-slate-200 bg-white shadow-sm"
-            style="width: var(--board-width);"
+        </div>
+      </div>
+      @if (cards().length > 1) {
+        <div class="assistant-board-preview__carousel-nav" aria-label="Carousel navigation">
+          <button
+            type="button"
+            class="assistant-board-preview__carousel-btn"
+            [attr.aria-label]="'Previous project'"
+            [disabled]="!canGoPrev"
+            (click)="goPrev()"
           >
-            <app-assistant-board-card
-              [card]="card"
-              [design]="design()"
-              [displayOptions]="displayOptionsForCard(card)"
-              [selectedPhotoIndex]="selectedIndex(card)"
-            />
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div class="assistant-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
+            @for (card of cards(); track card.id; let i = $index) {
+              <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="currentSlideIndex() === i"
+                [attr.aria-label]="'Project ' + (i + 1) + ' of ' + cards().length"
+                class="assistant-board-preview__carousel-dot"
+                [class.assistant-board-preview__carousel-dot--active]="currentSlideIndex() === i"
+                (click)="goToSlide(i)"
+              >
+              </button>
+            }
           </div>
           <button
             type="button"
-            (click)="downloadBoard(i)"
-            class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+            class="assistant-board-preview__carousel-btn"
+            [attr.aria-label]="'Next project'"
+            [disabled]="!canGoNext"
+            (click)="goNext()"
           >
-            Download PNG
+            <span aria-hidden="true">›</span>
           </button>
         </div>
       }

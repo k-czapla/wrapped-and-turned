@@ -1,4 +1,14 @@
-import { Component, ElementRef, inject, input, output, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  QueryList,
+  signal,
+  ViewChildren,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
 import type { BoardDisplayOptions, ProjectCard } from '../../services/api';
@@ -14,6 +24,8 @@ import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card
 })
 export class AssistantBoardPreview {
   private api = inject(Api);
+  /** Current carousel slide index (0-based). */
+  currentSlideIndex = signal(0);
   cards = input<ProjectCard[]>([]);
   cardsLoading = input<boolean>(false);
   design = input<ProjectBoardDesign | null>(null);
@@ -28,6 +40,14 @@ export class AssistantBoardPreview {
   photoUpload = output<{ projectId: number; dataUrl: string }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
+
+  constructor() {
+    effect(() => {
+      const len = this.cards().length;
+      const idx = this.currentSlideIndex();
+      if (len > 0 && idx >= len) this.currentSlideIndex.set(Math.max(0, len - 1));
+    });
+  }
 
   /** Photo source for a given card (per-board). */
   protected photoSourceForCard(card: ProjectCard): 'project' | 'pattern' {
@@ -58,6 +78,29 @@ export class AssistantBoardPreview {
     const map = this.selectedPhotoIndexByProjectId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  get canGoPrev(): boolean {
+    return this.currentSlideIndex() > 0;
+  }
+
+  get canGoNext(): boolean {
+    const idx = this.currentSlideIndex();
+    const len = this.cards().length;
+    return len > 0 && idx < len - 1;
+  }
+
+  goPrev(): void {
+    if (this.canGoPrev) this.currentSlideIndex.update((i) => i - 1);
+  }
+
+  goNext(): void {
+    if (this.canGoNext) this.currentSlideIndex.update((i) => i + 1);
+  }
+
+  goToSlide(index: number): void {
+    const len = this.cards().length;
+    if (index >= 0 && index < len) this.currentSlideIndex.set(index);
   }
 
   protected onFileSelected(card: ProjectCard, event: Event) {
