@@ -67,7 +67,7 @@ const SYSTEM_PROMPT = `You are a helpful assistant for knitting and fiber-arts p
 
 The video title will be assembled as: Ep. [##] | X FOs - {catchyTitle} - Knitting Podcast {emoji}
 - X is the number of finished objects (provided in the user message). You only supply catchyTitle and emoji.
-- "catchyTitle": A short, catchy phrase for the middle of the title (e.g. "Sweaters & Socks", "Cozy Winter Makes", "Hats Off to These FOs"). Reference the projects/patterns when it fits. Curiosity-sparking, clear keywords (knit, crochet, pattern themes). Max ~60 characters. No keyword stuffing.
+- "catchyTitle": A short, catchy phrase for the middle of the title. Reference the projects/patterns when it fits. Curiosity-sparking, clear keywords (knit, crochet, pattern themes). Max ~60 characters. No keyword stuffing.
 - "titleEmoji": 1–2 tasteful cozy emojis (e.g. 🧶 ✨ 🎙️) for the end of the title.
 
 Output a JSON object with exactly these keys (all strings):
