@@ -30,14 +30,16 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 When the user has selected **one or more projects** (same selection as for the board), a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**.
 
+**UI:** The description section shows the **count of finished objects** in the loaded date range (from Wrapped stats) and uses “finished objects” wording (e.g. “3 finished objects selected (of 12 in this period)”). The section title is catchy and uses light emoji (e.g. “✨ Show notes & YouTube description”).
+
 **Output structure (order matters for YouTube):**
 
-1. **Title** — Generated first; concise, keyword-aware, suitable as the video title. Important for search and “first impression” in recommendations.
-2. **Short description** — A brief (2–4 lines) summary of the episode/video, visible before “Show more” on YouTube. Hook the viewer and state what the video covers.
+1. **Title** — Catchy, curiosity-sparking, keyword-aware; suitable as the video/podcast title. May include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Important for search and “first impression” in recommendations.
+2. **Short description** — A brief (2–4 lines) summary of the episode/video, visible before “Show more” on YouTube. Hook the viewer; may use 1–2 emojis for warmth. Mention finished objects / FOs where natural.
 3. **List of Ravelry links** — For each selected project: project/pattern name and a clickable link to the Ravelry project (and optionally pattern) page. Clear list format for easy scanning.
-4. **Hashtags** — At the end; relevant fiber-arts and craft hashtags (e.g. #knitting, #crochet, #handmade, #ravelry, #fiberarts) plus project-specific tags where sensible.
+4. **Hashtags** — At the end; relevant fiber-arts and craft hashtags (e.g. #knitting, #crochet, #handmade, #ravelry, #fiberarts, #knittingpodcast) plus project-specific tags where sensible.
 
-**Design goals:** Concise, scannable, and aligned with what YouTube’s algorithm favors: strong first lines, clear keywords, no keyword stuffing, and structure that supports discovery (see [YouTube description and title guidance](https://support.google.com/youtube/answer/12948449)).
+**Design goals (“knitting podcast” algorithm):** Concise, scannable, and aligned with what YouTube and podcast platforms favor: catchy click-worthy titles, strong first lines, clear keywords (e.g. finished objects, FO, pattern names), no keyword stuffing, and structure that supports discovery. Tone is conversational and cozy. Generated text may include tasteful emojis for fun and shareability (see [YouTube description and title guidance](https://support.google.com/youtube/answer/12948449)).
 
 The generated text is displayed in a **show notes box** (or similar) so the user can copy it into YouTube (or another platform). Implementation uses **Groq** (see “AI tools (no-cost options)” below).
 

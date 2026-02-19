@@ -18,22 +18,23 @@ export type DescriptionResult = {
 export function buildFallbackDescription(cards: CardSummary[]): DescriptionResult {
   if (cards.length === 0) {
     return {
-      title: 'My fiber arts projects',
-      description: 'In this episode I share these projects.',
+      title: '🧶 My fiber arts FOs',
+      description: 'In this episode I share these finished objects! ✨',
       ravelryLinks: '',
-      hashtags: '#knitting #crochet #handmade #ravelry #fiberarts',
+      hashtags: '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast',
     };
   }
 
   const first = cards[0];
+  const oneTitle = first.patternName || first.projectName;
   const title =
     cards.length === 1
-      ? first.patternName || first.projectName
-      : `Projects: ${cards.map((c) => c.patternName || c.projectName).join(', ')}`;
+      ? `🧶 ${oneTitle} ✨`
+      : `🧶 ${cards.length} FOs: ${cards.map((c) => c.patternName || c.projectName).slice(0, 2).join(', ')}${cards.length > 2 ? '…' : ''}`;
   const description =
     cards.length === 1
-      ? `In this episode I'm sharing my finished project: ${first.patternName || first.projectName}.`
-      : `In this episode I'm sharing ${cards.length} projects from my Ravelry.`;
+      ? `In this episode I'm sharing my finished object: ${oneTitle}. 🎙️`
+      : `In this episode I'm sharing ${cards.length} finished objects from my Ravelry! ✨`;
 
   const ravelryLinks = cards
     .filter((c) => c.projectUrl)
@@ -44,18 +45,20 @@ export function buildFallbackDescription(cards: CardSummary[]): DescriptionResul
     .join('\n');
 
   const hashtags =
-    '#knitting #crochet #handmade #ravelry #fiberarts #yarntogether #craft';
+    '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #yarntogether #craft';
 
   return { title, description, ravelryLinks, hashtags };
 }
 
-const SYSTEM_PROMPT = `You are a helpful assistant for fiber arts content creators. Generate a YouTube video (or podcast episode) description based on the given Ravelry projects.
+const SYSTEM_PROMPT = `You are a helpful assistant for knitting and fiber-arts podcasters. Generate a YouTube video (or knitting podcast episode) description based on the given Ravelry finished objects.
+
+"Knitting podcast" algorithm tips: Use a catchy, click-worthy title that sparks curiosity and includes clear keywords (e.g. finished objects, FO, knit, crochet, pattern names). The first line of the description should hook listeners and work well for discovery. Keep it conversational and cozy—like a friend sharing their makes.
 
 Output a JSON object with exactly these keys (all strings):
-- "title": A concise, keyword-rich video title (suitable for YouTube). Max ~60 characters.
-- "description": A short paragraph (2-4 sentences) that hooks the viewer and summarizes what the video covers. Friendly, inclusive tone. This will appear before "Show more" on YouTube.
+- "title": A catchy, curiosity-sparking title (suitable for YouTube and podcast apps). Include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Max ~60 characters. Make it fun and shareable.
+- "description": A short paragraph (2-4 sentences) that hooks the viewer and summarizes the episode. Use 1–2 emojis for warmth. Friendly, inclusive, cozy tone. Mention that these are finished objects / FOs. This will appear before "Show more" on YouTube.
 - "ravelryLinks": A newline-separated list of lines. Each line: "- Pattern/Project name by Designer: https://www.ravelry.com/..." Use the exact URLs provided. Do not invent links.
-- "hashtags": Space-separated relevant hashtags, e.g. #knitting #crochet #handmade #ravelry #fiberarts plus any project-specific tags. No newlines.
+- "hashtags": Space-separated relevant hashtags, e.g. #knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #FO plus any project-specific tags. No newlines.
 
 Be concise. No keyword stuffing. Output only valid JSON, no markdown or extra text.`;
 
@@ -89,7 +92,7 @@ function parseGroqResponse(content: string): DescriptionResult | null {
     const ravelryLinks = typeof obj.ravelryLinks === 'string' ? obj.ravelryLinks : '';
     const hashtags = typeof obj.hashtags === 'string' ? obj.hashtags : '';
     if (!title && !description) return null;
-    return { title: title || 'My fiber arts projects', description, ravelryLinks, hashtags };
+    return { title: title || '🧶 My fiber arts FOs', description, ravelryLinks, hashtags };
   } catch {
     return null;
   }

@@ -1,8 +1,13 @@
 <div class="assistant-generate-description rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-  <h3 class="text-lg font-semibold text-slate-900">Show notes / YouTube description</h3>
+  <h3 class="text-lg font-semibold text-slate-900">✨ Show notes &amp; YouTube description</h3>
   <p class="mt-1 text-sm text-slate-600">
-    Generate a title, short description, Ravelry links, and hashtags for your video or podcast episode.
+    Generate a catchy title, short description, Ravelry links, and hashtags for your knitting podcast or video.
   </p>
+  @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined) {
+    <p class="mt-1 text-sm font-medium text-slate-600">
+      📊 {{ totalFinishedInRange() }} finished object{{ totalFinishedInRange() === 1 ? '' : 's' }} in this period
+    </p>
+  }
 
   @if (cards().length > 0) {
     <div class="mt-4">
@@ -31,13 +36,16 @@
         }
       </button>
       @if (cards().length === 1) {
-        <span class="text-sm text-slate-500">1 project selected</span>
+        <span class="text-sm text-slate-500">1 finished object selected</span>
       } @else if (cards().length > 1) {
-        <span class="text-sm text-slate-500">{{ cards().length }} projects selected</span>
+        <span class="text-sm text-slate-500">{{ cards().length }} finished objects selected</span>
+      }
+      @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined && cards().length > 0) {
+        <span class="text-sm text-slate-400">(of {{ totalFinishedInRange() }} in this period)</span>
       }
     </div>
   } @else {
-    <p class="mt-4 text-sm text-slate-500">Select one or more projects above to enable Generate Description.</p>
+    <p class="mt-4 text-sm text-slate-500">Select one or more finished objects above to enable Generate Description.</p>
   }
 
   @if (error(); as err) {
@@ -49,7 +57,7 @@
   @if (result(); as r) {
     <div class="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
       <div class="flex items-center justify-between gap-2">
-        <span class="text-sm font-medium text-slate-700">Show notes</span>
+        <span class="text-sm font-medium text-slate-700">📋 Show notes</span>
         <button
           type="button"
           class="rounded bg-slate-200 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"

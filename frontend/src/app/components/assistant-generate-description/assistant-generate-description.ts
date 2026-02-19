@@ -12,13 +12,15 @@ import { ErrorAlert } from '../error-alert/error-alert';
 export class AssistantGenerateDescription {
   /** Selected project cards (from project picker). */
   cards = input.required<ProjectCard[]>();
+  /** Total finished objects in the loaded date range (from wrapped stats). */
+  totalFinishedInRange = input<number | null>(null);
 
   protected optionalPrompt = '';
   protected generating = signal(false);
   protected error = signal<string | null>(null);
   protected result = signal<GenerateDescriptionResult | null>(null);
 
-  constructor(private api: Api) {}
+  constructor(private api: Api) { }
 
   protected get canGenerate(): boolean {
     const c = this.cards();
