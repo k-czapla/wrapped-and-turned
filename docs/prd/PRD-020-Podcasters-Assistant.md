@@ -43,17 +43,6 @@ When the user has selected **one or more projects** (same selection as for the b
 
 The generated text is displayed in a **show notes box** (or similar) so the user can copy it into YouTube (or another platform). Implementation uses **Groq** (see “AI tools (no-cost options)” below).
 
-### Generate YouTube thumbnail (AI-assisted)
-
-When the user has selected **one or more projects**, a **“YouTube thumbnail”** section is shown **below the project picker**. The user can:
-
-- **Mood**: choose one of three moods — **Cozy & warm**, **Bold & playful**, or **Minimal & clean** — to steer the visual style of the thumbnail.
-- **Optional description**: enter a short prompt (e.g. “Winter knits haul, cozy vibes”) to further guide the AI.
-- **Photos for thumbnail**: select up to **3 photos** from a **carousel** that includes (1) all photos from the selected projects (project and pattern photos) and (2) user uploads. The user can also upload additional photos from their device. Selected photos provide context for the AI (v1 uses project names, mood, and optional prompt for the image prompt; selected photo URLs may be used in future versions).
-- **Generate thumbnail**: trigger AI image generation. The result is shown as a preview with a **Download PNG** option.
-
-**UI:** The section uses a carousel for photo selection (horizontal scroll, prev/next), mood as selectable buttons, and an optional text area for the description. Implementation uses **Pollinations AI** ([pollinations.ai](https://pollinations.ai)), free and no API key. Thumbnail size is 1792×1024 (YouTube-thumbnail-friendly landscape).
-
 ### Output (board content)
 
 The board shows **Pattern name** and **Designer** always, and only the other fields the user has enabled in **Board display options**. When a field is enabled, it is included (when available from Ravelry):
@@ -96,8 +85,6 @@ The **Generate Description** feature requires an LLM/text-generation capability.
 
 **Chosen for v1: Groq.** The Generate Description feature uses the **Groq** API (free tier at [console.groq.com](https://console.groq.com), no credit card required; Llama models; rate limits apply). Other options in the table remain available for reference or future use. Ensure graceful degradation (clear error, optional non-AI fallback such as title + Ravelry links only) if Groq is unavailable.
 
-**YouTube thumbnail:** The Generate Thumbnail feature uses **Pollinations AI** ([pollinations.ai](https://pollinations.ai)), free and no API key. Errors (e.g. timeout) are returned as 502 with a user-facing message.
-
 ## Requirements
 
 ### UX / UI requirements
@@ -117,7 +104,6 @@ The **Generate Description** feature requires an LLM/text-generation capability.
 - **R14 — Generate Description visibility**: When at least one project is selected, a “Generate Description” button is visible. When no project is selected, the button is disabled or hidden, with a short prompt to select one or more projects.
 - **R14a — Optional prompt to enrich description**: The user can optionally enter a free-text prompt (e.g. episode theme, tone, or extra context) before generating. The UI exposes this as an optional field (e.g. text area or input) near the “Generate Description” action. If provided, it is sent to the AI to enrich the title and description; if left empty, generation uses only the selected projects and Ravelry data.
 - **R15 — Show notes box**: Generated text (title, description, Ravelry links, hashtags) is shown in a dedicated area (e.g. “Show notes” box) so the user can copy it into YouTube or elsewhere. Copy-to-clipboard (full text or by section) is recommended.
-- **R17 — YouTube thumbnail section**: Placed below the project picker. User can select mood (Cozy & warm, Bold & playful, Minimal & clean), optional description prompt, and up to 3 photos from a carousel (project + pattern photos and uploads). Generate produces an AI thumbnail; result is shown with Download PNG. If generation fails, a clear error is shown.
 
 ### Functional requirements
 
@@ -131,7 +117,6 @@ The **Generate Description** feature requires an LLM/text-generation capability.
   - Yarn used (derived from yarn packs when present)
   - Started and completed dates (when available from Ravelry)
 - **R16 — Generate Description (AI)**: When the user clicks “Generate Description”, the app calls the **Groq** API with context: selected project names, pattern names, designers, Ravelry project (and pattern) URLs, and any **optional user prompt** (if provided) to enrich the description. The service returns or the app composes: (1) title, (2) short description, (3) list of Ravelry links, (4) hashtags. Ravelry links must use canonical project/pattern URLs already available from the project-card API. If Groq is unavailable or fails, show a clear error and optionally a non-AI fallback (e.g. title from project list + Ravelry links only).
-- **R18 — Generate Thumbnail (AI)**: When the user clicks “Generate thumbnail”, the app sends selected project names, chosen mood, and optional user prompt to the backend. The backend uses **Pollinations AI** to generate a 1792×1024 image. The response is displayed and can be downloaded. If generation fails, return 502 with a user-facing error.
 
 ### Export requirements
 
@@ -152,7 +137,6 @@ The **Generate Description** feature requires an LLM/text-generation capability.
 - Yarn packs are present but inconsistent → render best-effort yarn list; avoid “undefined”.
 - Very long pattern/yarn names → clamp/wrap to avoid overflowing the board.
 - **Generate Description:** No projects selected → disable or hide “Generate Description”; prompt to select at least one. AI unavailable or timeout → show clear error; offer non-AI fallback (e.g. title + Ravelry links only). Very long project list → keep description concise; consider truncating hashtags or list if near platform length limits.
-- **Generate Thumbnail:** No projects selected → show prompt to select projects. Pollinations failure or timeout → 502 with clear error; frontend shows error alert.
 
 ## Acceptance criteria
 
@@ -165,5 +149,4 @@ The **Generate Description** feature requires an LLM/text-generation capability.
 - User can export each board as a PNG (export matches the preview style).
 - Board remains readable and visually stable when optional fields are missing.
 - **Generate Description:** When one or more projects are selected, user sees “Generate Description” and can optionally enter a prompt to enrich the description. Clicking it produces text with title, short description, Ravelry links list, and hashtags, shown in a show-notes–style box for copy/paste. If AI fails, user sees a clear error and optionally a non-AI fallback.
-- **Generate Thumbnail:** When one or more projects are selected, user sees the YouTube thumbnail section below the project picker, can choose mood (Cozy & warm, Bold & playful, Minimal & clean), optional description, and up to 3 photos from the carousel (project/pattern photos + uploads). Clicking “Generate thumbnail” produces an AI image via Pollinations; user can download PNG. If generation fails, a clear error is shown.
 

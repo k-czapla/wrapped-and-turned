@@ -7,7 +7,6 @@ import { AssistantBoardOptions } from '../../components/assistant-board-options/
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
 import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
 import { AssistantGenerateDescription } from '../../components/assistant-generate-description/assistant-generate-description';
-import { AssistantThumbnailGenerator } from '../../components/assistant-thumbnail-generator/assistant-thumbnail-generator';
 
 @Component({
   selector: 'app-assistant',
@@ -15,7 +14,6 @@ import { AssistantThumbnailGenerator } from '../../components/assistant-thumbnai
     AssistantControls,
     AssistantBoardOptions,
     AssistantProjectPicker,
-    AssistantThumbnailGenerator,
     AssistantBoardPreview,
     AssistantGenerateDescription,
   ],

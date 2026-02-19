@@ -55,7 +55,7 @@ npm run dev
 - **Wrapped**: pick a date range → generate stats + charts
   - Current stats: total projects, finished projects, total yardage/meterage, craft breakdown, average duration, most productive month
   - Easy additions: top designers, yarn weights, yarn brands, biggest project
-- **Podcaster’s Assistant**: load projects → pick one or more → download a vertical board as PNG; **Generate Description** for a YouTube/show-notes title, description, Ravelry links, and hashtags (optional Groq API key for AI; fallback if unset); **Generate thumbnail** for a fun YouTube thumbnail from selected projects, mood, and up to 3 photos (free **Pollinations AI**, no API key)
+- **Podcaster’s Assistant**: load projects → pick one or more → download a vertical board as PNG; **Generate Description** for a YouTube/show-notes title, description, Ravelry links, and hashtags (optional Groq API key for AI; fallback if unset)
 
 ### Notes / next upgrades
 

@@ -12,8 +12,6 @@ import {
   callGroqForDescription,
   type CardSummary,
 } from './generateDescription.js';
-import { generateThumbnail, type ThumbnailMood } from './generateThumbnail.js';
-
 /** Stat keys that can be toggled for analysis. Default: all true. */
 export const STAT_PREFERENCE_KEYS = [
   'projects',
@@ -593,41 +591,6 @@ app.post('/api/generate-description', async (req, res) => {
   }
 
   res.json(result);
-});
-
-// Generate YouTube thumbnail image (Pollinations AI, free, no API key)
-const THUMBNAIL_MOODS: ThumbnailMood[] = ['cozy', 'bold', 'minimal'];
-app.post('/api/generate-thumbnail', async (req, res) => {
-  if (!(await requireAuth(req, res))) return;
-
-  const body = req.body;
-  if (!body || typeof body !== 'object') {
-    res.status(400).json({ error: 'Expected JSON body' });
-    return;
-  }
-
-  const projectNamesRaw = body.projectNames;
-  const projectNames: string[] = Array.isArray(projectNamesRaw)
-    ? projectNamesRaw.filter((n: unknown) => typeof n === 'string')
-    : [];
-  const userPrompt =
-    typeof body.userPrompt === 'string' ? body.userPrompt.trim() || undefined : undefined;
-  const moodRaw = body.mood;
-  const mood: ThumbnailMood =
-    typeof moodRaw === 'string' && THUMBNAIL_MOODS.includes(moodRaw as ThumbnailMood)
-      ? (moodRaw as ThumbnailMood)
-      : 'cozy';
-
-  const result = await generateThumbnail(projectNames, mood, userPrompt);
-  if (!result) {
-    res.status(502).json({
-      error: 'Thumbnail generation failed. Please try again or check your prompt.',
-    });
-    return;
-  }
-
-  res.setHeader('Content-Type', result.contentType);
-  res.send(Buffer.from(result.imageBase64, 'base64'));
 });
 
 // Image proxy endpoint to avoid CORS issues when generating PNGs

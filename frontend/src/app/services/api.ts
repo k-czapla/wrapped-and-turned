@@ -78,9 +78,6 @@ export type GenerateDescriptionResult = {
   hashtags: string;
 };
 
-/** Mood for AI-generated YouTube thumbnail. */
-export type ThumbnailMood = 'cozy' | 'bold' | 'minimal';
-
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
 export type BoardDisplayOptions = {
   showPhoto: boolean;
@@ -188,28 +185,6 @@ export class Api {
       body,
       { withCredentials: true }
     );
-  }
-
-  /**
-   * Generate a YouTube thumbnail image from selected projects, mood, and optional prompt.
-   * Returns a Blob (PNG image). On error, the Observable errors with a message; if the server
-   * returns JSON error body, it is parsed and exposed as err.error?.error.
-   */
-  generateThumbnail(
-    projectNames: string[],
-    mood: ThumbnailMood,
-    userPrompt?: string
-  ): Observable<Blob> {
-    const backendBase = this.getBackendBase();
-    const body = {
-      projectNames,
-      mood,
-      ...(userPrompt?.trim() && { userPrompt: userPrompt.trim() }),
-    };
-    return this.http.post(this.join(backendBase, '/api/generate-thumbnail'), body, {
-      withCredentials: true,
-      responseType: 'blob',
-    } as { withCredentials: boolean; responseType: 'blob' });
   }
 
   getStatPreferences() {

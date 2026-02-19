@@ -38,9 +38,5 @@
         (photoUpload)="onPhotoUpload($event.projectId, $event.dataUrl)"
       />
     </div>
-    <app-assistant-thumbnail-generator
-      [cards]="cardsWithUploadedPhotos"
-      [uploadedPhotosByProjectId]="uploadedPhotosByProjectId"
-    />
   }
 </section>
