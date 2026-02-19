@@ -96,8 +96,9 @@ Prefer calling backend via relative paths (`/api/...`) when frontend and backend
 For this repo’s Render setup (separate Static Site + Web Service), the frontend supports an injected backend origin:
 
 - Set a **frontend build-time env var** `WT_BACKEND_URL` (or `BACKEND_URL` / `PUBLIC_BACKEND_URL`) to your backend public origin (e.g., `https://<service>.onrender.com`).
-- The frontend build runs `frontend/scripts/inject-backend-url.mjs`, which replaces a placeholder in `dist/index.html` (`<meta name="wt-backend-url" ...>`).
-- At runtime, the app uses that value for:
+- **Optional**: `WT_FEATURE_WRAPPED` — set to `"true"` or `"1"` to show the Wrapped page and related UI (nav link, home CTA, Stats Preferences). If unset or any other value, the Wrapped page is hidden (feature toggle for gradual rollout).
+- The frontend build runs `frontend/scripts/inject-backend-url.mjs`, which replaces placeholders in `dist/index.html` (`<meta name="wt-backend-url" ...>`, `<meta name="wt-feature-wrapped" ...>`).
+- At runtime, the app uses the backend URL for:
   - OAuth start: `GET <backend>/auth/ravelry/start`
   - API calls: `GET <backend>/api/...` (with credentials enabled)
 

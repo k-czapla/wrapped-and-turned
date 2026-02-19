@@ -11,12 +11,14 @@
     </a>
 
     <nav *ngIf="(me$() | async) as me" class="hidden items-center gap-1 md:flex">
-      <a
-        routerLink="/wrapped"
-        routerLinkActive="bg-slate-900 text-white"
-        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-        >Wrapped</a
-      >
+      @if (wrappedEnabled()) {
+        <a
+          routerLink="/wrapped"
+          routerLinkActive="bg-slate-900 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >Wrapped</a
+        >
+      }
       <a
         routerLink="/assistant"
         routerLinkActive="bg-slate-900 text-white"
@@ -55,14 +57,16 @@
                 >
                   Board design
                 </a>
-                <a
-                  routerLink="/stats-preferences"
-                  routerLinkActive="bg-slate-50"
-                  (click)="closeUserMenu()"
-                  class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  Stats Preferences
-                </a>
+                @if (wrappedEnabled()) {
+                  <a
+                    routerLink="/stats-preferences"
+                    routerLinkActive="bg-slate-50"
+                    (click)="closeUserMenu()"
+                    class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  >
+                    Stats Preferences
+                  </a>
+                }
                 <button
                   (click)="logout.emit(); closeUserMenu()"
                   class="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"

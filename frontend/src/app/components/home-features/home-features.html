@@ -1,8 +1,10 @@
 <section class="mt-8 grid gap-4 md:grid-cols-3">
-  <app-home-feature-card
-    title="Wrapped stats"
-    description="Project count, total yardage/meterage, breakdowns by craft (and room for more: yarn weights, top designers, most productive month)."
-  />
+  @if (wrappedEnabled()) {
+    <app-home-feature-card
+      title="Wrapped stats"
+      description="Project count, total yardage/meterage, breakdowns by craft (and room for more: yarn weights, top designers, most productive month)."
+    />
+  }
   <app-home-feature-card
     title="Podcaster's Assistant"
     description='Build a vertical "episode board" for a project (photo, pattern, designer, size, yarn) and download it as a PNG.'

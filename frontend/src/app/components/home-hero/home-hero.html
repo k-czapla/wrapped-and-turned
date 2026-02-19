@@ -18,11 +18,13 @@
 
     <div class="mt-6 flex flex-wrap items-center gap-3">
       @if (me(); as me) {
-        <a
-          routerLink="/wrapped"
-          class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-          >Generate your Wrapped</a
-        >
+        @if (wrappedEnabled()) {
+          <a
+            routerLink="/wrapped"
+            class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+            >Generate your Wrapped</a
+          >
+        }
         <a
           routerLink="/assistant"
           class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50"

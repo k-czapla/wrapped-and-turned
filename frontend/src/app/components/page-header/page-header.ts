@@ -1,8 +1,9 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, HostListener, input, output, signal } from '@angular/core';
+import { Component, HostListener, inject, input, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import type { Observable } from 'rxjs';
 import type { Me } from '../../services/api';
+import { FeatureFlags } from '../../services/feature-flags';
 
 @Component({
   selector: 'app-page-header',
@@ -12,11 +13,13 @@ import type { Me } from '../../services/api';
   styleUrl: './page-header.css',
 })
 export class PageHeader {
+  private featureFlags = inject(FeatureFlags);
   me$ = input.required<Observable<Me | null | undefined>>();
   login = output<void>();
   logout = output<void>();
 
   protected showUserMenu = signal(false);
+  protected wrappedEnabled = () => this.featureFlags.wrappedEnabled();
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {

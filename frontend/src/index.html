@@ -11,6 +11,10 @@
     When empty, the app falls back to same-origin paths (local dev proxy or shared-domain hosting).
   -->
   <meta name="wt-backend-url" content="__WT_BACKEND_URL__">
+  <!--
+    Feature toggle for Wrapped page. Replaced at build time; "true" or "1" = show Wrapped, otherwise hidden.
+  -->
+  <meta name="wt-feature-wrapped" content="__WT_FEATURE_WRAPPED__">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
