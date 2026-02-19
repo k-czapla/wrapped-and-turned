@@ -175,6 +175,6 @@ function defaultTo() {
 
 function defaultFrom() {
   const d = new Date();
-  d.setDate(1);
+  d.setDate(d.getDate() - 30);
   return isoDate(d);
 }
