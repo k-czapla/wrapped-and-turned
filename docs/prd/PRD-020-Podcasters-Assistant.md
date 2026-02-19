@@ -34,12 +34,12 @@ When the user has selected **one or more projects** (same selection as for the b
 
 **Output structure (order matters for YouTube):**
 
-1. **Title** — Catchy, curiosity-sparking, keyword-aware; suitable as the video/podcast title. May include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Important for search and “first impression” in recommendations.
+1. **Title** — Used as the YouTube video title. Must include the phrase “knitting podcast” and an episode number placeholder (e.g. “Ep. [##]” or “Episode [##]”) so the creator can fill in the number. Should reference the projects/patterns in the episode (pattern names, FO count, or themes) so it’s clearly connected to the content. Catchy, curiosity-sparking, keyword-aware; may include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Tailored for YouTube search and recommendations (~60 characters).
 2. **Short description** — A brief (2–4 lines) summary of the episode/video, visible before “Show more” on YouTube. Hook the viewer; may use 1–2 emojis for warmth. Mention finished objects / FOs where natural.
 3. **List of Ravelry links** — For each selected project: project/pattern name and a clickable link to the Ravelry project (and optionally pattern) page. Clear list format for easy scanning.
 4. **Hashtags** — At the end; relevant fiber-arts and craft hashtags (e.g. #knitting, #crochet, #handmade, #ravelry, #fiberarts, #knittingpodcast) plus project-specific tags where sensible.
 
-**Design goals (“knitting podcast” algorithm):** Concise, scannable, and aligned with what YouTube and podcast platforms favor: catchy click-worthy titles, strong first lines, clear keywords (e.g. finished objects, FO, pattern names), no keyword stuffing, and structure that supports discovery. Tone is conversational and cozy. Generated text may include tasteful emojis for fun and shareability (see [YouTube description and title guidance](https://support.google.com/youtube/answer/12948449)).
+**Design goals (“knitting podcast” algorithm):** Title is optimized for YouTube: includes “knitting podcast”, episode placeholder, and project-specific keywords so the title is catchy and clearly tied to the episode content. Concise, scannable; clear keywords (e.g. finished objects, FO, pattern names), no keyword stuffing. Tone is conversational and cozy. Generated text may include tasteful emojis for fun and shareability (see [YouTube description and title guidance](https://support.google.com/youtube/answer/12948449)).
 
 The generated text is displayed in a **show notes box** (or similar) so the user can copy it into YouTube (or another platform). Implementation uses **Groq** (see “AI tools (no-cost options)” below).
 

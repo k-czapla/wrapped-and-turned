@@ -18,7 +18,7 @@ export type DescriptionResult = {
 export function buildFallbackDescription(cards: CardSummary[]): DescriptionResult {
   if (cards.length === 0) {
     return {
-      title: '🧶 My fiber arts FOs',
+      title: 'Ep. [##] | 🧶 Knitting podcast: My fiber arts FOs ✨',
       description: 'In this episode I share these finished objects! ✨',
       ravelryLinks: '',
       hashtags: '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast',
@@ -52,10 +52,10 @@ export function buildFallbackDescription(cards: CardSummary[]): DescriptionResul
 
 const SYSTEM_PROMPT = `You are a helpful assistant for knitting and fiber-arts podcasters. Generate a YouTube video (or knitting podcast episode) description based on the given Ravelry finished objects.
 
-"Knitting podcast" algorithm tips: Use a catchy, click-worthy title that sparks curiosity and includes clear keywords (e.g. finished objects, FO, knit, crochet, pattern names). The first line of the description should hook listeners and work well for discovery. Keep it conversational and cozy—like a friend sharing their makes.
+YouTube algorithm & discovery: The title is critical. It must (1) include the exact phrase "knitting podcast", (2) include an episode number placeholder so the creator can fill it in—use "Ep. [##]" or "Episode [##]" at the start (e.g. "Ep. [42] | ..."), (3) reference the actual projects/patterns mentioned (pattern names, themes, or FO count) so it's clearly connected to the episode content, (4) be catchy and curiosity-sparking with clear keywords (FO, knit, crochet, pattern names). Keep it conversational and cozy—like a friend sharing their makes. No keyword stuffing.
 
 Output a JSON object with exactly these keys (all strings):
-- "title": A catchy, curiosity-sparking title (suitable for YouTube and podcast apps). Include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Max ~60 characters. Make it fun and shareable.
+- "title": The YouTube video title. MUST include the phrase "knitting podcast" and MUST start with an episode placeholder "Ep. [##]" or "Episode [##]". Reference the projects/patterns in the list (e.g. pattern name, "3 FOs", "sweaters & socks"). Include 1–2 tasteful emojis (e.g. 🧶 ✨ 🎙️). Max ~60 characters. Catchy and shareable for YouTube search and recommendations.
 - "description": A short paragraph (2-4 sentences) that hooks the viewer and summarizes the episode. Use 1–2 emojis for warmth. Friendly, inclusive, cozy tone. Mention that these are finished objects / FOs. This will appear before "Show more" on YouTube.
 - "ravelryLinks": A newline-separated list of lines. Each line: "- Pattern/Project name by Designer: https://www.ravelry.com/..." Use the exact URLs provided. Do not invent links.
 - "hashtags": Space-separated relevant hashtags, e.g. #knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #FO plus any project-specific tags. No newlines.
@@ -92,7 +92,7 @@ function parseGroqResponse(content: string): DescriptionResult | null {
     const ravelryLinks = typeof obj.ravelryLinks === 'string' ? obj.ravelryLinks : '';
     const hashtags = typeof obj.hashtags === 'string' ? obj.hashtags : '';
     if (!title && !description) return null;
-    return { title: title || '🧶 My fiber arts FOs', description, ravelryLinks, hashtags };
+    return { title: title || 'Ep. [##] | 🧶 Knitting podcast: My fiber arts FOs ✨', description, ravelryLinks, hashtags };
   } catch {
     return null;
   }
