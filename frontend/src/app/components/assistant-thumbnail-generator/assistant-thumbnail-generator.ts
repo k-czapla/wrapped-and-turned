@@ -111,7 +111,8 @@ export class AssistantThumbnailGenerator {
     this.api
       .generateThumbnail(projectNames, this.mood(), this.userPrompt || undefined)
       .subscribe({
-        next: (blob) => {
+        next: (data: Blob | ArrayBuffer) => {
+          const blob = data instanceof Blob ? data : new Blob([data]);
           const url = URL.createObjectURL(blob);
           this.resultBlobUrl.set(url);
           this.generating.set(false);

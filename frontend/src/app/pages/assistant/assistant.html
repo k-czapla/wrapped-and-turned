@@ -17,12 +17,12 @@
   @if (wrapped; as w) {
     <app-assistant-generate-description
       [cards]="cards"
-      [totalFinishedInRange]="w.totals?.finishedProjects ?? null"
+      [totalFinishedInRange]="w.totals.finishedProjects"
     />
 
     <div class="grid gap-4 md:grid-cols-2">
       <app-assistant-project-picker
-        [projects]="w.projects ?? []"
+        [projects]="w.projects"
         [selectedIds]="selectedProjectIds"
         (selectionChange)="onSelectionChange($event)"
       />

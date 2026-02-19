@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 
 export type Me = { username: string };
 
@@ -199,17 +199,17 @@ export class Api {
     projectNames: string[],
     mood: ThumbnailMood,
     userPrompt?: string
-  ) {
+  ): Observable<Blob> {
     const backendBase = this.getBackendBase();
     const body = {
       projectNames,
       mood,
       ...(userPrompt?.trim() && { userPrompt: userPrompt.trim() }),
     };
-    return this.http.post<Blob>(this.join(backendBase, '/api/generate-thumbnail'), body, {
+    return this.http.post(this.join(backendBase, '/api/generate-thumbnail'), body, {
       withCredentials: true,
       responseType: 'blob',
-    });
+    } as { withCredentials: boolean; responseType: 'blob' });
   }
 
   getStatPreferences() {
