@@ -116,6 +116,20 @@ export class AssistantBoardPreview {
     input.value = '';
   }
 
+  /** Sanitize a string for use as a filename (no path chars, reasonable length). */
+  private downloadBaseName(card: ProjectCard | undefined, index: number): string {
+    const raw =
+      card?.patternName?.trim() ||
+      card?.projectName?.trim() ||
+      `project-${card?.id ?? index}`;
+    const sanitized = raw
+      .replace(/[/\\:*?"<>|]/g, '-')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    return sanitized || `project-${card?.id ?? index}`;
+  }
+
   async downloadBoard(index: number) {
     const el = this.boardEls?.get(index)?.nativeElement;
     if (!el) return;
@@ -160,10 +174,10 @@ export class AssistantBoardPreview {
       });
 
       const card = this.cards()[index];
-      const id = card?.id ?? index;
+      const baseName = this.downloadBaseName(card, index);
       const a = document.createElement('a');
       a.href = dataUrl;
-      a.download = `wrapped-and-turned-project-${id}.png`;
+      a.download = `wrapped-and-turned-${baseName}.png`;
       a.click();
     } finally {
       // Restore original image sources
