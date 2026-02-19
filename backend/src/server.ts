@@ -593,13 +593,21 @@ app.post('/api/generate-description', async (req, res) => {
   const optionalPrompt =
     typeof body.optionalPrompt === 'string' ? body.optionalPrompt.trim() || undefined : undefined;
 
+  const foCount =
+    typeof body.foCount === 'number' &&
+    Number.isInteger(body.foCount) &&
+    body.foCount >= 0 &&
+    body.foCount <= cards.length
+      ? body.foCount
+      : undefined;
+
   let result: { title: string; description: string; ravelryLinks: string; hashtags: string };
   const apiKey = env.GROQ_API_KEY;
   if (apiKey) {
-    const groqResult = await callGroqForDescription(apiKey, cards, optionalPrompt);
-    result = groqResult ?? buildFallbackDescription(cards);
+    const groqResult = await callGroqForDescription(apiKey, cards, optionalPrompt, foCount);
+    result = groqResult ?? buildFallbackDescription(cards, foCount);
   } else {
-    result = buildFallbackDescription(cards);
+    result = buildFallbackDescription(cards, foCount);
   }
 
   res.json(result);

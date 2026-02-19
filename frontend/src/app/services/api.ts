@@ -168,10 +168,11 @@ export class Api {
   /**
    * Generate YouTube/show-notes description for selected projects.
    * Sends card summaries (from existing ProjectCard[]) and optional prompt; returns title, description, Ravelry links, hashtags.
+   * @param foCount - Optional count of selected projects that are finished objects (completed in range). Used for title "X FOs". If omitted, backend uses cards.length.
    */
-  generateDescription(cards: ProjectCard[], optionalPrompt?: string) {
+  generateDescription(cards: ProjectCard[], optionalPrompt?: string, foCount?: number) {
     const backendBase = this.getBackendBase();
-    const body = {
+    const body: Record<string, unknown> = {
       cards: cards.map((c) => ({
         projectName: c.projectName,
         patternName: c.patternName,
@@ -180,6 +181,9 @@ export class Api {
       })),
       ...(optionalPrompt?.trim() && { optionalPrompt: optionalPrompt.trim() }),
     };
+    if (typeof foCount === 'number' && Number.isInteger(foCount) && foCount >= 0) {
+      body['foCount'] = foCount;
+    }
     return this.http.post<GenerateDescriptionResult>(
       this.join(backendBase, '/api/generate-description'),
       body,

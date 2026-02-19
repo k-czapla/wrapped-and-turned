@@ -14,6 +14,8 @@ export class AssistantGenerateDescription {
   cards = input.required<ProjectCard[]>();
   /** Total finished objects in the loaded date range (from wrapped stats). */
   totalFinishedInRange = input<number | null>(null);
+  /** Count of selected cards that are FOs (completed in range). Used for title "X FOs". If null/undefined, backend uses cards.length. */
+  selectedFOCount = input<number | null>(null);
 
   protected optionalPrompt = '';
   protected generating = signal(false);
@@ -35,7 +37,11 @@ export class AssistantGenerateDescription {
     this.result.set(null);
     this.generating.set(true);
 
-    this.api.generateDescription(c, this.optionalPrompt || undefined).subscribe({
+    const foCount =
+      this.selectedFOCount() != null && Number.isInteger(this.selectedFOCount())
+        ? this.selectedFOCount()!
+        : undefined;
+    this.api.generateDescription(c, this.optionalPrompt || undefined, foCount).subscribe({
       next: (res) => {
         this.result.set(res);
         this.generating.set(false);

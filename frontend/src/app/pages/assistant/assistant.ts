@@ -44,6 +44,17 @@ export class Assistant {
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
 
+  /** Count of selected cards that are finished objects (completed date within loaded range). Used for title "X FOs". */
+  get selectedFOCount(): number {
+    const w = this.wrapped;
+    const range = w?.range;
+    if (!range?.from || !range?.to) return 0;
+    const fromD = new Date(range.from);
+    const toD = new Date(range.to);
+    if (Number.isNaN(fromD.getTime()) || Number.isNaN(toD.getTime())) return 0;
+    return this.cards.filter((c) => completedInRange(c.completed, fromD, toD)).length;
+  }
+
   constructor(
     private api: Api,
     private cdr: ChangeDetectorRef,
@@ -140,6 +151,13 @@ export class Assistant {
   }
 }
 
+function completedInRange(completed: string | undefined, from: Date, to: Date): boolean {
+  if (!completed) return false;
+  const d = new Date(completed);
+  if (Number.isNaN(d.getTime())) return false;
+  return d.getTime() >= from.getTime() && d.getTime() <= to.getTime();
+}
+
 function normalizeWrapped(raw: unknown): WrappedStats | null {
   if (!raw || typeof raw !== 'object') return null;
   const s = raw as Record<string, unknown>;
@@ -150,9 +168,18 @@ function normalizeWrapped(raw: unknown): WrappedStats | null {
     ? (rangeVal as WrappedStats['range'])
     : { from: '', to: '' };
   const totalsVal = s['totals'];
-  const totals = totalsVal && typeof totalsVal === 'object'
-    ? (totalsVal as WrappedStats['totals'])
-    : { projects: 0, finishedProjects: 0, totalYardage: 0, totalMeterage: 0 };
+  const t = totalsVal && typeof totalsVal === 'object' ? (totalsVal as Record<string, unknown>) : null;
+  const totals: WrappedStats['totals'] = {
+    projects: typeof t?.['projects'] === 'number' && t['projects'] >= 0 ? t['projects'] : 0,
+    finishedProjects:
+      typeof t?.['finishedProjects'] === 'number' && t['finishedProjects'] >= 0
+        ? t['finishedProjects']
+        : 0,
+    totalYardage:
+      typeof t?.['totalYardage'] === 'number' && t['totalYardage'] >= 0 ? t['totalYardage'] : 0,
+    totalMeterage:
+      typeof t?.['totalMeterage'] === 'number' && t['totalMeterage'] >= 0 ? t['totalMeterage'] : 0,
+  };
   const breakdowns = s['breakdowns'] && typeof s['breakdowns'] === 'object'
     ? (s['breakdowns'] as WrappedStats['breakdowns'])
     : { craft: {} };

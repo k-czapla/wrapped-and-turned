@@ -19,8 +19,15 @@ export function buildTitle(foCount: number, catchyTitle: string, emoji: string):
   return `Ep. [##] | ${foCount} FOs - ${catchyTitle} - Knitting Podcast ${emoji}`.trim();
 }
 
-/** Build non-AI fallback when Groq is unavailable or fails. */
-export function buildFallbackDescription(cards: CardSummary[]): DescriptionResult {
+/**
+ * Build non-AI fallback when Groq is unavailable or fails.
+ * @param foCount - Number of selected projects that are finished objects (completed in range). If omitted, uses cards.length.
+ */
+export function buildFallbackDescription(
+  cards: CardSummary[],
+  foCount?: number
+): DescriptionResult {
+  const count = resolveFoCount(cards, foCount);
   if (cards.length === 0) {
     return {
       title: buildTitle(0, 'My fiber arts FOs', '✨'),
@@ -36,11 +43,11 @@ export function buildFallbackDescription(cards: CardSummary[]): DescriptionResul
     cards.length === 1
       ? oneTitle
       : `${cards.map((c) => c.patternName || c.projectName).slice(0, 2).join(', ')}${cards.length > 2 ? '…' : ''}`;
-  const title = buildTitle(cards.length, catchyTitle, '✨');
+  const title = buildTitle(count, catchyTitle, '✨');
   const description =
-    cards.length === 1
+    count === 1
       ? `In this episode I'm sharing my finished object: ${oneTitle}. 🎙️`
-      : `In this episode I'm sharing ${cards.length} finished objects from my Ravelry! ✨`;
+      : `In this episode I'm sharing ${count} finished objects from my Ravelry! ✨`;
 
   const ravelryLinks = cards
     .filter((c) => c.projectUrl)
@@ -60,7 +67,7 @@ const SYSTEM_PROMPT = `You are a helpful assistant for knitting and fiber-arts p
 
 The video title will be assembled as: Ep. [##] | X FOs - {catchyTitle} - Knitting Podcast {emoji}
 - X is the number of finished objects (provided in the user message). You only supply catchyTitle and emoji.
-- "catchyTitle": A short, catchy phrase for the middle of the title (e.g. "Sweaters & Socks", "Cozy Winter Makes", "Hats Off to These FOs"). Reference the projects/patterns when it fits. Curiosity-sparking, clear keywords (knit, crochet, pattern themes). Max ~40 characters. No keyword stuffing.
+- "catchyTitle": A short, catchy phrase for the middle of the title (e.g. "Sweaters & Socks", "Cozy Winter Makes", "Hats Off to These FOs"). Reference the projects/patterns when it fits. Curiosity-sparking, clear keywords (knit, crochet, pattern themes). Max ~60 characters. No keyword stuffing.
 - "titleEmoji": 1–2 tasteful cozy emojis (e.g. 🧶 ✨ 🎙️) for the end of the title.
 
 Output a JSON object with exactly these keys (all strings):
@@ -72,8 +79,25 @@ Output a JSON object with exactly these keys (all strings):
 
 Be concise. No keyword stuffing. Output only valid JSON, no markdown or extra text.`;
 
-function buildUserMessage(cards: CardSummary[], optionalPrompt?: string): string {
-  const foCount = cards.length;
+/** Use client-provided foCount if valid (finished-objects-only count), else cards.length. */
+function resolveFoCount(cards: CardSummary[], foCount?: number): number {
+  if (
+    typeof foCount === 'number' &&
+    Number.isInteger(foCount) &&
+    foCount >= 0 &&
+    foCount <= cards.length
+  ) {
+    return foCount;
+  }
+  return cards.length;
+}
+
+function buildUserMessage(
+  cards: CardSummary[],
+  optionalPrompt?: string,
+  foCount?: number
+): string {
+  const count = resolveFoCount(cards, foCount);
   const projectList = cards
     .map((c) => {
       const parts = [
@@ -86,7 +110,7 @@ function buildUserMessage(cards: CardSummary[], optionalPrompt?: string): string
     })
     .join('\n\n');
 
-  const foLine = `Number of finished objects (FOs) for the title: ${foCount}`;
+  const foLine = `Number of finished objects (FOs) for the title: ${count}`;
   if (optionalPrompt?.trim()) {
     return `${foLine}\n\nOptional context from the creator: ${optionalPrompt.trim()}\n\nProjects:\n${projectList}`;
   }
@@ -115,14 +139,17 @@ function parseGroqResponse(content: string, foCount: number): DescriptionResult 
 /**
  * Call Groq to generate title, description, Ravelry links section, and hashtags.
  * Returns null if API key missing, request fails, or response is not valid.
+ * @param foCount - Number of selected projects that are finished objects (completed in range). If omitted, uses cards.length.
  */
 export async function callGroqForDescription(
   apiKey: string,
   cards: CardSummary[],
-  optionalPrompt?: string
+  optionalPrompt?: string,
+  foCount?: number
 ): Promise<DescriptionResult | null> {
+  const count = resolveFoCount(cards, foCount);
   const client = new Groq({ apiKey });
-  const userMessage = buildUserMessage(cards, optionalPrompt);
+  const userMessage = buildUserMessage(cards, optionalPrompt, foCount);
 
   try {
     const completion = await client.chat.completions.create({
@@ -137,7 +164,7 @@ export async function callGroqForDescription(
 
     const content = completion.choices?.[0]?.message?.content;
     if (!content) return null;
-    return parseGroqResponse(content, cards.length);
+    return parseGroqResponse(content, count);
   } catch {
     return null;
   }
