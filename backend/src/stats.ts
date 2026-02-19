@@ -58,11 +58,10 @@ export function computeBaseStats(args: {
   const fromD = new Date(args.from);
   const toD = new Date(args.to);
 
+  // Only projects with a completed date in range count as finished objects (FOs)
   const inRange = args.items.filter((p) => {
     const completed = safeDate(p.completed);
-    if (completed) return withinRange(completed, fromD, toD);
-    const started = safeDate(p.started);
-    return started ? withinRange(started, fromD, toD) : false;
+    return completed ? withinRange(completed, fromD, toD) : false;
   });
 
   const craft: Record<string, number> = {};
@@ -70,7 +69,7 @@ export function computeBaseStats(args: {
 
   for (const p of inRange) {
     inc(craft, p.craft_name ?? 'Unknown');
-    const d = safeDate(p.completed) ?? safeDate(p.started);
+    const d = safeDate(p.completed);
     if (d) inc(byMonth, monthKey(d));
   }
 

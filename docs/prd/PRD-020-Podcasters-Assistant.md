@@ -30,7 +30,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 When the user has selected **one or more projects** (same selection as for the board), a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**.
 
-**UI:** The description section shows the **count of finished objects** in the loaded date range (from Wrapped stats) and uses “finished objects” wording (e.g. “3 finished objects selected (of 12 in this period)”). The section title is catchy and uses light emoji (e.g. “✨ Show notes & YouTube description”).
+**UI:** The description section shows the **count of finished objects** in the loaded date range (from Wrapped stats) and uses “finished objects” wording (e.g. “3 finished objects selected (of 12 in this period)”). Only projects with a **completed date** within the range count as finished objects; projects with only a started date are excluded. The section title is catchy and uses light emoji (e.g. “✨ Show notes & YouTube description”).
 
 **Output structure (order matters for YouTube):**
 

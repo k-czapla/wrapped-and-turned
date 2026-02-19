@@ -187,7 +187,7 @@ describe('stats', () => {
       expect(result.mostProductiveMonth).toBe('2025-03');
     });
 
-    it('should handle projects with only started date', () => {
+    it('should exclude projects without completed date (only started does not count as FO)', () => {
       const projects: RavelryProjectListItem[] = [
         {
           id: 1,
@@ -203,8 +203,8 @@ describe('stats', () => {
         items: projects,
       });
 
-      expect(result.inRange).toHaveLength(1);
-      expect(result.craft.Knitting).toBe(1);
+      expect(result.inRange).toHaveLength(0);
+      expect(result.craft.Knitting ?? 0).toBe(0);
     });
 
     it('should handle empty project list', () => {
