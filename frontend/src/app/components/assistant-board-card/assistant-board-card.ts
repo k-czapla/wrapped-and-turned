@@ -25,7 +25,7 @@ export class AssistantBoardCard {
   selectedPhotoIndex = input<number>(0);
 
   protected isCanvaStyle = computed(() => this.design()?.canvaLayout === true);
-  protected opts = computed(() => this.displayOptions() ?? { ...DEFAULT_BOARD_DISPLAY_OPTIONS });
+  protected opts = computed(() => ({ ...DEFAULT_BOARD_DISPLAY_OPTIONS, ...this.displayOptions() }));
 
   /** Ravelry project page URL for the QR code; only set when card has projectUrl */
   protected projectUrl = computed(() => this.card()?.projectUrl ?? null);
