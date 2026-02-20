@@ -11,6 +11,7 @@ const SAMPLE_PROJECT_CARD: ProjectCard = {
   designerName: 'Jane Designer',
   sizeMade: 'M (38" chest)',
   yarnUsed: 'Malabrigo Ríos, 3 skeins',
+  needleSizes: '4mm + 3.5mm',
   projectUrl: 'https://www.ravelry.com/projects/demo/example-project',
 };
 

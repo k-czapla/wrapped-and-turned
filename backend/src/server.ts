@@ -503,13 +503,14 @@ app.get('/api/project-card/:id', async (req, res) => {
       .join(', ')
     : undefined;
 
-  const needleSizes = Array.isArray(proj?.needles)
+  const needlesArray = proj?.needle_sizes ?? proj?.needles;
+  const needleSizes = Array.isArray(needlesArray)
     ? [...new Set(
-        proj.needles
+        needlesArray
           .map((n: any) => {
-            const metric = n?.metric;
-            const us = n?.us;
-            const name = n?.name;
+            const metric = n?.metric ?? n?.mm;
+            const us = n?.us ?? n?.us_steel ?? n?.hook;
+            const name = n?.name ?? n?.pretty_metric;
             if (typeof metric === 'number' && metric > 0) return `${metric}mm`;
             if (typeof us === 'string' && us.trim()) return `US ${us}`;
             if (typeof name === 'string' && name.trim()) return name.trim();
