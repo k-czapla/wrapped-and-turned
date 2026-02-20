@@ -49,14 +49,23 @@
       />
       <span class="text-sm text-slate-700">Size made</span>
     </label>
-      <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
-        <input
-          type="checkbox"
-          [checked]="options().showStartDate && options().showCompletedDate"
-          (change)="toggleDates()"
-          class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-        />
-        <span class="text-sm text-slate-700">Start & completed date</span>
-      </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showNeedleSizes"
+        (change)="toggle('showNeedleSizes')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Needle sizes</span>
+    </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showStartDate && options().showCompletedDate"
+        (change)="toggleDates()"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Start & completed date</span>
+    </label>
   </div>
 </div>

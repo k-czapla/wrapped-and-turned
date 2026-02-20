@@ -444,6 +444,7 @@ app.get('/api/project-card/:id', async (req, res) => {
       designerName: 'Demo Designer',
       sizeMade: 'One size',
       yarnUsed: 'Demo Yarn',
+      needleSizes: '4mm + 3.5mm',
       projectUrl: 'https://www.ravelry.com/projects/demo/example-project',
       projectPhotos: [],
       patternPhotos: [],
@@ -500,6 +501,22 @@ app.get('/api/project-card/:id', async (req, res) => {
       })
       .filter(Boolean)
       .join(', ')
+    : undefined;
+
+  const needleSizes = Array.isArray(proj?.needles)
+    ? [...new Set(
+        proj.needles
+          .map((n: any) => {
+            const metric = n?.metric;
+            const us = n?.us;
+            const name = n?.name;
+            if (typeof metric === 'number' && metric > 0) return `${metric}mm`;
+            if (typeof us === 'string' && us.trim()) return `US ${us}`;
+            if (typeof name === 'string' && name.trim()) return name.trim();
+            return null;
+          })
+          .filter(Boolean)
+      )].join(' + ') || undefined
     : undefined;
 
   const username = req.session.ravelry!.username ?? '';
@@ -560,6 +577,7 @@ app.get('/api/project-card/:id', async (req, res) => {
     designerName,
     sizeMade: proj?.size,
     yarnUsed,
+    needleSizes,
     projectUrl,
     started: started || undefined,
     completed: completed || undefined,

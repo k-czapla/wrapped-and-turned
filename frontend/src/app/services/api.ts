@@ -62,6 +62,8 @@ export type ProjectCard = {
   designerName?: string;
   sizeMade?: string;
   yarnUsed?: string;
+  /** Needle sizes used, joined by "+" if multiple (e.g. "4mm + 3.5mm") */
+  needleSizes?: string;
   /** Ravelry project page URL for QR code / link */
   projectUrl?: string;
   /** ISO-ish date when project was started */
@@ -87,6 +89,7 @@ export type BoardDisplayOptions = {
   showDesignerName: boolean;
   showYarnUsed: boolean;
   showSizeMade: boolean;
+  showNeedleSizes: boolean;
   showStartDate: boolean;
   showCompletedDate: boolean;
 };
@@ -98,6 +101,7 @@ export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
   showDesignerName: true,
   showYarnUsed: true,
   showSizeMade: true,
+  showNeedleSizes: true,
   showStartDate: true,
   showCompletedDate: true,
 };
