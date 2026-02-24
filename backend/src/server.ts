@@ -828,6 +828,7 @@ app.get('/api/bundle/:id', async (req, res) => {
     res.json({
       bundle: { id: bundle.id, name: bundle.name },
       patternCards,
+      _rawRavelry: data,
     });
   } catch (err: any) {
     const status = err?.response?.status;
