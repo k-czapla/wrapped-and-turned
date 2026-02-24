@@ -25,6 +25,8 @@ For deployment and operations expectations (CI/CD, hosting, secrets, monitoring)
 - **Auth**: Ravelry OAuth 2.0
 - **Session storage**: in-memory session (sufficient for local/dev and small-scale usage)
 
+**Backend structure (modular):** Entry is `server.ts` (listen only). Express app is created in `app.ts` (middleware, CORS, session). Route handlers live under `routes/` (health, auth, and `api/` for me, wrapped, project-card, bundles, generate-description, proxy-image). Shared pieces: `auth.ts` (requireAuth, OAuth helpers), `session-types.ts` (session augmentation, stat preferences), `ravelry-helpers.ts` (photo URLs, pattern cards, bundle item parsing).
+
 ## API endpoints (v1)
 
 ### `GET /health`
