@@ -56,10 +56,8 @@
   margin-top: 0.25rem;
   font-size: 0.875rem;
   font-weight: 600;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .assistant-pattern-board-card__footer {
