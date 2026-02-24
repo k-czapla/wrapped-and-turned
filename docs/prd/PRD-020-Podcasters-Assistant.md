@@ -36,7 +36,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 - **Bundle list**: logged-in user clicks “Load my bundles” to fetch their Ravelry bundles (bundles_list). User selects one bundle from a dropdown.
 - **Bundle content**: after selection, the app fetches the bundle (bundles_show) and pattern details for each pattern in the bundle. User sees a **selectable pattern list** (pattern name, designer) and selects one or more patterns to generate boards and description for.
-- **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (sizes + min/max circumference in meters), **Needle size**, **Gauge**, **Suggested yarn**. Same board design selection (Board Design page) and PNG export as Project Update.
+- **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (from API `sizes_available` when present, else computed sizes + range), **Needle size**, **Gauge**, **Suggested yarn** (from pattern packs `yarn_name`), **Price** (pattern price and currency). Same board design selection (Board Design page) and PNG export as Project Update.
 
 ### Generate YouTube / show notes description (AI-assisted)
 
@@ -75,8 +75,10 @@ The Pattern Round Up board shows **Pattern name** and **Designer** always, and o
 
 - **Photo**: selected pattern photo from Ravelry (user can pick from pattern photo gallery)
 - **Pattern name**, **Designer**: always shown
-- **Sizes available**: size names plus min/max circumference in meters (e.g. “S, M, L (0.80–1.20 m)”)
-- **Needle size**, **Gauge**, **Suggested yarn**: from Ravelry pattern
+- **Sizes available**: from Ravelry pattern `sizes_available` when present (e.g. “13 sizes”), else computed size names plus min/max circumference in meters
+- **Needle size**, **Gauge**: from Ravelry pattern
+- **Suggested yarn**: from pattern packs `yarn_name` (e.g. “De Rerum Natura Bérénice”)
+- **Price**: pattern price and currency (e.g. “9.6 EUR”) when enabled
 - **QR code / link**: to the Ravelry pattern page
 
 ### Export

@@ -32,10 +32,23 @@ export class AssistantPatternBoardCard {
     showNeedleSizes: true,
     showGauge: true,
     showSuggestedYarn: true,
+    showPrice: true,
     ...this.displayOptions(),
   }));
 
   protected patternUrl = computed(() => this.card()?.patternUrl ?? null);
+
+  /** Formatted price line: e.g. "9.6 EUR" or "€ 9.60" when only currency code available. */
+  protected priceLine = computed(() => {
+    const c = this.card();
+    if (!c) return '';
+    const price = c.price;
+    const currency = c.currency?.trim();
+    if (price != null && Number.isFinite(price) && currency) return `${price} ${currency}`;
+    if (price != null && Number.isFinite(price)) return String(price);
+    if (currency) return currency;
+    return '';
+  });
 
   protected displayImageUrl = computed(() => {
     const c = this.card();

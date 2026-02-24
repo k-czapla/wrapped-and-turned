@@ -21,7 +21,7 @@
       </div>
     }
 
-    @if ((opts().showSizesAvailable && card()?.sizesAvailable?.trim()) || (opts().showNeedleSizes && card()?.needleSizes?.trim()) || (opts().showGauge && card()?.gauge?.trim()) || (opts().showSuggestedYarn && card()?.suggestedYarn?.trim())) {
+    @if ((opts().showSizesAvailable && card()?.sizesAvailable?.trim()) || (opts().showNeedleSizes && card()?.needleSizes?.trim()) || (opts().showGauge && card()?.gauge?.trim()) || (opts().showSuggestedYarn && card()?.suggestedYarn?.trim()) || (opts().showPrice && (card()?.price != null || card()?.currency?.trim()))) {
       <div class="assistant-pattern-board-card__fields">
         @if (opts().showSizesAvailable && (card()?.sizesAvailable?.trim())) {
           <div class="assistant-pattern-board-card__field">
@@ -45,6 +45,12 @@
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">SUGGESTED YARN</div>
             <div class="assistant-pattern-board-card__field-value">{{ card()!.suggestedYarn }}</div>
+          </div>
+        }
+        @if (opts().showPrice && (card()?.price != null || card()?.currency?.trim())) {
+          <div class="assistant-pattern-board-card__field">
+            <div class="assistant-pattern-board-card__field-label">PRICE</div>
+            <div class="assistant-pattern-board-card__field-value">{{ priceLine() }}</div>
           </div>
         }
       </div>

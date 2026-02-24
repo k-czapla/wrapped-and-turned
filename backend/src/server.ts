@@ -636,6 +636,11 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
     pat?.pattern_author?.name ?? pat?.designer?.name ?? undefined;
   const patternName = pat?.name ?? `Pattern #${patternId}`;
 
+  // Prefer sizes_available from API (e.g. "13 sizes"); fall back to computed from sizes array
+  const sizesAvailableFromApi =
+    typeof pat?.sizes_available === 'string' && pat.sizes_available.trim()
+      ? pat.sizes_available.trim()
+      : undefined;
   const sizesArr = Array.isArray(pat?.sizes) ? pat.sizes : [];
   const sizeNames = sizesArr.map((s: any) => s?.name ?? s?.size).filter(Boolean);
   const minCm = sizesArr.reduce(
@@ -654,12 +659,15 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
     },
     null as number | null
   );
-  let sizesAvailable = sizeNames.length ? sizeNames.join(', ') : undefined;
-  if (minCm != null || maxCm != null) {
-    const minM = minCm != null ? (minCm / 100).toFixed(2) : '?';
-    const maxM = maxCm != null ? (maxCm / 100).toFixed(2) : '?';
-    const range = minCm != null && maxCm != null ? `${minM}–${maxM} m` : minCm != null ? `≥${minM} m` : `≤${maxM} m`;
-    sizesAvailable = sizesAvailable ? `${sizesAvailable} (${range})` : range + ' circumference';
+  let sizesAvailable = sizesAvailableFromApi;
+  if (!sizesAvailable) {
+    sizesAvailable = sizeNames.length ? sizeNames.join(', ') : undefined;
+    if (minCm != null || maxCm != null) {
+      const minM = minCm != null ? (minCm / 100).toFixed(2) : '?';
+      const maxM = maxCm != null ? (maxCm / 100).toFixed(2) : '?';
+      const range = minCm != null && maxCm != null ? `${minM}–${maxM} m` : minCm != null ? `≥${minM} m` : `≤${maxM} m`;
+      sizesAvailable = sizesAvailable ? `${sizesAvailable} (${range})` : range + ' circumference';
+    }
   }
 
   const needleArr = pat?.needle_sizes ?? pat?.pattern_needle_sizes ?? [];
@@ -684,15 +692,24 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
       ? pat.gauge.trim()
       : pat?.gauge_description?.trim() ?? undefined;
 
-  const yarnWeights = pat?.yarn_weight ?? pat?.pattern_yarn_weights;
-  let suggestedYarn: string | undefined;
-  if (Array.isArray(yarnWeights) && yarnWeights.length > 0) {
-    suggestedYarn = yarnWeights
-      .map((y: any) => y?.name ?? y?.min_gauge ?? y?.ply ?? '')
-      .filter(Boolean)
-      .join(', ');
-  } else if (yarnWeights && typeof yarnWeights === 'object' && yarnWeights.name) {
-    suggestedYarn = String(yarnWeights.name);
+  // Prefer yarn_name from packs (e.g. "De Rerum Natura Bérénice"); fall back to yarn_weight
+  const packs = Array.isArray(pat?.packs) ? pat.packs : [];
+  const yarnNamesFromPacks = packs
+    .map((p: any) => (typeof p?.yarn_name === 'string' && p.yarn_name.trim() ? p.yarn_name.trim() : null))
+    .filter(Boolean);
+  const suggestedYarnFromPacks =
+    yarnNamesFromPacks.length > 0 ? [...new Set(yarnNamesFromPacks)].join(', ') : undefined;
+  let suggestedYarn: string | undefined = suggestedYarnFromPacks;
+  if (!suggestedYarn) {
+    const yarnWeights = pat?.yarn_weight ?? pat?.pattern_yarn_weights;
+    if (Array.isArray(yarnWeights) && yarnWeights.length > 0) {
+      suggestedYarn = yarnWeights
+        .map((y: any) => y?.name ?? y?.min_gauge ?? y?.ply ?? '')
+        .filter(Boolean)
+        .join(', ');
+    } else if (yarnWeights && typeof yarnWeights === 'object' && yarnWeights.name) {
+      suggestedYarn = String(yarnWeights.name);
+    }
   }
 
   const permalink = pat?.permalink;
@@ -700,6 +717,11 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
     typeof permalink === 'string' && permalink
       ? `https://www.ravelry.com/patterns/library/${permalink}`
       : `https://www.ravelry.com/patterns/library/${patternId}`;
+
+  const price =
+    typeof pat?.price === 'number' && Number.isFinite(pat.price) ? pat.price : undefined;
+  const currency =
+    typeof pat?.currency === 'string' && pat.currency.trim() ? pat.currency.trim() : undefined;
 
   return {
     id: patternId,
@@ -712,6 +734,8 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
     gauge,
     suggestedYarn,
     patternUrl,
+    ...(price != null && { price }),
+    ...(currency && { currency }),
   };
 }
 
@@ -798,6 +822,8 @@ app.get('/api/bundle/:id', async (req, res) => {
           suggestedYarn: 'DK',
           patternUrl: 'https://www.ravelry.com/patterns/library/demo-a',
           patternPhotos: [],
+          price: 6.5,
+          currency: 'USD',
         },
         {
           id: 102,
@@ -809,6 +835,8 @@ app.get('/api/bundle/:id', async (req, res) => {
           suggestedYarn: 'Fingering',
           patternUrl: 'https://www.ravelry.com/patterns/library/demo-b',
           patternPhotos: [],
+          price: 9.6,
+          currency: 'EUR',
         },
       ],
     });

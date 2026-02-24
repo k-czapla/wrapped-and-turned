@@ -55,5 +55,14 @@
       />
       <span class="text-sm text-slate-700">Suggested yarn</span>
     </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showPrice"
+        (change)="toggle('showPrice')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Price</span>
+    </label>
   </div>
 </div>

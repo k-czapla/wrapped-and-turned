@@ -94,13 +94,18 @@ export type PatternRoundUpCard = {
   patternPhotos?: string[];
   patternName: string;
   designerName?: string;
-  /** Sizes + min/max circumference in meters, e.g. "S, M, L (0.80–1.20 m)" */
+  /** Sizes from API (e.g. "13 sizes") or computed sizes + range */
   sizesAvailable?: string;
   needleSizes?: string;
   gauge?: string;
+  /** Suggested yarn from packs yarn_name or yarn_weight */
   suggestedYarn?: string;
   /** Ravelry pattern page URL for QR/link */
   patternUrl?: string;
+  /** Pattern price (e.g. 9.6) */
+  price?: number;
+  /** Currency code (e.g. "EUR", "USD") */
+  currency?: string;
 };
 
 /** Display options for Pattern Round Up boards (different fields than project boards). */
@@ -112,6 +117,7 @@ export type PatternRoundUpDisplayOptions = {
   showNeedleSizes: boolean;
   showGauge: boolean;
   showSuggestedYarn: boolean;
+  showPrice: boolean;
 };
 
 export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOptions = {
@@ -122,6 +128,7 @@ export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOpti
   showNeedleSizes: true,
   showGauge: true,
   showSuggestedYarn: true,
+  showPrice: true,
 };
 
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
