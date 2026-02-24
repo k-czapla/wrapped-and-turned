@@ -26,31 +26,31 @@
         @if (opts().showSizesAvailable && (card()?.sizesAvailable?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">SIZES</div>
-            <div class="assistant-pattern-board-card__field-value">{{ card()!.sizesAvailable }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.sizesAvailable | truncateMiddle }}</div>
           </div>
         }
         @if (opts().showNeedleSizes && (card()?.needleSizes?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">NEEDLE</div>
-            <div class="assistant-pattern-board-card__field-value">{{ card()!.needleSizes }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.needleSizes | truncateMiddle }}</div>
           </div>
         }
         @if (opts().showGauge && (card()?.gauge?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">GAUGE</div>
-            <div class="assistant-pattern-board-card__field-value">{{ card()!.gauge }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.gauge | truncateMiddle }}</div>
           </div>
         }
         @if (opts().showSuggestedYarn && (card()?.suggestedYarn?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">SUGGESTED YARN</div>
-            <div class="assistant-pattern-board-card__field-value">{{ card()!.suggestedYarn }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.suggestedYarn | truncateMiddle }}</div>
           </div>
         }
         @if (opts().showPrice && (card()?.price != null || card()?.currency?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">PRICE</div>
-            <div class="assistant-pattern-board-card__field-value">{{ priceLine() }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ priceLine() | truncateMiddle }}</div>
           </div>
         }
       </div>

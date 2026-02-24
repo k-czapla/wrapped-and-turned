@@ -3,6 +3,7 @@ import { Component, input, computed } from '@angular/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 import type { PatternRoundUpCard, PatternRoundUpDisplayOptions } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
+import { TruncateMiddlePipe } from './truncate-middle.pipe';
 
 const DEFAULT_CARD_STYLE: Record<string, string> = {
   fontFamily: 'system-ui, sans-serif',
@@ -14,7 +15,7 @@ const DEFAULT_CARD_STYLE: Record<string, string> = {
 @Component({
   selector: 'app-assistant-pattern-board-card',
   standalone: true,
-  imports: [NgStyle, QRCodeComponent],
+  imports: [NgStyle, QRCodeComponent, TruncateMiddlePipe],
   templateUrl: './assistant-pattern-board-card.html',
   styleUrl: './assistant-pattern-board-card.css',
 })
