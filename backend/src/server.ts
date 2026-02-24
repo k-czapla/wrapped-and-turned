@@ -715,6 +715,37 @@ function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string
   };
 }
 
+/** Extract item array from bundle. Ravelry returns bundled_items (array of BundledItem). */
+function extractBundleItems(bundle: Record<string, unknown>): unknown[] {
+  const direct = bundle.bundled_items ?? bundle.bundle_items ?? bundle.items;
+  if (Array.isArray(direct)) return direct;
+  if (direct && typeof direct === 'object' && !Array.isArray(direct)) {
+    const paginated = direct as Record<string, unknown>;
+    const list = paginated.item ?? paginated.items ?? paginated.bundled_items ?? paginated.bundle_items;
+    if (Array.isArray(list)) return list;
+  }
+  return [];
+}
+
+/** Get pattern id from a bundle item; Ravelry may use pattern_id, pattern.id, or nested pattern. */
+function getPatternIdFromBundleItem(item: Record<string, unknown>): number | undefined {
+  const pid = item.pattern_id;
+  if (typeof pid === 'number' && Number.isFinite(pid)) return pid;
+  const pattern = item.pattern;
+  if (pattern && typeof pattern === 'object' && pattern !== null) {
+    const p = pattern as Record<string, unknown>;
+    const id = p.id ?? p.pattern_id;
+    if (typeof id === 'number' && Number.isFinite(id)) return id;
+  }
+  const craftPattern = item.craft_pattern;
+  if (craftPattern && typeof craftPattern === 'object' && craftPattern !== null) {
+    const cp = craftPattern as Record<string, unknown>;
+    const id = cp.id ?? cp.pattern_id;
+    if (typeof id === 'number' && Number.isFinite(id)) return id;
+  }
+  return undefined;
+}
+
 // Show bundle and return pattern cards (Ravelry bundles_show + pattern details)
 app.get('/api/bundle/:id', async (req, res) => {
   if (!(await requireAuth(req, res))) return;
@@ -773,10 +804,10 @@ app.get('/api/bundle/:id', async (req, res) => {
       `/people/${encodeURIComponent(username)}/bundles/${bundleId}.json`
     );
     const rawBundle = data?.bundle;
-    const bundle = rawBundle ?? { id: bundleId, name: undefined, bundle_items: [] };
-    const items = Array.isArray(bundle.bundle_items) ? bundle.bundle_items : [];
+    const bundle = rawBundle ?? { id: bundleId, name: undefined, bundled_items: [] };
+    const items = extractBundleItems(bundle);
     const patternIds = items
-      .map((item: { pattern_id?: number; pattern?: { id?: number } }) => item.pattern_id ?? item.pattern?.id)
+      .map((item) => getPatternIdFromBundleItem(item && typeof item === 'object' && !Array.isArray(item) ? (item as Record<string, unknown>) : {}))
       .filter((id: unknown): id is number => typeof id === 'number' && Number.isFinite(id));
     const uniqueIds = [...new Set(patternIds)];
 

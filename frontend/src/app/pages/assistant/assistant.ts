@@ -54,6 +54,8 @@ export class Assistant {
 
   /** Pattern Round Up: all pattern cards from selected bundle. */
   protected bundlePatternCards: PatternRoundUpCard[] = [];
+  /** Pattern Round Up: name of last selected bundle (for empty-state message). */
+  protected lastSelectedBundleName: string | null = null;
   /** Pattern Round Up: selected pattern ids for boards. */
   protected selectedPatternIds: number[] = [];
   /** Pattern Round Up: per-pattern selected photo index. */
@@ -194,9 +196,11 @@ export class Assistant {
       this.selectedProjectIds = [];
       this.cards = [];
       this.bundlePatternCards = [];
+      this.lastSelectedBundleName = null;
       this.selectedPatternIds = [];
     } else {
       this.bundlePatternCards = [];
+      this.lastSelectedBundleName = null;
       this.selectedPatternIds = [];
     }
     this.cdr.markForCheck();
@@ -208,6 +212,7 @@ export class Assistant {
     patternCards: PatternRoundUpCard[];
   }) {
     this.error = null;
+    this.lastSelectedBundleName = payload.bundleName ?? `Bundle ${payload.bundleId}`;
     this.bundlePatternCards = payload.patternCards;
     this.selectedPatternIds = [];
     this.selectedPhotoIndexByPatternId = {};

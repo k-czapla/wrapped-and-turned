@@ -59,17 +59,20 @@ export type RavelryBundlesListResponse = {
   bundles?: RavelryBundleListItem[];
 };
 
-/** Bundle show (bundles_show). Bundle contains bundle_items with pattern references. */
-export type RavelryBundleItem = {
+/** BundledItem (list) – item in a bundle from Ravelry bundles_show. */
+export type RavelryBundledItem = {
   id: number;
   pattern_id?: number;
   pattern?: { id: number; name?: string; permalink?: string };
 };
 
+/** Bundle (full) from Ravelry bundles_show. Attributes: bundled_items, bundled_items_count, id, name, etc. */
 export type RavelryBundleShowResponse = {
   bundle?: {
     id: number;
     name?: string;
-    bundle_items?: RavelryBundleItem[];
+    permalink?: string;
+    bundled_items?: RavelryBundledItem[];
+    bundled_items_count?: number;
   };
 };

@@ -80,6 +80,10 @@
           (selectedPhotoIndexChange)="onPatternPhotoIndexChange($event.patternId, $event.index)"
         />
       </div>
+    } @else if (lastSelectedBundleName) {
+      <p class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <strong>{{ lastSelectedBundleName }}</strong> has no patterns, or we couldn’t load them. Try another bundle or reload the page.
+      </p>
     }
   }
 </section>
