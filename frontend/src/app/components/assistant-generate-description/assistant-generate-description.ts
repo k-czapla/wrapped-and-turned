@@ -1,5 +1,10 @@
 import { Component, input, signal } from '@angular/core';
-import { Api, type GenerateDescriptionResult, type ProjectCard } from '../../services/api';
+import {
+  Api,
+  type GenerateDescriptionResult,
+  type PatternRoundUpCard,
+  type ProjectCard,
+} from '../../services/api';
 import { ErrorAlert } from '../error-alert/error-alert';
 
 @Component({
@@ -10,8 +15,10 @@ import { ErrorAlert } from '../error-alert/error-alert';
   styleUrl: './assistant-generate-description.css',
 })
 export class AssistantGenerateDescription {
-  /** Selected project cards (from project picker). */
-  cards = input.required<ProjectCard[]>();
+  /** Selected project cards (from project picker). Used when mode is project-update. */
+  cards = input<ProjectCard[]>([]);
+  /** Selected pattern cards (from pattern round up). When non-empty, description is generated for pattern round up. */
+  patternCards = input<PatternRoundUpCard[]>([]);
   /** Total finished objects in the loaded date range (from wrapped stats). */
   totalFinishedInRange = input<number | null>(null);
   /** Count of selected cards that are FOs (completed in range). Used for title "X FOs". If null/undefined, backend uses cards.length. */
@@ -22,37 +29,71 @@ export class AssistantGenerateDescription {
   protected error = signal<string | null>(null);
   protected result = signal<GenerateDescriptionResult | null>(null);
 
-  constructor(private api: Api) { }
+  constructor(private api: Api) {}
 
+  /** True when we have something to generate for (projects or patterns). */
   protected get canGenerate(): boolean {
+    const pc = this.patternCards();
     const c = this.cards();
-    return Array.isArray(c) && c.length > 0 && !this.generating();
+    const hasPatterns = Array.isArray(pc) && pc.length > 0;
+    const hasProjects = Array.isArray(c) && c.length > 0;
+    return (hasPatterns || hasProjects) && !this.generating();
+  }
+
+  /** True when in pattern round up mode (pattern cards provided and selected). */
+  protected get isPatternRoundUp(): boolean {
+    const pc = this.patternCards();
+    return Array.isArray(pc) && pc.length > 0;
   }
 
   protected onGenerate() {
+    if (this.generating()) return;
+    const pc = this.patternCards();
     const c = this.cards();
-    if (!Array.isArray(c) || c.length === 0 || this.generating()) return;
+    const hasPatterns = Array.isArray(pc) && pc.length > 0;
+    const hasProjects = Array.isArray(c) && c.length > 0;
 
     this.error.set(null);
     this.result.set(null);
     this.generating.set(true);
 
-    const foCount =
-      this.selectedFOCount() != null && Number.isInteger(this.selectedFOCount())
-        ? this.selectedFOCount()!
-        : undefined;
-    this.api.generateDescription(c, this.optionalPrompt || undefined, foCount).subscribe({
-      next: (res) => {
-        this.result.set(res);
-        this.generating.set(false);
-      },
-      error: (err) => {
-        const msg =
-          err?.error?.error ?? err?.message ?? 'Failed to generate description. Please try again.';
-        this.error.set(msg);
-        this.generating.set(false);
-      },
-    });
+    if (hasPatterns) {
+      this.api
+        .generatePatternRoundUpDescription(pc, this.optionalPrompt || undefined)
+        .subscribe({
+          next: (res) => {
+            this.result.set(res);
+            this.generating.set(false);
+          },
+          error: (err) => {
+            this.error.set(
+              err?.error?.error ?? err?.message ?? 'Failed to generate description. Please try again.'
+            );
+            this.generating.set(false);
+          },
+        });
+      return;
+    }
+    if (hasProjects) {
+      const foCount =
+        this.selectedFOCount() != null && Number.isInteger(this.selectedFOCount())
+          ? this.selectedFOCount()!
+          : undefined;
+      this.api.generateDescription(c, this.optionalPrompt || undefined, foCount).subscribe({
+        next: (res) => {
+          this.result.set(res);
+          this.generating.set(false);
+        },
+        error: (err) => {
+          this.error.set(
+            err?.error?.error ?? err?.message ?? 'Failed to generate description. Please try again.'
+          );
+          this.generating.set(false);
+        },
+      });
+    } else {
+      this.generating.set(false);
+    }
   }
 
   /** Full show-notes text for copy. */

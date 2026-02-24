@@ -47,3 +47,29 @@ export type RavelryProjectsListResponse = {
 export type RavelryCurrentUserResponse = {
   user: { username: string };
 };
+
+/** Bundle list item (bundles_list). */
+export type RavelryBundleListItem = {
+  id: number;
+  name?: string;
+  pattern_count?: number;
+};
+
+export type RavelryBundlesListResponse = {
+  bundles?: RavelryBundleListItem[];
+};
+
+/** Bundle show (bundles_show). Bundle contains bundle_items with pattern references. */
+export type RavelryBundleItem = {
+  id: number;
+  pattern_id?: number;
+  pattern?: { id: number; name?: string; permalink?: string };
+};
+
+export type RavelryBundleShowResponse = {
+  bundle?: {
+    id: number;
+    name?: string;
+    bundle_items?: RavelryBundleItem[];
+  };
+};

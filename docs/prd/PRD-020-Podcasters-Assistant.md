@@ -4,11 +4,11 @@
 - **Feature**: Podcaster’s Assistant
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-02-20
+- **Last updated**: 2026-02-24
 
 ## Summary
 
-Podcaster’s Assistant generates a **vertical, share-ready board** for a chosen Ravelry project and lets the user **download it as a PNG** for use in podcast show notes, Instagram Stories, and similar formats. Users can select from multiple visual design styles to personalize their boards. When one or more projects are selected, users can also **generate an AI-assisted YouTube/show-notes description** (title, short description, Ravelry links list, hashtags) for use in the show notes box and video title.
+Podcaster’s Assistant generates **vertical, share-ready boards** for Ravelry content and lets the user **download them as PNGs** for use in podcast show notes, Instagram Stories, and similar formats. On opening the Assistant page, the user first selects either **Project Update** (date-range–based projects) or **Pattern Round Up** (bundle-based patterns). Users can select from multiple visual design styles to personalize their boards. For both modes, users can **generate an AI-assisted YouTube/show-notes description** (title, short description, Ravelry links list, hashtags).
 
 ## User story
 
@@ -16,7 +16,13 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 ## Scope (v1)
 
-### Inputs
+### Mode selection
+
+- On the Podcaster’s Assistant page, the user first chooses **Project Update** or **Pattern Round Up**.
+- **Project Update**: load projects by date range; create boards and description for selected projects (existing behaviour).
+- **Pattern Round Up**: select a bundle from the user’s Ravelry Bundle/Favorites list ([Ravelry API: bundles_list](https://www.ravelry.com/api#bundles_list)); the app loads the bundle and its patterns ([Ravelry API: bundles_show](https://www.ravelry.com/api#bundles_show)). User selects which patterns to include; boards and video description are generated from pattern data (photo, pattern name, designer, sizes available, needle size, gauge, suggested yarn).
+
+### Inputs (Project Update)
 
 - Date range (**From**, **To**) to load candidate projects
 - **Selectable project list**: user is presented with a checkmark list of **all projects in the date range** (projects that were started or completed within the range). They select one or more projects to generate a visualisation for. The **finished object (FO) count** (projects completed in the range) is used only in the Generate Description section for title/description wording (e.g. “3 FOs in this period”), not for filtering the list.
@@ -26,9 +32,15 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
 - **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
 
+### Inputs (Pattern Round Up)
+
+- **Bundle list**: logged-in user clicks “Load my bundles” to fetch their Ravelry bundles (bundles_list). User selects one bundle from a dropdown.
+- **Bundle content**: after selection, the app fetches the bundle (bundles_show) and pattern details for each pattern in the bundle. User sees a **selectable pattern list** (pattern name, designer) and selects one or more patterns to generate boards and description for.
+- **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (sizes + min/max circumference in meters), **Needle size**, **Gauge**, **Suggested yarn**. Same board design selection (Board Design page) and PNG export as Project Update.
+
 ### Generate YouTube / show notes description (AI-assisted)
 
-When the user has selected **one or more projects** (same selection as for the board), a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**.
+When the user has selected **one or more projects** (Project Update) or **one or more patterns** (Pattern Round Up)—same selection as for the boards—a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**. For **Pattern Round Up**, the title format is **Ep. [##] | Pattern Round Up - #catchy title# - Knitting Podcast #emoji#** and the description focuses on sharing patterns from a bundle (not FOs).
 
 **UI:** The description section shows the **count of finished objects (FOs)** in the loaded date range (from Wrapped stats) for **title/description wording only** (e.g. “3 finished objects in this period (for title/description wording)” and “(of 3 FOs in this period)”). Only projects with a **completed date** within the range count as FOs. The project list above shows all projects in range (started or completed), not only FOs. The section title uses light emoji (e.g. “✨ Show notes & YouTube description”).
 
@@ -56,6 +68,16 @@ The board shows **Pattern name** and **Designer** always, and only the other fie
 - **Dates**: one line at the bottom of the board (before the QR code), when **Start date** or **Completed date** is enabled and a start date is available. If only start date: “DD.MM.YYYY – In progress”. If both: “DD.MM.YYYY – DD.MM.YYYY”. If no start date, the date section is hidden.
 
 App branding (“Wrapped & Turned”) and footer link remain on the board.
+
+### Output (Pattern Round Up board content)
+
+The Pattern Round Up board shows **Pattern name** and **Designer** always, and only the other fields the user has enabled in **Board display options (Pattern Round Up)**. When a field is enabled, it is included (when available from Ravelry pattern data):
+
+- **Photo**: selected pattern photo from Ravelry (user can pick from pattern photo gallery)
+- **Pattern name**, **Designer**: always shown
+- **Sizes available**: size names plus min/max circumference in meters (e.g. “S, M, L (0.80–1.20 m)”)
+- **Needle size**, **Gauge**, **Suggested yarn**: from Ravelry pattern
+- **QR code / link**: to the Ravelry pattern page
 
 ### Export
 

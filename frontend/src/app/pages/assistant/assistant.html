@@ -1,43 +1,85 @@
 <section class="flex flex-col gap-6">
-  <app-assistant-controls
-    [from]="from"
-    [to]="to"
-    (fromChange)="from = $event"
-    (toChange)="to = $event"
-    [loading]="loading"
-    [error]="error"
-    (loadProjects)="loadProjects()"
+  <app-assistant-mode-selector
+    [value]="mode"
+    (valueChange)="setMode($event)"
   />
 
-  <app-assistant-board-options
-    [options]="displayOptions"
-    (optionsChange)="displayOptions = $event"
-  />
-
-  @if (wrapped; as w) {
-    <app-assistant-generate-description
-      [cards]="cards"
-      [totalFinishedInRange]="w.totals.finishedProjects"
-      [selectedFOCount]="selectedFOCount"
+  @if (mode === 'project-update') {
+    <app-assistant-controls
+      [from]="from"
+      [to]="to"
+      (fromChange)="from = $event"
+      (toChange)="to = $event"
+      [loading]="loading"
+      [error]="error"
+      (loadProjects)="loadProjects()"
     />
 
-    <div class="grid gap-4 md:grid-cols-2">
-      <app-assistant-project-picker
-        [projects]="w.projects"
-        [selectedIds]="selectedProjectIds"
-        (selectionChange)="onSelectionChange($event)"
+    <app-assistant-board-options
+      [options]="displayOptions"
+      (optionsChange)="displayOptions = $event"
+    />
+
+    @if (wrapped; as w) {
+      <app-assistant-generate-description
+        [cards]="cards"
+        [totalFinishedInRange]="w.totals.finishedProjects"
+        [selectedFOCount]="selectedFOCount"
       />
-      <app-assistant-board-preview
-        [cards]="cardsWithUploadedPhotos"
-        [cardsLoading]="cardsLoading"
-        [design]="selectedDesign()"
-        [displayOptions]="displayOptions"
-        [photoSourceByProjectId]="photoSourceByProjectId"
-        [selectedPhotoIndexByProjectId]="selectedPhotoIndexByProjectId"
-        (photoSourceChange)="onPhotoSourceChange($event.projectId, $event.source)"
-        (selectedPhotoIndexChange)="onSelectedPhotoIndexChange($event.projectId, $event.index)"
-        (photoUpload)="onPhotoUpload($event.projectId, $event.dataUrl)"
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <app-assistant-project-picker
+          [projects]="w.projects"
+          [selectedIds]="selectedProjectIds"
+          (selectionChange)="onSelectionChange($event)"
+        />
+        <app-assistant-board-preview
+          [cards]="cardsWithUploadedPhotos"
+          [cardsLoading]="cardsLoading"
+          [design]="selectedDesign()"
+          [displayOptions]="displayOptions"
+          [photoSourceByProjectId]="photoSourceByProjectId"
+          [selectedPhotoIndexByProjectId]="selectedPhotoIndexByProjectId"
+          (photoSourceChange)="onPhotoSourceChange($event.projectId, $event.source)"
+          (selectedPhotoIndexChange)="onSelectedPhotoIndexChange($event.projectId, $event.index)"
+          (photoUpload)="onPhotoUpload($event.projectId, $event.dataUrl)"
+        />
+      </div>
+    }
+  }
+
+  @if (mode === 'pattern-round-up') {
+    <app-assistant-bundle-controls
+      [loading]="false"
+      [error]="error"
+      (loadError)="error = $event"
+      (bundleSelected)="onBundleSelected($event)"
+    />
+
+    @if (bundlePatternCards.length > 0) {
+      <app-assistant-pattern-board-options
+        [options]="patternRoundUpDisplayOptions"
+        (optionsChange)="patternRoundUpDisplayOptions = $event"
       />
-    </div>
+
+      <app-assistant-generate-description
+        [patternCards]="selectedPatternCards()"
+      />
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <app-assistant-pattern-picker
+          [patterns]="bundlePatternCards"
+          [selectedIds]="selectedPatternIds"
+          (selectionChange)="onPatternSelectionChange($event)"
+        />
+        <app-assistant-pattern-board-preview
+          [cards]="selectedPatternCards()"
+          [design]="selectedDesign()"
+          [displayOptions]="patternRoundUpDisplayOptions"
+          [selectedPhotoIndexByPatternId]="selectedPhotoIndexByPatternId"
+          (selectedPhotoIndexChange)="onPatternPhotoIndexChange($event.patternId, $event.index)"
+        />
+      </div>
+    }
   }
 </section>

@@ -1,26 +1,46 @@
 import { ChangeDetectorRef, Component, computed } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { Api, DEFAULT_BOARD_DISPLAY_OPTIONS, type BoardDisplayOptions, type ProjectCard, type WrappedStats } from '../../services/api';
+import {
+  Api,
+  DEFAULT_BOARD_DISPLAY_OPTIONS,
+  DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS,
+  type BoardDisplayOptions,
+  type PatternRoundUpCard,
+  type PatternRoundUpDisplayOptions,
+  type ProjectCard,
+  type WrappedStats,
+} from '../../services/api';
 import { BoardDesignService } from '../../services/board-design.service';
+import { AssistantModeSelector, type AssistantMode } from '../../components/assistant-mode-selector/assistant-mode-selector';
 import { AssistantControls } from '../../components/assistant-controls/assistant-controls';
 import { AssistantBoardOptions } from '../../components/assistant-board-options/assistant-board-options';
 import { AssistantProjectPicker } from '../../components/assistant-project-picker/assistant-project-picker';
 import { AssistantBoardPreview } from '../../components/assistant-board-preview/assistant-board-preview';
 import { AssistantGenerateDescription } from '../../components/assistant-generate-description/assistant-generate-description';
+import { AssistantBundleControls } from '../../components/assistant-bundle-controls/assistant-bundle-controls';
+import { AssistantPatternPicker } from '../../components/assistant-pattern-picker/assistant-pattern-picker';
+import { AssistantPatternBoardOptions } from '../../components/assistant-pattern-board-options/assistant-pattern-board-options';
+import { AssistantPatternBoardPreview } from '../../components/assistant-pattern-board-preview/assistant-pattern-board-preview';
 
 @Component({
   selector: 'app-assistant',
   imports: [
+    AssistantModeSelector,
     AssistantControls,
     AssistantBoardOptions,
     AssistantProjectPicker,
     AssistantBoardPreview,
     AssistantGenerateDescription,
+    AssistantBundleControls,
+    AssistantPatternPicker,
+    AssistantPatternBoardOptions,
+    AssistantPatternBoardPreview,
   ],
   templateUrl: './assistant.html',
   styleUrl: './assistant.css',
 })
 export class Assistant {
+  protected mode: AssistantMode = 'project-update';
   protected loading = false;
   protected error: string | null = null;
 
@@ -32,6 +52,13 @@ export class Assistant {
   protected cards: ProjectCard[] = [];
   protected cardsLoading = false;
 
+  /** Pattern Round Up: all pattern cards from selected bundle. */
+  protected bundlePatternCards: PatternRoundUpCard[] = [];
+  /** Pattern Round Up: selected pattern ids for boards. */
+  protected selectedPatternIds: number[] = [];
+  /** Pattern Round Up: per-pattern selected photo index. */
+  protected selectedPhotoIndexByPatternId: Record<number, number> = {};
+
   /** Per-project selected photo index (within project or pattern photos list). */
   protected selectedPhotoIndexByProjectId: Record<number, number> = {};
 
@@ -42,7 +69,16 @@ export class Assistant {
   protected photoSourceByProjectId: Record<number, 'project' | 'pattern'> = {};
 
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
+  protected patternRoundUpDisplayOptions: PatternRoundUpDisplayOptions = {
+    ...DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS,
+  };
   protected selectedDesign = computed(() => this.boardDesign.effectiveDesign());
+
+  /** Pattern Round Up: cards for selected patterns only (for preview and description). */
+  protected selectedPatternCards = computed(() => {
+    const ids = new Set(this.selectedPatternIds);
+    return this.bundlePatternCards.filter((p) => ids.has(p.id));
+  });
 
   /** Count of selected cards that are finished objects (completed date within loaded range). Used for title "X FOs". */
   get selectedFOCount(): number {
@@ -147,6 +183,47 @@ export class Assistant {
       [projectId]: newList,
     };
     this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: newList.length - 1 };
+    this.cdr.markForCheck();
+  }
+
+  protected setMode(m: AssistantMode) {
+    this.mode = m;
+    this.error = null;
+    if (m === 'pattern-round-up') {
+      this.wrapped = null;
+      this.selectedProjectIds = [];
+      this.cards = [];
+      this.bundlePatternCards = [];
+      this.selectedPatternIds = [];
+    } else {
+      this.bundlePatternCards = [];
+      this.selectedPatternIds = [];
+    }
+    this.cdr.markForCheck();
+  }
+
+  protected onBundleSelected(payload: {
+    bundleId: number;
+    bundleName?: string;
+    patternCards: PatternRoundUpCard[];
+  }) {
+    this.error = null;
+    this.bundlePatternCards = payload.patternCards;
+    this.selectedPatternIds = [];
+    this.selectedPhotoIndexByPatternId = {};
+    this.cdr.markForCheck();
+  }
+
+  protected onPatternSelectionChange(ids: number[]) {
+    this.selectedPatternIds = ids;
+    this.cdr.markForCheck();
+  }
+
+  protected onPatternPhotoIndexChange(patternId: number, index: number) {
+    this.selectedPhotoIndexByPatternId = {
+      ...this.selectedPhotoIndexByPatternId,
+      [patternId]: index,
+    };
     this.cdr.markForCheck();
   }
 }

@@ -1,0 +1,59 @@
+<div class="assistant-pattern-board-options rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <h3 class="text-sm font-semibold text-slate-900">Show on board</h3>
+  <p class="mt-0.5 text-xs text-slate-600">Choose which pattern information to display.</p>
+  <div class="mt-4 flex flex-wrap gap-x-6 gap-y-3 justify-between">
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showPhoto"
+        (change)="toggle('showPhoto')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Photo</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-default items-center gap-2 opacity-90">
+      <input type="checkbox" [checked]="true" disabled class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+      <span class="text-sm text-slate-700">Pattern name</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-default items-center gap-2 opacity-90">
+      <input type="checkbox" [checked]="true" disabled class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+      <span class="text-sm text-slate-700">Designer</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showSizesAvailable"
+        (change)="toggle('showSizesAvailable')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Sizes available</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showNeedleSizes"
+        (change)="toggle('showNeedleSizes')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Needle size</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showGauge"
+        (change)="toggle('showGauge')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Gauge</span>
+    </label>
+    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showSuggestedYarn"
+        (change)="toggle('showSuggestedYarn')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">Suggested yarn</span>
+    </label>
+  </div>
+</div>

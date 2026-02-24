@@ -5,12 +5,21 @@ import session from 'express-session';
 import axios from 'axios';
 import { getEnv } from './env.js';
 import { buildAuthorizeUrl, exchangeCodeForToken, makeState, refreshAccessToken } from './ravelryOAuth2.js';
-import { makeRavelryApi, type RavelryCurrentUserResponse, type RavelryProjectsListResponse } from './ravelryApi.js';
+import {
+  makeRavelryApi,
+  type RavelryBundleShowResponse,
+  type RavelryBundlesListResponse,
+  type RavelryCurrentUserResponse,
+  type RavelryProjectsListResponse,
+} from './ravelryApi.js';
 import { computeBaseStats, mapWithConcurrency, safeDate } from './stats.js';
 import {
   buildFallbackDescription,
+  buildFallbackPatternRoundUpDescription,
   callGroqForDescription,
+  callGroqForPatternRoundUpDescription,
   type CardSummary,
+  type PatternRoundUpSummary,
 } from './generateDescription.js';
 /** Stat keys that can be toggled for analysis. Default: all true. */
 export const STAT_PREFERENCE_KEYS = [
@@ -586,6 +595,200 @@ app.get('/api/project-card/:id', async (req, res) => {
   });
 });
 
+// List user's bundles (Ravelry bundles_list)
+app.get('/api/bundles', async (req, res) => {
+  if (!(await requireAuth(req, res))) return;
+  const username = req.session.ravelry!.username ?? '';
+  if (!username && !ravelryEnabled) {
+    res.json({ bundles: [] });
+    return;
+  }
+  if (!ravelryEnabled) {
+    res.json({
+      bundles: [
+        { id: 1, name: 'Demo bundle', pattern_count: 2 },
+        { id: 2, name: 'Favorites', pattern_count: 5 },
+      ],
+    });
+    return;
+  }
+  const api = makeRavelryApi({ session: req.session.ravelry! });
+  try {
+    const data = await api.getJson<RavelryBundlesListResponse>(
+      `/people/${encodeURIComponent(username)}/bundles/list.json`,
+      { page_size: 100 }
+    );
+    const bundles = Array.isArray(data.bundles) ? data.bundles : [];
+    res.json({ bundles });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message ?? 'Failed to load bundles' });
+  }
+});
+
+/** Build a pattern card for Pattern Round Up from Ravelry pattern response. */
+function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string, unknown> {
+  const photos = Array.isArray(pat?.photos) ? pat.photos : [];
+  const patternPhotos = photos.map((ph: any) => ravelryPhotoUrl(ph)).filter(Boolean);
+  const firstPhoto = photos[0];
+  const imageUrl = ravelryPhotoUrl(firstPhoto);
+
+  const designerName =
+    pat?.pattern_author?.name ?? pat?.designer?.name ?? undefined;
+  const patternName = pat?.name ?? `Pattern #${patternId}`;
+
+  const sizesArr = Array.isArray(pat?.sizes) ? pat.sizes : [];
+  const sizeNames = sizesArr.map((s: any) => s?.name ?? s?.size).filter(Boolean);
+  const minCm = sizesArr.reduce(
+    (acc: number | null, s: any) => {
+      const v = s?.min_circumference_cm ?? s?.min_circumference;
+      const n = typeof v === 'number' ? v : null;
+      return n != null && (acc == null || n < acc) ? n : acc;
+    },
+    null as number | null
+  );
+  const maxCm = sizesArr.reduce(
+    (acc: number | null, s: any) => {
+      const v = s?.max_circumference_cm ?? s?.max_circumference;
+      const n = typeof v === 'number' ? v : null;
+      return n != null && (acc == null || n > acc) ? n : acc;
+    },
+    null as number | null
+  );
+  let sizesAvailable = sizeNames.length ? sizeNames.join(', ') : undefined;
+  if (minCm != null || maxCm != null) {
+    const minM = minCm != null ? (minCm / 100).toFixed(2) : '?';
+    const maxM = maxCm != null ? (maxCm / 100).toFixed(2) : '?';
+    const range = minCm != null && maxCm != null ? `${minM}–${maxM} m` : minCm != null ? `≥${minM} m` : `≤${maxM} m`;
+    sizesAvailable = sizesAvailable ? `${sizesAvailable} (${range})` : range + ' circumference';
+  }
+
+  const needleArr = pat?.needle_sizes ?? pat?.pattern_needle_sizes ?? [];
+  const needleSizes = Array.isArray(needleArr)
+    ? [...new Set(
+        needleArr
+          .map((n: any) => {
+            const metric = n?.metric ?? n?.mm;
+            const us = n?.us ?? n?.us_steel ?? n?.hook;
+            const name = n?.name ?? n?.pretty_metric;
+            if (typeof metric === 'number' && metric > 0) return `${metric}mm`;
+            if (typeof us !== 'undefined' && us !== null) return `US ${us}`;
+            if (typeof name === 'string' && name.trim()) return name.trim();
+            return null;
+          })
+          .filter(Boolean)
+      )].join(' + ') || undefined
+    : undefined;
+
+  const gauge =
+    typeof pat?.gauge === 'string' && pat.gauge.trim()
+      ? pat.gauge.trim()
+      : pat?.gauge_description?.trim() ?? undefined;
+
+  const yarnWeights = pat?.yarn_weight ?? pat?.pattern_yarn_weights;
+  let suggestedYarn: string | undefined;
+  if (Array.isArray(yarnWeights) && yarnWeights.length > 0) {
+    suggestedYarn = yarnWeights
+      .map((y: any) => y?.name ?? y?.min_gauge ?? y?.ply ?? '')
+      .filter(Boolean)
+      .join(', ');
+  } else if (yarnWeights && typeof yarnWeights === 'object' && yarnWeights.name) {
+    suggestedYarn = String(yarnWeights.name);
+  }
+
+  const permalink = pat?.permalink;
+  const patternUrl =
+    typeof permalink === 'string' && permalink
+      ? `https://www.ravelry.com/patterns/library/${permalink}`
+      : `https://www.ravelry.com/patterns/library/${patternId}`;
+
+  return {
+    id: patternId,
+    imageUrl,
+    patternPhotos: patternPhotos.length ? patternPhotos : undefined,
+    patternName,
+    designerName,
+    sizesAvailable: sizesAvailable ?? undefined,
+    needleSizes,
+    gauge,
+    suggestedYarn,
+    patternUrl,
+  };
+}
+
+// Show bundle and return pattern cards (Ravelry bundles_show + pattern details)
+app.get('/api/bundle/:id', async (req, res) => {
+  if (!(await requireAuth(req, res))) return;
+  const bundleId = Number(req.params.id);
+  if (!Number.isFinite(bundleId)) {
+    res.status(400).json({ error: 'Invalid bundle id' });
+    return;
+  }
+  if (!ravelryEnabled) {
+    res.json({
+      bundle: { id: bundleId, name: 'Demo bundle' },
+      patternCards: [
+        {
+          id: 101,
+          patternName: 'Demo Pattern A',
+          designerName: 'Designer A',
+          sizesAvailable: 'S, M, L (0.80–1.20 m)',
+          needleSizes: '4mm',
+          gauge: '20 sts / 28 rows = 10 cm',
+          suggestedYarn: 'DK',
+          patternUrl: 'https://www.ravelry.com/patterns/library/demo-a',
+          patternPhotos: [],
+        },
+        {
+          id: 102,
+          patternName: 'Demo Pattern B',
+          designerName: 'Designer B',
+          sizesAvailable: 'One size (1.00 m)',
+          needleSizes: '3.5mm',
+          gauge: '22 sts / 30 rows = 10 cm',
+          suggestedYarn: 'Fingering',
+          patternUrl: 'https://www.ravelry.com/patterns/library/demo-b',
+          patternPhotos: [],
+        },
+      ],
+    });
+    return;
+  }
+  const api = makeRavelryApi({ session: req.session.ravelry! });
+  try {
+    const data = await api.getJson<RavelryBundleShowResponse>(
+      `/bundles/${bundleId}.json`
+    );
+    const rawBundle = data?.bundle;
+    const bundle = rawBundle ?? { id: bundleId, name: undefined, bundle_items: [] };
+    const items = Array.isArray(bundle.bundle_items) ? bundle.bundle_items : [];
+    const patternIds = items
+      .map((item: { pattern_id?: number; pattern?: { id?: number } }) => item.pattern_id ?? item.pattern?.id)
+      .filter((id: unknown): id is number => typeof id === 'number' && Number.isFinite(id));
+    const uniqueIds = [...new Set(patternIds)];
+
+    const patternCards = await mapWithConcurrency(uniqueIds, 4, async (patternId: number) => {
+      try {
+        const patternRes = await api.getJson<any>(`/patterns/${patternId}.json`);
+        const pat = patternRes?.pattern ?? patternRes?.patterns?.[0] ?? {};
+        return buildPatternCardFromRavelry(pat, patternId);
+      } catch {
+        return {
+          id: patternId,
+          patternName: `Pattern #${patternId}`,
+          patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
+        };
+      }
+    });
+
+    res.json({
+      bundle: { id: bundle.id, name: bundle.name },
+      patternCards,
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message ?? 'Failed to load bundle' });
+  }
+});
+
 // Generate YouTube/show-notes description (AI-assisted via Groq, fallback if unavailable)
 app.post('/api/generate-description', async (req, res) => {
   if (!(await requireAuth(req, res))) return;
@@ -596,9 +799,32 @@ app.post('/api/generate-description', async (req, res) => {
     return;
   }
 
+  const patternCardsRaw = body.patternCards;
+  const isPatternRoundUp = Array.isArray(patternCardsRaw) && patternCardsRaw.length > 0;
+
+  if (isPatternRoundUp) {
+    const patterns: PatternRoundUpSummary[] = patternCardsRaw.map((p: any) => ({
+      patternName: typeof p.patternName === 'string' ? p.patternName : String(p?.patternName ?? ''),
+      designerName: typeof p.designerName === 'string' ? p.designerName : undefined,
+      patternUrl: typeof p.patternUrl === 'string' ? p.patternUrl : undefined,
+    }));
+    const optionalPrompt =
+      typeof body.optionalPrompt === 'string' ? body.optionalPrompt.trim() || undefined : undefined;
+    let result: { title: string; description: string; ravelryLinks: string; hashtags: string };
+    const apiKey = env.GROQ_API_KEY;
+    if (apiKey) {
+      const groqResult = await callGroqForPatternRoundUpDescription(apiKey, patterns, optionalPrompt);
+      result = groqResult ?? buildFallbackPatternRoundUpDescription(patterns);
+    } else {
+      result = buildFallbackPatternRoundUpDescription(patterns);
+    }
+    res.json(result);
+    return;
+  }
+
   const cardsRaw = body.cards;
   if (!Array.isArray(cardsRaw) || cardsRaw.length === 0) {
-    res.status(400).json({ error: 'At least one project (cards) is required' });
+    res.status(400).json({ error: 'At least one project (cards) or pattern (patternCards) is required' });
     return;
   }
 

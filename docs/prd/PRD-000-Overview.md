@@ -3,16 +3,15 @@
 - **Product**: Wrapped and Turned
 - **Doc type**: PRD (overview)
 - **Status**: Draft
-- **Last updated**: 2026-02-19
+- **Last updated**: 2026-02-24
 
 ## Summary
 
 **Wrapped and Turned** is a lightweight web app for fiber artists (knitters, crocheters, etc.) that connects to **Ravelry**. It helps creators:
 
 - Generate a “Spotify Wrapped”-style view of their making over a selected date range (**Wrapped**)
-- Create a **share-ready vertical project board** for podcasts / Instagram Stories / social posts (**Podcaster’s Assistant**)
-
-- Generate an **AI-assisted YouTube/show-notes description** (title, description, Ravelry links, hashtags) for selected projects
+- Create **share-ready vertical boards** for podcasts / Instagram Stories / social posts (**Podcaster’s Assistant**): either **Project Update** (projects by date range) or **Pattern Round Up** (patterns from a Ravelry bundle)
+- Generate an **AI-assisted YouTube/show-notes description** (title, description, Ravelry links, hashtags) for selected projects or patterns
 
 The app is intentionally simple: no paid services, minimal infrastructure, and no need to support high request volume at this stage.
 
@@ -54,10 +53,9 @@ Fiber artists track projects in Ravelry, but:
 
 ### Journey B — Create Podcaster’s Assistant board
 
-1. User opens Assistant → chooses **From / To** dates → **Load projects**
-2. User picks a project from dropdown
-3. App renders a vertical board preview
-4. User clicks **Download PNG**
+1. User opens Assistant → selects **Project Update** or **Pattern Round Up**
+2. **Project Update**: chooses From/To dates → Load projects → picks one or more projects → app renders vertical board preview(s) → Download PNG and/or Generate Description
+3. **Pattern Round Up**: Load my bundles → selects a bundle → picks one or more patterns → app renders vertical pattern board preview(s) → Download PNG and/or Generate Description
 
 ## Success metrics (v1)
 

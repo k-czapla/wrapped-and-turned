@@ -80,6 +80,50 @@ export type GenerateDescriptionResult = {
   hashtags: string;
 };
 
+/** Bundle list item (from Ravelry bundles_list). */
+export type BundleListItem = {
+  id: number;
+  name?: string;
+  pattern_count?: number;
+};
+
+/** Pattern card for Pattern Round Up (from bundle + Ravelry pattern details). */
+export type PatternRoundUpCard = {
+  id: number;
+  imageUrl?: string;
+  patternPhotos?: string[];
+  patternName: string;
+  designerName?: string;
+  /** Sizes + min/max circumference in meters, e.g. "S, M, L (0.80–1.20 m)" */
+  sizesAvailable?: string;
+  needleSizes?: string;
+  gauge?: string;
+  suggestedYarn?: string;
+  /** Ravelry pattern page URL for QR/link */
+  patternUrl?: string;
+};
+
+/** Display options for Pattern Round Up boards (different fields than project boards). */
+export type PatternRoundUpDisplayOptions = {
+  showPhoto: boolean;
+  showPatternName: boolean;
+  showDesignerName: boolean;
+  showSizesAvailable: boolean;
+  showNeedleSizes: boolean;
+  showGauge: boolean;
+  showSuggestedYarn: boolean;
+};
+
+export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOptions = {
+  showPhoto: true,
+  showPatternName: true,
+  showDesignerName: true,
+  showSizesAvailable: true,
+  showNeedleSizes: true,
+  showGauge: true,
+  showSuggestedYarn: true,
+};
+
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */
 export type BoardDisplayOptions = {
   showPhoto: boolean;
@@ -169,6 +213,25 @@ export class Api {
       .pipe(shareReplay(1));
   }
 
+  getBundles() {
+    const backendBase = this.getBackendBase();
+    return this.http
+      .get<{ bundles: BundleListItem[] }>(this.join(backendBase, '/api/bundles'), {
+        withCredentials: true,
+      })
+      .pipe(shareReplay(1));
+  }
+
+  getBundleWithPatterns(bundleId: number) {
+    const backendBase = this.getBackendBase();
+    return this.http.get<{
+      bundle: { id: number; name?: string };
+      patternCards: PatternRoundUpCard[];
+    }>(this.join(backendBase, `/api/bundle/${bundleId}`), {
+      withCredentials: true,
+    });
+  }
+
   /**
    * Generate YouTube/show-notes description for selected projects.
    * Sends card summaries (from existing ProjectCard[]) and optional prompt; returns title, description, Ravelry links, hashtags.
@@ -188,6 +251,29 @@ export class Api {
     if (typeof foCount === 'number' && Number.isInteger(foCount) && foCount >= 0) {
       body['foCount'] = foCount;
     }
+    return this.http.post<GenerateDescriptionResult>(
+      this.join(backendBase, '/api/generate-description'),
+      body,
+      { withCredentials: true }
+    );
+  }
+
+  /**
+   * Generate YouTube/show-notes description for pattern round up (selected pattern cards from a bundle).
+   */
+  generatePatternRoundUpDescription(
+    patternCards: PatternRoundUpCard[],
+    optionalPrompt?: string
+  ) {
+    const backendBase = this.getBackendBase();
+    const body: Record<string, unknown> = {
+      patternCards: patternCards.map((c) => ({
+        patternName: c.patternName,
+        designerName: c.designerName,
+        patternUrl: c.patternUrl,
+      })),
+      ...(optionalPrompt?.trim() && { optionalPrompt: optionalPrompt.trim() }),
+    };
     return this.http.post<GenerateDescriptionResult>(
       this.join(backendBase, '/api/generate-description'),
       body,

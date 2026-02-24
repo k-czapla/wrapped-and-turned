@@ -1,0 +1,49 @@
+<div class="assistant-mode-selector rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <h2 class="text-xl font-bold text-slate-900">Podcaster's Assistant</h2>
+  <p class="mt-1 text-sm text-slate-600">
+    Choose how you want to create your content: project update (date range) or pattern round up (from a bundle).
+  </p>
+
+  <div class="mt-4 flex flex-wrap gap-3" role="radiogroup" aria-label="Assistant mode">
+    <label
+      class="assistant-mode-selector__option flex flex-1 min-w-[200px] cursor-pointer flex-col gap-1 rounded-xl border-2 p-4 transition-colors"
+      [class.assistant-mode-selector__option--selected]="value() === 'project-update'"
+      [class.border-indigo-500]="value() === 'project-update'"
+      [class.bg-indigo-50]="value() === 'project-update'"
+      [class.border-slate-200]="value() !== 'project-update'"
+      [class.hover:border-slate-300]="value() !== 'project-update'"
+    >
+      <input
+        type="radio"
+        name="assistantMode"
+        value="project-update"
+        [checked]="value() === 'project-update'"
+        (change)="setMode('project-update')"
+        class="sr-only"
+        aria-label="Project Update"
+      />
+      <span class="font-semibold text-slate-900">Project Update</span>
+      <span class="text-sm text-slate-600">Load projects by date range and create boards for your FOs.</span>
+    </label>
+    <label
+      class="assistant-mode-selector__option flex flex-1 min-w-[200px] cursor-pointer flex-col gap-1 rounded-xl border-2 p-4 transition-colors"
+      [class.assistant-mode-selector__option--selected]="value() === 'pattern-round-up'"
+      [class.border-indigo-500]="value() === 'pattern-round-up'"
+      [class.bg-indigo-50]="value() === 'pattern-round-up'"
+      [class.border-slate-200]="value() !== 'pattern-round-up'"
+      [class.hover:border-slate-300]="value() !== 'pattern-round-up'"
+    >
+      <input
+        type="radio"
+        name="assistantMode"
+        value="pattern-round-up"
+        [checked]="value() === 'pattern-round-up'"
+        (change)="setMode('pattern-round-up')"
+        class="sr-only"
+        aria-label="Pattern Round Up"
+      />
+      <span class="font-semibold text-slate-900">Pattern Round Up</span>
+      <span class="text-sm text-slate-600">Pick a bundle from your Ravelry favorites and create boards for each pattern.</span>
+    </label>
+  </div>
+</div>

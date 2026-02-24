@@ -3,13 +3,13 @@
   <p class="mt-1 text-sm text-slate-600">
     Generate a catchy title, short description, Ravelry links, and hashtags for your knitting podcast or video.
   </p>
-  @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined) {
+  @if (!isPatternRoundUp && totalFinishedInRange() != null && totalFinishedInRange() !== undefined) {
     <p class="mt-1 text-sm font-medium text-slate-600">
       📊 {{ totalFinishedInRange() }} finished object{{ totalFinishedInRange() === 1 ? '' : 's' }} in this period
     </p>
   }
 
-  @if (cards().length > 0) {
+  @if (canGenerate) {
     <div class="mt-4">
       <label class="block text-sm font-medium text-slate-700">Optional prompt (e.g. episode theme, tone)</label>
       <textarea
@@ -35,17 +35,25 @@
           Generate Description
         }
       </button>
-      @if (cards().length === 1) {
-        <span class="text-sm text-slate-500">1 finished object selected</span>
-      } @else if (cards().length > 1) {
-        <span class="text-sm text-slate-500">{{ cards().length }} finished objects selected</span>
-      }
-      @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined && cards().length > 0) {
-        <span class="text-sm text-slate-400">(of {{ totalFinishedInRange() }} FOs in this period)</span>
+      @if (isPatternRoundUp) {
+        @if (patternCards().length === 1) {
+          <span class="text-sm text-slate-500">1 pattern selected</span>
+        } @else {
+          <span class="text-sm text-slate-500">{{ patternCards().length }} patterns selected</span>
+        }
+      } @else {
+        @if (cards().length === 1) {
+          <span class="text-sm text-slate-500">1 finished object selected</span>
+        } @else if (cards().length > 1) {
+          <span class="text-sm text-slate-500">{{ cards().length }} finished objects selected</span>
+        }
+        @if (totalFinishedInRange() != null && totalFinishedInRange() !== undefined && cards().length > 0) {
+          <span class="text-sm text-slate-400">(of {{ totalFinishedInRange() }} FOs in this period)</span>
+        }
       }
     </div>
   } @else {
-    <p class="mt-4 text-sm text-slate-500">Select one or more finished objects above to enable Generate Description.</p>
+    <p class="mt-4 text-sm text-slate-500">Select one or more projects or patterns above to enable Generate Description.</p>
   }
 
   @if (error(); as err) {

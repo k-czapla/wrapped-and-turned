@@ -1,0 +1,101 @@
+<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <div class="flex items-center justify-between gap-3">
+    <div class="text-sm font-semibold text-slate-900">Preview</div>
+    <a routerLink="/board-design" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline">
+      Customize board design
+    </a>
+  </div>
+
+  @if (cards().length === 0) {
+    <p class="mt-4 text-sm text-slate-500">Select a bundle and then pick one or more patterns to generate a board.</p>
+  } @else {
+    <div class="mt-4 assistant-pattern-board-preview__carousel">
+      <div class="assistant-pattern-board-preview__carousel-viewport">
+        <div
+          class="assistant-pattern-board-preview__carousel-track"
+          [style.transform]="'translateX(-' + currentSlideIndex() * 100 + '%)'"
+        >
+          @for (card of cards(); track card.id; let i = $index) {
+            <div class="assistant-pattern-board-preview__carousel-slide">
+              <div class="flex flex-col items-center gap-3">
+                @if (displayOptions()?.showPhoto && photosForCard(card).length > 0) {
+                  <div class="assistant-pattern-board-preview__gallery">
+                    <div class="assistant-pattern-board-preview__gallery-thumbs" role="listbox" aria-label="Choose photo">
+                      @for (photo of photosForCard(card); track $index) {
+                        <button
+                          type="button"
+                          role="option"
+                          [attr.aria-selected]="selectedIndex(card) === $index"
+                          (click)="selectedPhotoIndexChange.emit({ patternId: card.id, index: $index })"
+                          class="assistant-pattern-board-preview__gallery-thumb"
+                          [class.assistant-pattern-board-preview__gallery-thumb--selected]="selectedIndex(card) === $index"
+                        >
+                          <img [src]="photo" alt="" />
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+                <div
+                  #board
+                  class="overflow-hidden border border-slate-200 bg-white shadow-sm"
+                  style="width: var(--board-width);"
+                >
+                  <app-assistant-pattern-board-card
+                    [card]="card"
+                    [design]="design()"
+                    [displayOptions]="displayOptions()"
+                    [selectedPhotoIndex]="selectedIndex(card)"
+                  />
+                </div>
+                <button
+                  type="button"
+                  (click)="downloadBoard(i)"
+                  class="rounded-lg bg-gradient-to-r from-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                >
+                  Download PNG
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      @if (cards().length > 1) {
+        <div class="assistant-pattern-board-preview__carousel-nav" aria-label="Carousel navigation">
+          <button
+            type="button"
+            class="assistant-pattern-board-preview__carousel-btn"
+            aria-label="Previous pattern"
+            [disabled]="!canGoPrev"
+            (click)="goPrev()"
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div class="assistant-pattern-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
+            @for (card of cards(); track card.id; let i = $index) {
+              <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="currentSlideIndex() === i"
+                [attr.aria-label]="'Pattern ' + (i + 1) + ' of ' + cards().length"
+                class="assistant-pattern-board-preview__carousel-dot"
+                [class.assistant-pattern-board-preview__carousel-dot--active]="currentSlideIndex() === i"
+                (click)="goToSlide(i)"
+              >
+              </button>
+            }
+          </div>
+          <button
+            type="button"
+            class="assistant-pattern-board-preview__carousel-btn"
+            aria-label="Next pattern"
+            [disabled]="!canGoNext"
+            (click)="goNext()"
+          >
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

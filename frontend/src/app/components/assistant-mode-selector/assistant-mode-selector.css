@@ -1,0 +1,4 @@
+.assistant-mode-selector__option:focus-within {
+  outline: 2px solid var(--tw-ring-color, theme('colors.indigo.500'));
+  outline-offset: 2px;
+}

@@ -7,6 +7,13 @@ export type CardSummary = {
   projectUrl?: string;
 };
 
+/** Summary for pattern round up description (pattern URLs, not project URLs). */
+export type PatternRoundUpSummary = {
+  patternName: string;
+  designerName?: string;
+  patternUrl?: string;
+};
+
 export type DescriptionResult = {
   title: string;
   description: string;
@@ -59,6 +66,48 @@ export function buildFallbackDescription(
 
   const hashtags =
     '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #yarntogether #craft';
+
+  return { title, description, ravelryLinks, hashtags };
+}
+
+/** Title format for pattern round up: Ep. [##] | Pattern Round Up - #title# - Knitting Podcast #emoji# */
+export function buildPatternRoundUpTitle(catchyTitle: string, emoji: string): string {
+  return `Ep. [##] | Pattern Round Up - ${catchyTitle} - Knitting Podcast ${emoji}`.trim();
+}
+
+export function buildFallbackPatternRoundUpDescription(
+  patterns: PatternRoundUpSummary[]
+): DescriptionResult {
+  if (patterns.length === 0) {
+    return {
+      title: buildPatternRoundUpTitle('Patterns from my bundle', '✨'),
+      description: 'In this episode I share a round up of patterns from my Ravelry bundle! ✨',
+      ravelryLinks: '',
+      hashtags: '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #patternroundup',
+    };
+  }
+  const first = patterns[0];
+  const oneTitle = first.patternName;
+  const catchyTitle =
+    patterns.length === 1
+      ? oneTitle
+      : `${patterns.map((p) => p.patternName).slice(0, 2).join(', ')}${patterns.length > 2 ? '…' : ''}`;
+  const title = buildPatternRoundUpTitle(catchyTitle, '✨');
+  const description =
+    patterns.length === 1
+      ? `In this episode I'm sharing a pattern I love: ${oneTitle}. 🎙️`
+      : `In this episode I'm sharing ${patterns.length} patterns from my Ravelry bundle! ✨`;
+
+  const ravelryLinks = patterns
+    .filter((p) => p.patternUrl)
+    .map((p) => {
+      const label = [p.patternName, p.designerName].filter(Boolean).join(' by ');
+      return `- ${label}: ${p.patternUrl}`;
+    })
+    .join('\n');
+
+  const hashtags =
+    '#knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #patternroundup #yarntogether';
 
   return { title, description, ravelryLinks, hashtags };
 }
@@ -165,6 +214,86 @@ export async function callGroqForDescription(
     const content = completion.choices?.[0]?.message?.content;
     if (!content) return null;
     return parseGroqResponse(content, count);
+  } catch {
+    return null;
+  }
+}
+
+const SYSTEM_PROMPT_PATTERN_ROUND_UP = `You are a helpful assistant for knitting and fiber-arts podcasters. Generate a YouTube video (or knitting podcast episode) description for a "Pattern Round Up" episode based on the given Ravelry patterns (from the creator's bundle/favorites).
+
+The video title will be assembled as: Ep. [##] | Pattern Round Up - {catchyTitle} 
+- You only supply catchyTitle and emoji.
+- "catchyTitle": A short, catchy phrase. Reference the patterns when it fits. Curiosity-sparking, clear keywords. Max ~60 characters. No keyword stuffing.
+- "titleEmoji": 1–2 tasteful cozy emojis (e.g. 🧶 ✨ 🎙️).
+
+Output a JSON object with exactly these keys (all strings):
+- "catchyTitle": The catchy middle phrase for the title.
+- "titleEmoji": 1–2 cozy emojis for the title.
+- "description": A short paragraph (2-4 sentences) that hooks the viewer. This is a pattern round up (sharing patterns from a bundle), not finished objects. Use 1–2 emojis. Friendly, cozy tone. This will appear before "Show more" on YouTube.
+- "ravelryLinks": A newline-separated list of lines. Each line: "- Pattern name by Designer: https://www.ravelry.com/..." Use the exact URLs provided. Do not invent links.
+- "hashtags": Space-separated relevant hashtags, e.g. #knitting #crochet #handmade #ravelry #fiberarts #knittingpodcast #patternroundup plus any pattern-specific tags. No newlines.
+
+Be concise. No keyword stuffing. Output only valid JSON, no markdown or extra text.`;
+
+function buildPatternRoundUpUserMessage(
+  patterns: PatternRoundUpSummary[],
+  optionalPrompt?: string
+): string {
+  const patternList = patterns
+    .map((p) => {
+      const parts = [
+        `Pattern: ${p.patternName}`,
+        p.designerName && `Designer: ${p.designerName}`,
+        p.patternUrl && `URL: ${p.patternUrl}`,
+      ].filter(Boolean);
+      return parts.join('\n');
+    })
+    .join('\n\n');
+  if (optionalPrompt?.trim()) {
+    return `Optional context from the creator: ${optionalPrompt.trim()}\n\nPatterns:\n${patternList}`;
+  }
+  return `Patterns:\n${patternList}`;
+}
+
+function parseGroqResponsePatternRoundUp(content: string): DescriptionResult | null {
+  const trimmed = content.trim();
+  const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) return null;
+  try {
+    const obj = JSON.parse(jsonMatch[0]) as Record<string, unknown>;
+    const catchyTitle = typeof obj.catchyTitle === 'string' ? obj.catchyTitle.trim() : '';
+    const titleEmoji = typeof obj.titleEmoji === 'string' ? obj.titleEmoji.trim() : '✨';
+    const description = typeof obj.description === 'string' ? obj.description : '';
+    const ravelryLinks = typeof obj.ravelryLinks === 'string' ? obj.ravelryLinks : '';
+    const hashtags = typeof obj.hashtags === 'string' ? obj.hashtags : '';
+    if (!catchyTitle && !description) return null;
+    const title = buildPatternRoundUpTitle(catchyTitle || 'Patterns from my bundle', titleEmoji);
+    return { title, description, ravelryLinks, hashtags };
+  } catch {
+    return null;
+  }
+}
+
+export async function callGroqForPatternRoundUpDescription(
+  apiKey: string,
+  patterns: PatternRoundUpSummary[],
+  optionalPrompt?: string
+): Promise<DescriptionResult | null> {
+  const client = new Groq({ apiKey });
+  const userMessage = buildPatternRoundUpUserMessage(patterns, optionalPrompt);
+  try {
+    const completion = await client.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT_PATTERN_ROUND_UP },
+        { role: 'user', content: userMessage },
+      ],
+      temperature: 0.5,
+      max_tokens: 1024,
+    });
+    const content = completion.choices?.[0]?.message?.content;
+    if (!content) return null;
+    return parseGroqResponsePatternRoundUp(content);
   } catch {
     return null;
   }

@@ -1,0 +1,72 @@
+<div
+  class="assistant-pattern-board-card"
+  [class.assistant-pattern-board-card--canva-style]="design()?.canvaLayout === true"
+  [ngStyle]="cardStyle()"
+>
+  <div class="assistant-pattern-board-card__inner">
+    @if (opts().showPhoto && displayImageUrl()) {
+      <div class="assistant-pattern-board-card__image-wrap">
+        <img [src]="displayImageUrl()" class="assistant-pattern-board-card__image" alt="" />
+      </div>
+    }
+
+    @if (opts().showPatternName || opts().showDesignerName) {
+      <div class="assistant-pattern-board-card__title-block">
+        @if (opts().showPatternName) {
+          <div class="assistant-pattern-board-card__title">{{ card()?.patternName }}</div>
+        }
+        @if (opts().showDesignerName && card()?.designerName) {
+          <div class="assistant-pattern-board-card__designer">{{ card()!.designerName }}</div>
+        }
+      </div>
+    }
+
+    @if ((opts().showSizesAvailable && card()?.sizesAvailable?.trim()) || (opts().showNeedleSizes && card()?.needleSizes?.trim()) || (opts().showGauge && card()?.gauge?.trim()) || (opts().showSuggestedYarn && card()?.suggestedYarn?.trim())) {
+      <div class="assistant-pattern-board-card__fields">
+        @if (opts().showSizesAvailable && (card()?.sizesAvailable?.trim())) {
+          <div class="assistant-pattern-board-card__field">
+            <div class="assistant-pattern-board-card__field-label">SIZES</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.sizesAvailable }}</div>
+          </div>
+        }
+        @if (opts().showNeedleSizes && (card()?.needleSizes?.trim())) {
+          <div class="assistant-pattern-board-card__field">
+            <div class="assistant-pattern-board-card__field-label">NEEDLE</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.needleSizes }}</div>
+          </div>
+        }
+        @if (opts().showGauge && (card()?.gauge?.trim())) {
+          <div class="assistant-pattern-board-card__field">
+            <div class="assistant-pattern-board-card__field-label">GAUGE</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.gauge }}</div>
+          </div>
+        }
+        @if (opts().showSuggestedYarn && (card()?.suggestedYarn?.trim())) {
+          <div class="assistant-pattern-board-card__field">
+            <div class="assistant-pattern-board-card__field-label">SUGGESTED YARN</div>
+            <div class="assistant-pattern-board-card__field-value">{{ card()!.suggestedYarn }}</div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (patternUrl()) {
+      <div class="assistant-pattern-board-card__footer">
+        <a
+          [href]="patternUrl()!"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="assistant-pattern-board-card__qr-wrap"
+          [attr.aria-label]="'Open Ravelry pattern page'"
+        >
+          <qrcode
+            [qrdata]="patternUrl()!"
+            [width]="64"
+            [errorCorrectionLevel]="'M'"
+            [alt]="'QR code for Ravelry pattern'"
+          />
+        </a>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,82 @@
+.assistant-pattern-board-card {
+  position: relative;
+  min-height: 100%;
+}
+
+.assistant-pattern-board-card__inner {
+  position: relative;
+  padding: var(--board-padding, 1.25rem);
+  box-sizing: border-box;
+}
+
+.assistant-pattern-board-card__image-wrap {
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.assistant-pattern-board-card__image {
+  aspect-ratio: 1;
+  width: 100%;
+  object-fit: cover;
+}
+
+.assistant-pattern-board-card__title-block {
+  margin-top: 1rem;
+}
+
+.assistant-pattern-board-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.assistant-pattern-board-card__designer {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.assistant-pattern-board-card__fields {
+  margin-top: 0.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.assistant-pattern-board-card__field {
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.assistant-pattern-board-card__field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.assistant-pattern-board-card__field-value {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.assistant-pattern-board-card__footer {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+}
+
+.assistant-pattern-board-card__qr-wrap {
+  display: inline-block;
+  line-height: 0;
+}
+
+.assistant-pattern-board-card__qr-wrap:hover {
+  opacity: 0.9;
+}
+
+.assistant-pattern-board-card__qr-wrap qrcode ::ng-deep canvas,
+.assistant-pattern-board-card__qr-wrap qrcode ::ng-deep img {
+  display: block;
+  border-radius: 4px;
+}
