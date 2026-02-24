@@ -785,7 +785,18 @@ app.get('/api/bundle/:id', async (req, res) => {
       patternCards,
     });
   } catch (err: any) {
-    res.status(500).json({ error: err?.message ?? 'Failed to load bundle' });
+    const status = err?.response?.status;
+    const message = err?.response?.data?.error ?? err?.message ?? 'Failed to load bundle';
+    if (status === 404) {
+      res.status(404).json({ error: 'Bundle not found' });
+      return;
+    }
+    if (status === 403) {
+      res.status(403).json({ error: "You don't have access to this bundle" });
+      return;
+    }
+    console.error('GET /api/bundle/:id error', { bundleId, status, message }, err);
+    res.status(500).json({ error: message });
   }
 });
 
