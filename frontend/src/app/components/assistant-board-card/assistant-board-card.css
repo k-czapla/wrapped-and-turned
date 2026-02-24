@@ -1,10 +1,18 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .assistant-board-card {
   position: relative;
   min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .assistant-board-card__inner {
   position: relative;
+  width: 100%;
   padding: var(--board-padding, 1.25rem);
   box-sizing: border-box;
 }
