@@ -7,15 +7,9 @@
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
-      <button
-        type="button"
-        (click)="loadBundles()"
-        [disabled]="bundlesLoading"
-        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
-      >
-        {{ bundlesLoading ? 'Loading…' : 'Load my bundles' }}
-      </button>
-      @if (bundles.length > 0) {
+      @if (bundlesLoading) {
+        <span class="text-sm text-slate-500">Loading your bundles…</span>
+      } @else if (bundles.length > 0) {
         <select
           (change)="onBundleChange($event)"
           [disabled]="loadPatternsLoading"

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input, OnInit, output } from '@angular/core';
 import { ErrorAlert } from '../error-alert/error-alert';
 import type { BundleListItem, PatternRoundUpCard } from '../../services/api';
 import { Api } from '../../services/api';
@@ -10,7 +10,7 @@ import { Api } from '../../services/api';
   templateUrl: './assistant-bundle-controls.html',
   styleUrl: './assistant-bundle-controls.css',
 })
-export class AssistantBundleControls {
+export class AssistantBundleControls implements OnInit {
   private api = inject(Api);
   private cdr = inject(ChangeDetectorRef);
 
@@ -25,6 +25,10 @@ export class AssistantBundleControls {
   protected bundlesLoading = false;
   protected selectedBundleId: number | null = null;
   protected loadPatternsLoading = false;
+
+  ngOnInit(): void {
+    this.loadBundles();
+  }
 
   protected loadBundles() {
     this.bundlesLoading = true;

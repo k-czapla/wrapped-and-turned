@@ -34,7 +34,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 ### Inputs (Pattern Round Up)
 
-- **Bundle list**: logged-in user clicks “Load my bundles” to fetch their Ravelry bundles (bundles_list). User selects one bundle from a dropdown.
+- **Bundle list**: when Pattern Round Up is selected, the app immediately fetches the user's Ravelry bundles (bundles_list). User selects one bundle from a dropdown.
 - **Bundle content**: after selection, the app fetches the bundle (bundles_show) and pattern details for each pattern in the bundle. User sees a **selectable pattern list** (pattern name, designer) and selects one or more patterns to generate boards and description for.
 - **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (from API `sizes_available` when present, else computed sizes + range), **Needle size**, **Gauge**, **Suggested yarn** (from pattern packs `yarn_name`), **Price** (pattern price and currency). Same board design selection (Board Design page) and PNG export as Project Update.
 

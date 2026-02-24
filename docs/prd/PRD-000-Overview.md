@@ -55,7 +55,7 @@ Fiber artists track projects in Ravelry, but:
 
 1. User opens Assistant → selects **Project Update** or **Pattern Round Up**
 2. **Project Update**: chooses From/To dates → Load projects → picks one or more projects → app renders vertical board preview(s) → Download PNG and/or Generate Description
-3. **Pattern Round Up**: Load my bundles → selects a bundle → picks one or more patterns → app renders vertical pattern board preview(s) → Download PNG and/or Generate Description
+3. **Pattern Round Up**: app loads bundles automatically; user selects a bundle → picks one or more patterns → app renders vertical pattern board preview(s) → Download PNG and/or Generate Description
 
 ## Success metrics (v1)
 
