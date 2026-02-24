@@ -1,3 +1,10 @@
+/* Pattern boards are 30% wider than the default board size */
+:host {
+  --board-content-width: 416px; /* 320px * 1.3 */
+  width: var(--board-width);
+  display: block;
+}
+
 .assistant-pattern-board-card {
   position: relative;
   min-height: 100%;

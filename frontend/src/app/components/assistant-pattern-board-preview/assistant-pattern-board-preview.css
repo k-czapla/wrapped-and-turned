@@ -1,7 +1,6 @@
-/* Pattern boards are 30% wider than the default board size */
+/* Inherit pattern board width so gallery max-width matches the card */
 :host {
-  --board-content-width: 416px;
-  /* 320px * 1.3 */
+  --board-content-width: 416px; /* 320px * 1.3, must match assistant-pattern-board-card */
 }
 
 .assistant-pattern-board-preview__carousel {
