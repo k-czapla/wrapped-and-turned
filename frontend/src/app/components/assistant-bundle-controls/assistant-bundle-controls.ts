@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
 import { ErrorAlert } from '../error-alert/error-alert';
 import type { BundleListItem, PatternRoundUpCard } from '../../services/api';
 import { Api } from '../../services/api';
@@ -12,6 +12,7 @@ import { Api } from '../../services/api';
 })
 export class AssistantBundleControls {
   private api = inject(Api);
+  private cdr = inject(ChangeDetectorRef);
 
   loading = input<boolean>(false);
   error = input<string | null>(null);
@@ -33,10 +34,12 @@ export class AssistantBundleControls {
         this.bundles = res.bundles ?? [];
         this.bundlesLoaded.emit(this.bundles);
         this.bundlesLoading = false;
+        this.cdr.markForCheck();
       },
       error: (e) => {
         this.loadError.emit(e?.error?.error ?? 'Failed to load bundles. Are you logged in?');
         this.bundlesLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -56,10 +59,12 @@ export class AssistantBundleControls {
           patternCards: res.patternCards ?? [],
         });
         this.loadPatternsLoading = false;
+        this.cdr.markForCheck();
       },
       error: (e) => {
         this.loadError.emit(e?.error?.error ?? 'Failed to load bundle.');
         this.loadPatternsLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
