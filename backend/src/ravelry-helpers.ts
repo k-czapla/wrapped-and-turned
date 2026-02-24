@@ -13,6 +13,34 @@ export function ravelryPhotoUrl(ph: {
   return url ?? undefined;
 }
 
+const GAUGE_STITCHES_ROWS_REGEX =
+  /(\d+)\s*(?:stitches?|sts?\.?)\s*(?:and|,|\/)\s*(\d+)\s*rows?/i;
+
+function parseStitchesRows(text: string): string | undefined {
+  const m = text.match(GAUGE_STITCHES_ROWS_REGEX);
+  return m ? `${m[1]} stitches / ${m[2]} rows` : undefined;
+}
+
+/**
+ * Extract or build gauge as "X stitches / X rows" from Ravelry pattern data.
+ * Uses numeric gauge + row_gauge when available; otherwise parses gauge_description or string gauge.
+ */
+export function formatGaugeStitchesRows(pat: any): string | undefined {
+  const stitchNum = typeof pat?.gauge === 'number' && Number.isFinite(pat.gauge) ? pat.gauge : null;
+  const rowNum = typeof pat?.row_gauge === 'number' && Number.isFinite(pat.row_gauge) ? pat.row_gauge : null;
+  if (stitchNum != null && rowNum != null) {
+    return `${stitchNum} stitches / ${rowNum} rows`;
+  }
+  const desc = typeof pat?.gauge_description === 'string' ? pat.gauge_description.trim() : '';
+  if (desc) {
+    const parsed = parseStitchesRows(desc);
+    if (parsed) return parsed;
+  }
+  const gaugeStr = typeof pat?.gauge === 'string' ? pat.gauge.trim() : '';
+  if (gaugeStr) return parseStitchesRows(gaugeStr) ?? undefined;
+  return undefined;
+}
+
 /** Build a pattern card for Pattern Round Up from Ravelry pattern response. */
 export function buildPatternCardFromRavelry(pat: any, patternId: number): Record<string, unknown> {
   const photos = Array.isArray(pat?.photos) ? pat.photos : [];
@@ -75,10 +103,8 @@ export function buildPatternCardFromRavelry(pat: any, patternId: number): Record
       )].join(' + ') || undefined
     : undefined;
 
-  const gauge =
-    typeof pat?.gauge === 'string' && pat.gauge.trim()
-      ? pat.gauge.trim()
-      : pat?.gauge_description?.trim() ?? undefined;
+  /** Prefer "X stitches / X rows" from numbers or parsed from gauge_description. */
+  const gauge = formatGaugeStitchesRows(pat);
 
   // Prefer yarn_name from packs (e.g. "De Rerum Natura Bérénice"); fall back to yarn_weight
   const packs = Array.isArray(pat?.packs) ? pat.packs : [];
