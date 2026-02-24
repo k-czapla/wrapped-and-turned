@@ -754,9 +754,23 @@ app.get('/api/bundle/:id', async (req, res) => {
     return;
   }
   const api = makeRavelryApi({ session: req.session.ravelry! });
+  let username = req.session.ravelry!.username;
+  if (!username && req.session.ravelry!.accessToken) {
+    try {
+      const currentUser = await api.getJson<RavelryCurrentUserResponse>('/current_user.json');
+      username = currentUser?.user?.username;
+      if (username) req.session.ravelry!.username = username;
+    } catch {
+      // keep username undefined
+    }
+  }
+  if (!username || !username.trim()) {
+    res.status(400).json({ error: 'User identity not available; try refreshing the page.' });
+    return;
+  }
   try {
     const data = await api.getJson<RavelryBundleShowResponse>(
-      `/bundles/${bundleId}.json`
+      `/people/${encodeURIComponent(username)}/bundles/${bundleId}.json`
     );
     const rawBundle = data?.bundle;
     const bundle = rawBundle ?? { id: bundleId, name: undefined, bundle_items: [] };
