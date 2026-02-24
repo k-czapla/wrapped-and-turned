@@ -1,3 +1,14 @@
+/* Board is 30% wider than default (416px content); matches pattern board width */
+:host {
+  --board-content-width: 416px; /* 320px * 1.3 */
+}
+
+/* Wrapper width includes border so the card inside gets full --board-width (no 2px loss) */
+.assistant-board-preview__board-wrap {
+  width: var(--board-width);
+  box-sizing: content-box;
+}
+
 /* Carousel */
 
 .assistant-board-preview__carousel {
