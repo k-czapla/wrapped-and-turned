@@ -848,11 +848,13 @@ app.get('/api/bundle/:id', async (req, res) => {
       }
     }
 
+    const rawPatternResponses: Record<number, unknown> = {};
     const patternCards = await Promise.all(
       entries.map(async ({ patternId, item }) => {
         const embedded = getEmbeddedPatternFromBundleItem(item);
         try {
           const patternRes = await api.getJson<any>(`/patterns/${patternId}.json`);
+          rawPatternResponses[patternId] = patternRes;
           const pat = patternRes?.pattern ?? patternRes?.patterns?.[0] ?? {};
           if (pat && (pat.photos != null || pat.name != null)) {
             return buildPatternCardFromRavelry(pat, patternId);
@@ -875,6 +877,7 @@ app.get('/api/bundle/:id', async (req, res) => {
       bundle: { id: bundle.id, name: bundle.name },
       patternCards,
       _rawRavelry: data,
+      _rawRavelryPatterns: rawPatternResponses,
     });
   } catch (err: any) {
     const status = err?.response?.status;
