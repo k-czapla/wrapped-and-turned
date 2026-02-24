@@ -727,7 +727,7 @@ function extractBundleItems(bundle: Record<string, unknown>): unknown[] {
   return [];
 }
 
-/** Get pattern id from a bundle item; Ravelry may use pattern_id, pattern.id, or nested pattern. */
+/** Get pattern id from a bundle item; Ravelry may use item_id (Pattern), pattern_id, pattern.id, or nested pattern. */
 function getPatternIdFromBundleItem(item: Record<string, unknown>): number | undefined {
   const pid = item.pattern_id;
   if (typeof pid === 'number' && Number.isFinite(pid)) return pid;
@@ -743,7 +743,37 @@ function getPatternIdFromBundleItem(item: Record<string, unknown>): number | und
     const id = cp.id ?? cp.pattern_id;
     if (typeof id === 'number' && Number.isFinite(id)) return id;
   }
+  // Ravelry bundles_show: bundled_items[].item_id is the pattern id when item_type === 'Pattern'
+  const itemId = item.item_id;
+  if (typeof itemId === 'number' && Number.isFinite(itemId)) {
+    const type = item.item_type;
+    if (type === 'Pattern' || type === undefined) return itemId;
+  }
+  // Embedded bookmark.favorited (pattern object) when item is a pattern bookmark
+  const bookmark = item.bookmark;
+  if (bookmark && typeof bookmark === 'object' && bookmark !== null) {
+    const fav = (bookmark as Record<string, unknown>).favorited;
+    if (fav && typeof fav === 'object' && fav !== null) {
+      const f = fav as Record<string, unknown>;
+      const id = f.id ?? f.pattern_id;
+      if (typeof id === 'number' && Number.isFinite(id)) return id;
+    }
+  }
   return undefined;
+}
+
+/** Get embedded pattern from a bundle item when Ravelry returns bookmark.favorited (e.g. bundles_show). */
+function getEmbeddedPatternFromBundleItem(item: Record<string, unknown>): Record<string, unknown> | null {
+  const bookmark = item.bookmark;
+  if (!bookmark || typeof bookmark !== 'object' || bookmark === null) return null;
+  const fav = (bookmark as Record<string, unknown>).favorited;
+  if (!fav || typeof fav !== 'object' || fav === null) return null;
+  const f = fav as Record<string, unknown>;
+  if (f.id == null && f.name == null) return null;
+  // Normalize for buildPatternCardFromRavelry: it expects pat.photos array; bundle gives first_photo
+  const firstPhoto = f.first_photo;
+  const photos = firstPhoto && typeof firstPhoto === 'object' ? [firstPhoto] : [];
+  return { ...f, photos };
 }
 
 // Show bundle and return pattern cards (Ravelry bundles_show + pattern details)
@@ -806,24 +836,37 @@ app.get('/api/bundle/:id', async (req, res) => {
     const rawBundle = data?.bundle;
     const bundle = rawBundle ?? { id: bundleId, name: undefined, bundled_items: [] };
     const items = extractBundleItems(bundle);
-    const patternIds = items
-      .map((item) => getPatternIdFromBundleItem(item && typeof item === 'object' && !Array.isArray(item) ? (item as Record<string, unknown>) : {}))
-      .filter((id: unknown): id is number => typeof id === 'number' && Number.isFinite(id));
-    const uniqueIds = [...new Set(patternIds)];
-
-    const patternCards = await mapWithConcurrency(uniqueIds, 4, async (patternId: number) => {
-      try {
-        const patternRes = await api.getJson<any>(`/patterns/${patternId}.json`);
-        const pat = patternRes?.pattern ?? patternRes?.patterns?.[0] ?? {};
-        return buildPatternCardFromRavelry(pat, patternId);
-      } catch {
-        return {
-          id: patternId,
-          patternName: `Pattern #${patternId}`,
-          patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
-        };
+    type ItemEntry = { patternId: number; item: Record<string, unknown> };
+    const entries: ItemEntry[] = [];
+    const seen = new Set<number>();
+    for (const raw of items) {
+      const item = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
+      const patternId = getPatternIdFromBundleItem(item);
+      if (typeof patternId === 'number' && Number.isFinite(patternId) && !seen.has(patternId)) {
+        seen.add(patternId);
+        entries.push({ patternId, item });
       }
-    });
+    }
+
+    const patternCards = await Promise.all(
+      entries.map(async ({ patternId, item }) => {
+        const embedded = getEmbeddedPatternFromBundleItem(item);
+        if (embedded) {
+          return buildPatternCardFromRavelry(embedded, patternId);
+        }
+        try {
+          const patternRes = await api.getJson<any>(`/patterns/${patternId}.json`);
+          const pat = patternRes?.pattern ?? patternRes?.patterns?.[0] ?? {};
+          return buildPatternCardFromRavelry(pat, patternId);
+        } catch {
+          return {
+            id: patternId,
+            patternName: `Pattern #${patternId}`,
+            patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
+          };
+        }
+      })
+    );
 
     res.json({
       bundle: { id: bundle.id, name: bundle.name },

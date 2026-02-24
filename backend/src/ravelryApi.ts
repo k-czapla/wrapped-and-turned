@@ -59,11 +59,16 @@ export type RavelryBundlesListResponse = {
   bundles?: RavelryBundleListItem[];
 };
 
-/** BundledItem (list) – item in a bundle from Ravelry bundles_show. */
+/** BundledItem from Ravelry bundles_show. When logged in, items use item_id + item_type and embed pattern in bookmark.favorited. */
 export type RavelryBundledItem = {
   id: number;
   pattern_id?: number;
   pattern?: { id: number; name?: string; permalink?: string };
+  /** bundles_show (logged-in): pattern id for Pattern items */
+  item_id?: number;
+  item_type?: string;
+  /** bundles_show (logged-in): embedded pattern object (id, name, permalink, first_photo, designer, pattern_author, pattern_sources) */
+  bookmark?: { favorited?: Record<string, unknown> };
 };
 
 /** Bundle (full) from Ravelry bundles_show. Attributes: bundled_items, bundled_items_count, id, name, etc. */
