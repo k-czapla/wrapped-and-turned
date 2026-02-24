@@ -851,20 +851,23 @@ app.get('/api/bundle/:id', async (req, res) => {
     const patternCards = await Promise.all(
       entries.map(async ({ patternId, item }) => {
         const embedded = getEmbeddedPatternFromBundleItem(item);
-        if (embedded) {
-          return buildPatternCardFromRavelry(embedded, patternId);
-        }
         try {
           const patternRes = await api.getJson<any>(`/patterns/${patternId}.json`);
           const pat = patternRes?.pattern ?? patternRes?.patterns?.[0] ?? {};
-          return buildPatternCardFromRavelry(pat, patternId);
+          if (pat && (pat.photos != null || pat.name != null)) {
+            return buildPatternCardFromRavelry(pat, patternId);
+          }
         } catch {
-          return {
-            id: patternId,
-            patternName: `Pattern #${patternId}`,
-            patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
-          };
+          // fall through to embedded or minimal fallback
         }
+        if (embedded) {
+          return buildPatternCardFromRavelry(embedded, patternId);
+        }
+        return {
+          id: patternId,
+          patternName: `Pattern #${patternId}`,
+          patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
+        };
       })
     );
 
