@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import {
   Api,
@@ -53,11 +53,11 @@ export class Assistant {
   protected cardsLoading = false;
 
   /** Pattern Round Up: all pattern cards from selected bundle. */
-  protected bundlePatternCards: PatternRoundUpCard[] = [];
+  protected bundlePatternCards = signal<PatternRoundUpCard[]>([]);
   /** Pattern Round Up: name of last selected bundle (for empty-state message). */
   protected lastSelectedBundleName: string | null = null;
   /** Pattern Round Up: selected pattern ids for boards. */
-  protected selectedPatternIds: number[] = [];
+  protected selectedPatternIds = signal<number[]>([]);
   /** Pattern Round Up: per-pattern selected photo index. */
   protected selectedPhotoIndexByPatternId: Record<number, number> = {};
 
@@ -78,8 +78,8 @@ export class Assistant {
 
   /** Pattern Round Up: cards for selected patterns only (for preview and description). */
   protected selectedPatternCards = computed(() => {
-    const ids = new Set(this.selectedPatternIds);
-    return this.bundlePatternCards.filter((p) => ids.has(p.id));
+    const ids = new Set(this.selectedPatternIds());
+    return this.bundlePatternCards().filter((p) => ids.has(p.id));
   });
 
   /** Count of selected cards that are finished objects (completed date within loaded range). Used for title "X FOs". */
@@ -195,13 +195,13 @@ export class Assistant {
       this.wrapped = null;
       this.selectedProjectIds = [];
       this.cards = [];
-      this.bundlePatternCards = [];
+      this.bundlePatternCards.set([]);
       this.lastSelectedBundleName = null;
-      this.selectedPatternIds = [];
+      this.selectedPatternIds.set([]);
     } else {
-      this.bundlePatternCards = [];
+      this.bundlePatternCards.set([]);
       this.lastSelectedBundleName = null;
-      this.selectedPatternIds = [];
+      this.selectedPatternIds.set([]);
     }
     this.cdr.markForCheck();
   }
@@ -213,14 +213,14 @@ export class Assistant {
   }) {
     this.error = null;
     this.lastSelectedBundleName = payload.bundleName ?? `Bundle ${payload.bundleId}`;
-    this.bundlePatternCards = payload.patternCards;
-    this.selectedPatternIds = [];
+    this.bundlePatternCards.set(payload.patternCards);
+    this.selectedPatternIds.set([]);
     this.selectedPhotoIndexByPatternId = {};
     this.cdr.markForCheck();
   }
 
   protected onPatternSelectionChange(ids: number[]) {
-    this.selectedPatternIds = ids;
+    this.selectedPatternIds.set(ids);
     this.cdr.markForCheck();
   }
 
