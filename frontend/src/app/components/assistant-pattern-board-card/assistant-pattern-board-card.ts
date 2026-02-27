@@ -50,14 +50,16 @@ export class AssistantPatternBoardCard {
 
   protected patternUrl = computed(() => this.card()?.patternUrl ?? null);
 
-  /** Formatted price line: e.g. "9.6 EUR" or "€ 9.60" when only currency code available. */
+  /** Formatted price line in euros (e.g. "9.60 EUR"). API returns prices normalized to EUR. */
   protected priceLine = computed(() => {
     const c = this.card();
     if (!c) return '';
     const price = c.price;
+    if (price != null && Number.isFinite(price)) {
+      const amount = Math.round(Number(price) * 100) / 100;
+      return `${amount} EUR`;
+    }
     const currency = c.currency?.trim();
-    if (price != null && Number.isFinite(price) && currency) return `${price} ${currency}`;
-    if (price != null && Number.isFinite(price)) return String(price);
     if (currency) return currency;
     return '';
   });

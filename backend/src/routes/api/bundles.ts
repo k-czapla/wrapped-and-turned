@@ -5,6 +5,7 @@ import {
   type RavelryBundlesListResponse,
   type RavelryCurrentUserResponse,
 } from '../../ravelryApi.js';
+import { normalizeCardPriceToEur } from '../../exchange-rates.js';
 import {
   buildPatternCardFromRavelry,
   extractBundleItems,
@@ -53,36 +54,40 @@ export function registerBundlesRoutes(router: Router, ctx: RouteContext): void {
       return;
     }
     if (!ravelryEnabled) {
+      const demoCards = [
+        {
+          id: 101,
+          patternName: 'Demo Pattern A',
+          designerName: 'Designer A',
+          sizesAvailable: 'S, M, L (0.80–1.20 m)',
+          needleSizes: '4mm',
+          gauge: '20 sts / 28 rows = 10 cm',
+          suggestedYarn: 'DK',
+          patternUrl: 'https://www.ravelry.com/patterns/library/demo-a',
+          patternPhotos: [],
+          price: 6.5,
+          currency: 'USD',
+        },
+        {
+          id: 102,
+          patternName: 'Demo Pattern B',
+          designerName: 'Designer B',
+          sizesAvailable: 'One size (1.00 m)',
+          needleSizes: '3.5mm',
+          gauge: '22 sts / 30 rows = 10 cm',
+          suggestedYarn: 'Fingering',
+          patternUrl: 'https://www.ravelry.com/patterns/library/demo-b',
+          patternPhotos: [],
+          price: 9.6,
+          currency: 'EUR',
+        },
+      ];
+      const normalizedDemo = await Promise.all(
+        demoCards.map((card) => normalizeCardPriceToEur({ ...card }))
+      );
       res.json({
         bundle: { id: bundleId, name: 'Demo bundle' },
-        patternCards: [
-          {
-            id: 101,
-            patternName: 'Demo Pattern A',
-            designerName: 'Designer A',
-            sizesAvailable: 'S, M, L (0.80–1.20 m)',
-            needleSizes: '4mm',
-            gauge: '20 sts / 28 rows = 10 cm',
-            suggestedYarn: 'DK',
-            patternUrl: 'https://www.ravelry.com/patterns/library/demo-a',
-            patternPhotos: [],
-            price: 6.5,
-            currency: 'USD',
-          },
-          {
-            id: 102,
-            patternName: 'Demo Pattern B',
-            designerName: 'Designer B',
-            sizesAvailable: 'One size (1.00 m)',
-            needleSizes: '3.5mm',
-            gauge: '22 sts / 30 rows = 10 cm',
-            suggestedYarn: 'Fingering',
-            patternUrl: 'https://www.ravelry.com/patterns/library/demo-b',
-            patternPhotos: [],
-            price: 9.6,
-            currency: 'EUR',
-          },
-        ],
+        patternCards: normalizedDemo,
       });
       return;
     }
@@ -121,7 +126,7 @@ export function registerBundlesRoutes(router: Router, ctx: RouteContext): void {
       }
 
       const rawPatternResponses: Record<number, unknown> = {};
-      const patternCards = await Promise.all(
+      const rawCards = await Promise.all(
         entries.map(async ({ patternId, item }) => {
           const embedded = getEmbeddedPatternFromBundleItem(item);
           try {
@@ -143,6 +148,9 @@ export function registerBundlesRoutes(router: Router, ctx: RouteContext): void {
             patternUrl: `https://www.ravelry.com/patterns/library/${patternId}`,
           };
         })
+      );
+      const patternCards = await Promise.all(
+        rawCards.map((card) => normalizeCardPriceToEur({ ...card }))
       );
 
       res.json({
