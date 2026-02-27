@@ -29,6 +29,8 @@ import {
 export class AssistantPatternBoardPreview {
   private api = inject(Api);
   currentSlideIndex = signal(0);
+  /** True while downloading all boards (disables Download all button). */
+  downloadingAll = signal(false);
   cards = input<PatternRoundUpCard[]>([]);
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<PatternRoundUpDisplayOptions | null>(null);
@@ -162,6 +164,23 @@ export class AssistantPatternBoardPreview {
           images[i].src = originalSrcs[i];
         }
       }
+    }
+  }
+
+  /** Download all boards as individual PNG files (one per selected pattern). */
+  async downloadAllBoards() {
+    const len = this.cards().length;
+    if (len === 0) return;
+    this.downloadingAll.set(true);
+    try {
+      for (let i = 0; i < len; i++) {
+        await this.downloadBoard(i);
+        if (i < len - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+        }
+      }
+    } finally {
+      this.downloadingAll.set(false);
     }
   }
 }
