@@ -46,6 +46,9 @@
                     [design]="design()"
                     [displayOptions]="displayOptions()"
                     [selectedPhotoIndex]="selectedIndex(card)"
+                    [editable]="true"
+                    [fieldOverrides]="fieldOverridesForCard(card)"
+                    (fieldOverrideChange)="onFieldOverrideChange(card, $event)"
                   />
                 </div>
                 <button

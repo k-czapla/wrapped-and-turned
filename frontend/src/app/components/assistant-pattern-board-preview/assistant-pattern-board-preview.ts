@@ -14,7 +14,10 @@ import { toPng } from 'html-to-image';
 import type { PatternRoundUpCard, PatternRoundUpDisplayOptions } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { Api } from '../../services/api';
-import { AssistantPatternBoardCard } from '../assistant-pattern-board-card/assistant-pattern-board-card';
+import {
+  AssistantPatternBoardCard,
+  PATTERN_BOARD_EDITABLE_FIELDS,
+} from '../assistant-pattern-board-card/assistant-pattern-board-card';
 
 @Component({
   selector: 'app-assistant-pattern-board-preview',
@@ -30,6 +33,7 @@ export class AssistantPatternBoardPreview {
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<PatternRoundUpDisplayOptions | null>(null);
   selectedPhotoIndexByPatternId = input<Record<number, number>>({});
+  private fieldOverridesByCardId = signal<Record<number, Record<string, string>>>({});
 
   selectedPhotoIndexChange = output<{ patternId: number; index: number }>();
 
@@ -47,6 +51,30 @@ export class AssistantPatternBoardPreview {
     const map = this.selectedPhotoIndexByPatternId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  protected fieldOverridesForCard(card: PatternRoundUpCard): Record<string, string> | null {
+    const byId = this.fieldOverridesByCardId();
+    const overrides = byId[card.id];
+    return overrides && Object.keys(overrides).length > 0 ? overrides : null;
+  }
+
+  protected onFieldOverrideChange(
+    card: PatternRoundUpCard,
+    event: { field: string; value: string }
+  ): void {
+    if (
+      !PATTERN_BOARD_EDITABLE_FIELDS.includes(event.field as (typeof PATTERN_BOARD_EDITABLE_FIELDS)[number])
+    )
+      return;
+    this.fieldOverridesByCardId.update((byId) => {
+      const next = { ...byId };
+      const cardOverrides = { ...(next[card.id] ?? {}), [event.field]: event.value };
+      if (event.value === '') delete cardOverrides[event.field];
+      if (Object.keys(cardOverrides).length === 0) delete next[card.id];
+      else next[card.id] = cardOverrides;
+      return next;
+    });
   }
 
   protected photosForCard(card: PatternRoundUpCard): string[] {

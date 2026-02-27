@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, input, computed } from '@angular/core';
+import { Component, ElementRef, input, output, computed, signal, ViewChildren, QueryList } from '@angular/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { DEFAULT_BOARD_DISPLAY_OPTIONS, type BoardDisplayOptions, type ProjectCard } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
@@ -9,6 +9,9 @@ const DEFAULT_CARD_STYLE: Record<string, string> = {
   background: "linear-gradient(to bottom right, rgba(99,102,241,0.2), white, rgba(244,63,94,0.2))",
   color: "#0f172a",
 };
+
+/** Editable field keys for project boards (yarns, sizes). */
+export const PROJECT_BOARD_EDITABLE_FIELDS = ['sizeMade', 'yarnUsed', 'needleSizes'] as const;
 
 @Component({
   selector: 'app-assistant-board-card',
@@ -23,6 +26,19 @@ export class AssistantBoardCard {
   displayOptions = input<BoardDisplayOptions | null>(null);
   /** Selected photo index within project or pattern photos (from gallery). */
   selectedPhotoIndex = input<number>(0);
+  /** When true, yarn/size fields are editable in place. */
+  editable = input<boolean>(false);
+  /** Overrides for field values (from parent); key = field name, value = display text. */
+  fieldOverrides = input<Record<string, string> | null>(null);
+  /** Emitted when user commits an edit (Enter or blur). */
+  fieldOverrideChange = output<{ field: string; value: string }>();
+
+  /** Which field is currently in edit mode, or null. */
+  protected editingField = signal<string | null>(null);
+  /** Temporary value while editing. */
+  protected editValue = signal('');
+
+  @ViewChildren('editInputRef') private editInputRefs?: QueryList<ElementRef<HTMLInputElement>>;
 
   protected isCanvaStyle = computed(() => this.design()?.canvaLayout === true);
   protected opts = computed(() => ({ ...DEFAULT_BOARD_DISPLAY_OPTIONS, ...this.displayOptions() }));
@@ -72,4 +88,29 @@ export class AssistantBoardCard {
     if (!d?.style) return DEFAULT_CARD_STYLE;
     return { ...DEFAULT_CARD_STYLE, ...d.style };
   });
+
+  /** Display value for a field (override or card value). */
+  protected displayValue(field: string): string {
+    const overrides = this.fieldOverrides();
+    if (overrides && field in overrides) return overrides[field];
+    const c = this.card();
+    if (!c) return '';
+    const v = (c as Record<string, unknown>)[field];
+    return typeof v === 'string' ? v : '';
+  }
+
+  protected startEdit(field: string): void {
+    if (!this.editable()) return;
+    this.editValue.set(this.displayValue(field));
+    this.editingField.set(field);
+    setTimeout(() => this.editInputRefs?.first?.nativeElement?.focus(), 0);
+  }
+
+  protected commitEdit(): void {
+    const field = this.editingField();
+    if (!field) return;
+    const value = this.editValue().trim();
+    this.fieldOverrideChange.emit({ field, value });
+    this.editingField.set(null);
+  }
 }

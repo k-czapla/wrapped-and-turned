@@ -4,7 +4,7 @@
 - **Feature**: Podcaster’s Assistant
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-02-24
+- **Last updated**: 2026-02-27
 
 ## Summary
 
@@ -69,6 +69,8 @@ The board shows **Pattern name** and **Designer** always, and only the other fie
 
 App branding (“Wrapped & Turned”) and footer link remain on the board.
 
+**Editable fields (Project Update):** In the board preview, the user can edit the text for **yarn** (Yarn + color), **size** (Size made), and **needles** (Needle sizes) in place. Pattern name and designer are not editable (cursor remains default). When the user hovers over an editable field, the cursor indicates text editing; clicking the field switches to edit mode; pressing Enter or clicking outside saves the value. The preview and the downloaded PNG both reflect the user's edits.
+
 ### Output (Pattern Round Up board content)
 
 The Pattern Round Up board shows **Pattern name** and **Designer** always, and only the other fields the user has enabled in **Board display options (Pattern Round Up)**. When a field is enabled, it is included (when available from Ravelry pattern data):
@@ -81,9 +83,11 @@ The Pattern Round Up board shows **Pattern name** and **Designer** always, and o
 - **Price**: pattern price and currency (e.g. “9.6 EUR”) when enabled
 - **QR code / link**: to the Ravelry pattern page
 
+**Editable fields (Pattern Round Up):** In the board preview, the user can edit the text for **Sizes available**, **Needle size**, and **Suggested yarn** in place. Pattern name, designer, gauge, and price are not editable. Same interaction as Project Update: editable fields show a text cursor on hover; click to edit; Enter or click outside to save. The preview and downloaded PNG include the user's changes.
+
 ### Export
 
-- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing.
+- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing. The PNG includes any in-place edits the user made to yarn/size fields on the board.
 
 ## Out of scope (v1)
 

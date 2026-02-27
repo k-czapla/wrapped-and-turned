@@ -12,6 +12,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
 import type { BoardDisplayOptions, ProjectCard } from '../../services/api';
+import { PROJECT_BOARD_EDITABLE_FIELDS } from '../assistant-board-card/assistant-board-card';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { Api } from '../../services/api';
 import { AssistantBoardCard } from '../assistant-board-card/assistant-board-card';
@@ -34,6 +35,11 @@ export class AssistantBoardPreview {
   photoSourceByProjectId = input<Record<number, 'project' | 'pattern'>>({});
   /** Per-project selected photo index (for project/pattern photo gallery). */
   selectedPhotoIndexByProjectId = input<Record<number, number>>({});
+  /** Per-card overrides for editable fields (yarn, sizes). Held locally so preview and PNG reflect edits. */
+  private fieldOverridesByCardId = signal<Record<number, Record<string, string>>>({});
+  /** Output for two-way binding; overrides are kept in fieldOverridesByCardId signal. */
+  fieldOverridesByCardIdChange = output<{ cardId: number; field: string; value: string }>();
+
   photoSourceChange = output<{ projectId: number; source: 'project' | 'pattern' }>();
   selectedPhotoIndexChange = output<{ projectId: number; index: number }>();
   /** Emitted when the user uploads a photo from their computer for a project board. */
@@ -78,6 +84,25 @@ export class AssistantBoardPreview {
     const map = this.selectedPhotoIndexByProjectId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  protected fieldOverridesForCard(card: ProjectCard): Record<string, string> | null {
+    const byId = this.fieldOverridesByCardId();
+    const overrides = byId[card.id];
+    return overrides && Object.keys(overrides).length > 0 ? overrides : null;
+  }
+
+  protected onFieldOverrideChange(card: ProjectCard, event: { field: string; value: string }): void {
+    if (!PROJECT_BOARD_EDITABLE_FIELDS.includes(event.field as (typeof PROJECT_BOARD_EDITABLE_FIELDS)[number]))
+      return;
+    this.fieldOverridesByCardId.update((byId) => {
+      const next = { ...byId };
+      const cardOverrides = { ...(next[card.id] ?? {}), [event.field]: event.value };
+      if (event.value === '') delete cardOverrides[event.field];
+      if (Object.keys(cardOverrides).length === 0) delete next[card.id];
+      else next[card.id] = cardOverrides;
+      return next;
+    });
   }
 
   get canGoPrev(): boolean {

@@ -26,24 +26,78 @@
       <div class="assistant-board-card__date-line">{{ dateLine() }}</div>
     }
 
-    @if ((opts().showSizeMade && card()?.sizeMade?.trim()) || (opts().showYarnUsed && card()?.yarnUsed?.trim()) || (opts().showNeedleSizes && card()?.needleSizes?.trim())) {
+    @if ((opts().showSizeMade && (card()?.sizeMade?.trim() || fieldOverrides()?.['sizeMade'])) || (opts().showYarnUsed && (card()?.yarnUsed?.trim() || fieldOverrides()?.['yarnUsed'])) || (opts().showNeedleSizes && (card()?.needleSizes?.trim() || fieldOverrides()?.['needleSizes']))) {
       <div class="assistant-board-card__fields">
-        @if (opts().showSizeMade && (card()?.sizeMade?.trim())) {
+        @if (opts().showSizeMade && (card()?.sizeMade?.trim() || fieldOverrides()?.['sizeMade'] || editingField() === 'sizeMade')) {
           <div class="assistant-board-card__field">
             <div class="assistant-board-card__field-label">SIZE</div>
-            <div class="assistant-board-card__field-value">{{ card()!.sizeMade }}</div>
+            @if (editable() && editingField() === 'sizeMade') {
+              <input
+                #editInputRef
+                type="text"
+                class="assistant-board-card__field-input"
+                [value]="editValue()"
+                (input)="editValue.set($any($event.target).value)"
+                (blur)="commitEdit()"
+                (keydown.enter)="commitEdit(); $event.preventDefault()"
+              />
+            } @else {
+              <div
+                class="assistant-board-card__field-value"
+                [class.assistant-board-card__field-value--editable]="editable()"
+                (click)="startEdit('sizeMade')"
+              >
+                {{ displayValue('sizeMade') }}
+              </div>
+            }
           </div>
         }
-        @if (opts().showYarnUsed && (card()?.yarnUsed?.trim())) {
+        @if (opts().showYarnUsed && (card()?.yarnUsed?.trim() || fieldOverrides()?.['yarnUsed'] || editingField() === 'yarnUsed')) {
           <div class="assistant-board-card__field">
             <div class="assistant-board-card__field-label">YARN</div>
-            <div class="assistant-board-card__field-value">{{ card()!.yarnUsed }}</div>
+            @if (editable() && editingField() === 'yarnUsed') {
+              <input
+                #editInputRef
+                type="text"
+                class="assistant-board-card__field-input"
+                [value]="editValue()"
+                (input)="editValue.set($any($event.target).value)"
+                (blur)="commitEdit()"
+                (keydown.enter)="commitEdit(); $event.preventDefault()"
+              />
+            } @else {
+              <div
+                class="assistant-board-card__field-value"
+                [class.assistant-board-card__field-value--editable]="editable()"
+                (click)="startEdit('yarnUsed')"
+              >
+                {{ displayValue('yarnUsed') }}
+              </div>
+            }
           </div>
         }
-        @if (opts().showNeedleSizes && (card()?.needleSizes?.trim())) {
+        @if (opts().showNeedleSizes && (card()?.needleSizes?.trim() || fieldOverrides()?.['needleSizes'] || editingField() === 'needleSizes')) {
           <div class="assistant-board-card__field">
             <div class="assistant-board-card__field-label">NEEDLES</div>
-            <div class="assistant-board-card__field-value">{{ card()!.needleSizes }}</div>
+            @if (editable() && editingField() === 'needleSizes') {
+              <input
+                #editInputRef
+                type="text"
+                class="assistant-board-card__field-input"
+                [value]="editValue()"
+                (input)="editValue.set($any($event.target).value)"
+                (blur)="commitEdit()"
+                (keydown.enter)="commitEdit(); $event.preventDefault()"
+              />
+            } @else {
+              <div
+                class="assistant-board-card__field-value"
+                [class.assistant-board-card__field-value--editable]="editable()"
+                (click)="startEdit('needleSizes')"
+              >
+                {{ displayValue('needleSizes') }}
+              </div>
+            }
           </div>
         }
       </div>
