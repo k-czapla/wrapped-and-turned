@@ -27,6 +27,8 @@ export class AssistantBoardPreview {
   private api = inject(Api);
   /** Current carousel slide index (0-based). */
   currentSlideIndex = signal(0);
+  /** True while downloading all boards (disables Download all button). */
+  downloadingAll = signal(false);
   cards = input<ProjectCard[]>([]);
   cardsLoading = input<boolean>(false);
   design = input<ProjectBoardDesign | null>(null);
@@ -211,6 +213,23 @@ export class AssistantBoardPreview {
           images[i].src = originalSrcs[i];
         }
       }
+    }
+  }
+
+  /** Download all boards as individual PNG files (one per selected project). */
+  async downloadAllBoards() {
+    const len = this.cards().length;
+    if (len === 0) return;
+    this.downloadingAll.set(true);
+    try {
+      for (let i = 0; i < len; i++) {
+        await this.downloadBoard(i);
+        if (i < len - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+        }
+      }
+    } finally {
+      this.downloadingAll.set(false);
     }
   }
 }

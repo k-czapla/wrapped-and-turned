@@ -31,6 +31,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Needle sizes**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
 - **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
+- **Download all**: a “Download all” button in the preview section downloads all selected project boards as individual PNG files (one file per board). Each board uses the same filename pattern as the per-board “Download PNG” button.
 
 ### Inputs (Pattern Round Up)
 
