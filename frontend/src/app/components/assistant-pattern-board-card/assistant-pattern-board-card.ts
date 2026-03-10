@@ -12,8 +12,8 @@ const DEFAULT_CARD_STYLE: Record<string, string> = {
   color: '#0f172a',
 };
 
-/** Editable field keys for pattern boards (yarns, sizes; not pattern name, designer, gauge). */
-export const PATTERN_BOARD_EDITABLE_FIELDS = ['sizesAvailable', 'needleSizes', 'suggestedYarn'] as const;
+/** Editable field keys for pattern boards (yarns, sizes; not pattern name, designer, gauge/needles). */
+export const PATTERN_BOARD_EDITABLE_FIELDS = ['sizesAvailable', 'suggestedYarn'] as const;
 
 @Component({
   selector: 'app-assistant-pattern-board-card',
@@ -41,7 +41,6 @@ export class AssistantPatternBoardCard {
     showPatternName: true,
     showDesignerName: true,
     showSizesAvailable: true,
-    showNeedleSizes: true,
     showGauge: true,
     showSuggestedYarn: true,
     showPrice: true,
@@ -49,6 +48,16 @@ export class AssistantPatternBoardCard {
   }));
 
   protected patternUrl = computed(() => this.card()?.patternUrl ?? null);
+
+  /** Gauge with needle size in parentheses when present (e.g. "20 sts / 28 rows = 10 cm (4mm)"). */
+  protected gaugeWithNeedlesLine = computed(() => {
+    const c = this.card();
+    if (!c) return '';
+    const gauge = (c.gauge ?? '').trim();
+    const needles = (c.needleSizes ?? '').trim();
+    if (needles) return gauge ? `${gauge} (${needles})` : `(${needles})`;
+    return gauge;
+  });
 
   /** Formatted price line in euros (e.g. "9.60 EUR"). API returns prices normalized to EUR. */
   protected priceLine = computed(() => {

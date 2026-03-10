@@ -114,7 +114,7 @@ export type PatternRoundUpDisplayOptions = {
   showPatternName: boolean;
   showDesignerName: boolean;
   showSizesAvailable: boolean;
-  showNeedleSizes: boolean;
+  /** When true, shows gauge with needle size in parentheses (e.g. "20 sts / 28 rows = 10 cm (4mm)"). */
   showGauge: boolean;
   showSuggestedYarn: boolean;
   showPrice: boolean;
@@ -125,7 +125,6 @@ export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOpti
   showPatternName: true,
   showDesignerName: true,
   showSizesAvailable: true,
-  showNeedleSizes: true,
   showGauge: true,
   showSuggestedYarn: true,
   showPrice: true,

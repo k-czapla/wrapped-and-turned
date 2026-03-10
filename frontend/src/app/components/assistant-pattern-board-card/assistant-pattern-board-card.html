@@ -21,7 +21,7 @@
       </div>
     }
 
-    @if ((opts().showSizesAvailable && (card()?.sizesAvailable?.trim() || fieldOverrides()?.['sizesAvailable'] || editingField() === 'sizesAvailable')) || (opts().showNeedleSizes && (card()?.needleSizes?.trim() || fieldOverrides()?.['needleSizes'] || editingField() === 'needleSizes')) || (opts().showGauge && card()?.gauge?.trim()) || (opts().showSuggestedYarn && (card()?.suggestedYarn?.trim() || fieldOverrides()?.['suggestedYarn'] || editingField() === 'suggestedYarn')) || (opts().showPrice && (card()?.price != null || card()?.currency?.trim()))) {
+    @if ((opts().showSizesAvailable && (card()?.sizesAvailable?.trim() || fieldOverrides()?.['sizesAvailable'] || editingField() === 'sizesAvailable')) || (opts().showGauge && (card()?.gauge?.trim() || card()?.needleSizes?.trim())) || (opts().showSuggestedYarn && (card()?.suggestedYarn?.trim() || fieldOverrides()?.['suggestedYarn'] || editingField() === 'suggestedYarn')) || (opts().showPrice && (card()?.price != null || card()?.currency?.trim()))) {
       <div class="assistant-pattern-board-card__fields">
         @if (opts().showSizesAvailable && (card()?.sizesAvailable?.trim() || fieldOverrides()?.['sizesAvailable'] || editingField() === 'sizesAvailable')) {
           <div class="assistant-pattern-board-card__field">
@@ -47,34 +47,10 @@
             }
           </div>
         }
-        @if (opts().showNeedleSizes && (card()?.needleSizes?.trim() || fieldOverrides()?.['needleSizes'] || editingField() === 'needleSizes')) {
-          <div class="assistant-pattern-board-card__field">
-            <div class="assistant-pattern-board-card__field-label">NEEDLE</div>
-            @if (editable() && editingField() === 'needleSizes') {
-              <input
-                #editInputRef
-                type="text"
-                class="assistant-pattern-board-card__field-input"
-                [value]="editValue()"
-                (input)="editValue.set($any($event.target).value)"
-                (blur)="commitEdit()"
-                (keydown.enter)="commitEdit(); $event.preventDefault()"
-              />
-            } @else {
-              <div
-                class="assistant-pattern-board-card__field-value"
-                [class.assistant-pattern-board-card__field-value--editable]="editable()"
-                (click)="startEdit('needleSizes')"
-              >
-                {{ displayValue('needleSizes') | truncateMiddle }}
-              </div>
-            }
-          </div>
-        }
-        @if (opts().showGauge && (card()?.gauge?.trim())) {
+        @if (opts().showGauge && (card()?.gauge?.trim() || card()?.needleSizes?.trim())) {
           <div class="assistant-pattern-board-card__field">
             <div class="assistant-pattern-board-card__field-label">GAUGE</div>
-            <div class="assistant-pattern-board-card__field-value">{{ card()!.gauge | truncateMiddle }}</div>
+            <div class="assistant-pattern-board-card__field-value">{{ gaugeWithNeedlesLine() | truncateMiddle }}</div>
           </div>
         }
         @if (opts().showSuggestedYarn && (card()?.suggestedYarn?.trim() || fieldOverrides()?.['suggestedYarn'] || editingField() === 'suggestedYarn')) {

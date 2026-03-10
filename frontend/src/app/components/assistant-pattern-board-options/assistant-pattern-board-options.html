@@ -31,20 +31,11 @@
     <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
       <input
         type="checkbox"
-        [checked]="options().showNeedleSizes"
-        (change)="toggle('showNeedleSizes')"
-        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-      />
-      <span class="text-sm text-slate-700">Needle size</span>
-    </label>
-    <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
-      <input
-        type="checkbox"
         [checked]="options().showGauge"
         (change)="toggle('showGauge')"
         class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
       />
-      <span class="text-sm text-slate-700">Gauge</span>
+      <span class="text-sm text-slate-700">Gauge (with needle size)</span>
     </label>
     <label class="assistant-pattern-board-options__item inline-flex cursor-pointer items-center gap-2">
       <input
