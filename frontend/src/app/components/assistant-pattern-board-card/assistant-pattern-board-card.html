@@ -86,23 +86,5 @@
       </div>
     }
 
-    @if (patternUrl()) {
-      <div class="assistant-pattern-board-card__footer">
-        <a
-          [href]="patternUrl()!"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="assistant-pattern-board-card__qr-wrap"
-          [attr.aria-label]="'Open Ravelry pattern page'"
-        >
-          <qrcode
-            [qrdata]="patternUrl()!"
-            [width]="64"
-            [errorCorrectionLevel]="'M'"
-            [alt]="'QR code for Ravelry pattern'"
-          />
-        </a>
-      </div>
-    }
   </div>
 </div>

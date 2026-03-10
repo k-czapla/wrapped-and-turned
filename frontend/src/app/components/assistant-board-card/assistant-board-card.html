@@ -103,23 +103,5 @@
       </div>
     }
 
-    @if (projectUrl()) {
-      <div class="assistant-board-card__footer">
-        <a
-          [href]="projectUrl()!"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="assistant-board-card__qr-wrap"
-          [attr.aria-label]="'Open Ravelry project page'"
-        >
-          <qrcode
-            [qrdata]="projectUrl()!"
-            [width]="64"
-            [errorCorrectionLevel]="'M'"
-            [alt]="'QR code for Ravelry project'"
-          />
-        </a>
-      </div>
-    }
   </div>
 </div>

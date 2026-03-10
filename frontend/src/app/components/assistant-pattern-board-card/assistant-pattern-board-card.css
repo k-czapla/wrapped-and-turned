@@ -96,26 +96,3 @@
   outline: 2px solid rgba(99, 102, 241, 0.5);
   outline-offset: 1px;
 }
-
-.assistant-pattern-board-card__footer {
-  margin-top: 1rem;
-  font-size: 0.75rem;
-  opacity: 0.85;
-  display: flex;
-  align-items: center;
-}
-
-.assistant-pattern-board-card__qr-wrap {
-  display: inline-block;
-  line-height: 0;
-}
-
-.assistant-pattern-board-card__qr-wrap:hover {
-  opacity: 0.9;
-}
-
-.assistant-pattern-board-card__qr-wrap qrcode ::ng-deep canvas,
-.assistant-pattern-board-card__qr-wrap qrcode ::ng-deep img {
-  display: block;
-  border-radius: 4px;
-}

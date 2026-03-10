@@ -67,9 +67,9 @@ The board shows **Pattern name** and **Designer** always, and only the other fie
 - **Yarn + color**: yarn used (from Ravelry packs)
 - **Size made**: size made (from Ravelry project)
 - **Needle sizes**: needle sizes used (from Ravelry project needles); if multiple, joined with "+" (e.g. "4mm + 3.5mm")
-- **Dates**: one line at the bottom of the board (before the QR code), when **Start date** or **Completed date** is enabled and a start date is available. If only start date: “DD.MM.YYYY – In progress”. If both: “DD.MM.YYYY – DD.MM.YYYY”. If no start date, the date section is hidden.
+- **Dates**: one line at the bottom of the board when **Start date** or **Completed date** is enabled and a start date is available. If only start date: “DD.MM.YYYY – In progress”. If both: “DD.MM.YYYY – DD.MM.YYYY”. If no start date, the date section is hidden. A QR code is not shown on the board; when the user downloads the PNG and the card has a Ravelry project URL, a QR code is appended on export (see Export).
 
-App branding (“Wrapped & Turned”) and footer link remain on the board.
+App branding (“Wrapped & Turned”) remains on the board.
 
 **Editable fields (Project Update):** In the board preview, the user can edit the text for **yarn** (Yarn + color), **size** (Size made), and **needles** (Needle sizes) in place. Pattern name and designer are not editable (cursor remains default). When the user hovers over an editable field, the cursor indicates text editing; clicking the field switches to edit mode; pressing Enter or clicking outside saves the value. The preview and the downloaded PNG both reflect the user's edits.
 
@@ -83,13 +83,13 @@ The Pattern Round Up board shows **Pattern name** and **Designer** always, and o
 - **Gauge (with needle size)**: gauge from Ravelry pattern, with needle size shown in parentheses when present (e.g. "20 sts / 28 rows = 10 cm (4mm)")
 - **Suggested yarn**: from pattern packs `yarn_name` (e.g. “De Rerum Natura Bérénice”)
 - **Price**: pattern price always shown in euros (e.g. “9.60 EUR”). When the source provides a different currency, the backend converts it to EUR using ECB daily exchange rates (with a static fallback for common currencies if the feed is unavailable).
-- **QR code / link**: to the Ravelry pattern page
+- **QR code**: not shown on the board; when the user downloads the PNG and the card has a Ravelry pattern URL, a QR code is appended on export (see Export).
 
 **Editable fields (Pattern Round Up):** In the board preview, the user can edit the text for **Sizes available** and **Suggested yarn** in place. Pattern name, designer, gauge (with needle size), and price are not editable. Same interaction as Project Update: editable fields show a text cursor on hover; click to edit; Enter or click outside to save. The preview and downloaded PNG include the user's changes.
 
 ### Export
 
-- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing. The PNG includes any in-place edits the user made to yarn/size fields on the board.
+- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing. The PNG includes any in-place edits the user made to yarn/size fields on the board. When the card has a Ravelry project or pattern URL, the downloaded image also includes a QR code (linking to that URL) on the **left side** of the board, **outside** the board rectangle; the QR has a white background and the board layout and visuals are unchanged.
 
 ## Out of scope (v1)
 

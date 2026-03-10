@@ -1,6 +1,5 @@
 import { NgStyle } from '@angular/common';
 import { Component, ElementRef, input, output, computed, signal, ViewChildren, QueryList } from '@angular/core';
-import { QRCodeComponent } from 'angularx-qrcode';
 import { DEFAULT_BOARD_DISPLAY_OPTIONS, type BoardDisplayOptions, type ProjectCard } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 
@@ -16,7 +15,7 @@ export const PROJECT_BOARD_EDITABLE_FIELDS = ['sizeMade', 'yarnUsed', 'needleSiz
 @Component({
   selector: 'app-assistant-board-card',
   standalone: true,
-  imports: [NgStyle, QRCodeComponent],
+  imports: [NgStyle],
   templateUrl: './assistant-board-card.html',
   styleUrl: './assistant-board-card.css',
 })
@@ -42,9 +41,6 @@ export class AssistantBoardCard {
 
   protected isCanvaStyle = computed(() => this.design()?.canvaLayout === true);
   protected opts = computed(() => ({ ...DEFAULT_BOARD_DISPLAY_OPTIONS, ...this.displayOptions() }));
-
-  /** Ravelry project page URL for the QR code; only set when card has projectUrl */
-  protected projectUrl = computed(() => this.card()?.projectUrl ?? null);
 
   /** One-line date text for bottom of card: only shown when start date is available and dates are enabled. */
   protected dateLine = computed(() => {

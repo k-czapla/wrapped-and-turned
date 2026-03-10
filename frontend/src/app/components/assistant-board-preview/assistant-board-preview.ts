@@ -11,7 +11,9 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
+import QRCode from 'qrcode';
 import type { BoardDisplayOptions, ProjectCard } from '../../services/api';
+import { compositeBoardWithQr } from '../../utils/board-download';
 import { PROJECT_BOARD_EDITABLE_FIELDS } from '../assistant-board-card/assistant-board-card';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { Api } from '../../services/api';
@@ -194,13 +196,28 @@ export class AssistantBoardPreview {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     try {
-      const dataUrl = await toPng(el, {
+      const boardDataUrl = await toPng(el, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: '#ffffff',
       });
 
       const card = this.cards()[index];
+      let dataUrl = boardDataUrl;
+      const qrSizePx = 360; // 120 logical px at 3x
+      if (card?.projectUrl) {
+        try {
+          const qrDataUrl = await QRCode.toDataURL(card.projectUrl, {
+            width: qrSizePx,
+            margin: 2,
+            color: { dark: '#000000', light: '#ffffff' },
+          });
+          dataUrl = await compositeBoardWithQr(boardDataUrl, qrDataUrl, qrSizePx);
+        } catch (e) {
+          console.warn('QR generation failed, downloading board only:', e);
+        }
+      }
+
       const baseName = this.downloadBaseName(card, index);
       const a = document.createElement('a');
       a.href = dataUrl;

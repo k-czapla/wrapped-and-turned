@@ -1,6 +1,5 @@
 import { NgStyle } from '@angular/common';
 import { Component, ElementRef, input, output, computed, signal, ViewChildren, QueryList } from '@angular/core';
-import { QRCodeComponent } from 'angularx-qrcode';
 import type { PatternRoundUpCard, PatternRoundUpDisplayOptions } from '../../services/api';
 import type { ProjectBoardDesign } from '../../services/project-board-designs';
 import { TruncateMiddlePipe } from './truncate-middle.pipe';
@@ -18,7 +17,7 @@ export const PATTERN_BOARD_EDITABLE_FIELDS = ['sizesAvailable', 'suggestedYarn']
 @Component({
   selector: 'app-assistant-pattern-board-card',
   standalone: true,
-  imports: [NgStyle, QRCodeComponent, TruncateMiddlePipe],
+  imports: [NgStyle, TruncateMiddlePipe],
   templateUrl: './assistant-pattern-board-card.html',
   styleUrl: './assistant-pattern-board-card.css',
 })
@@ -46,8 +45,6 @@ export class AssistantPatternBoardCard {
     showPrice: true,
     ...this.displayOptions(),
   }));
-
-  protected patternUrl = computed(() => this.card()?.patternUrl ?? null);
 
   /** Gauge with needle size in parentheses when present (e.g. "20 sts / 28 rows = 10 cm (4mm)"). */
   protected gaugeWithNeedlesLine = computed(() => {
