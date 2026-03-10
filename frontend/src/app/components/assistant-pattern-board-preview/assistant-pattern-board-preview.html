@@ -48,6 +48,42 @@
                     </div>
                   </div>
                 }
+                @if (cards().length > 1) {
+                  <div class="assistant-pattern-board-preview__carousel-nav" aria-label="Carousel navigation">
+                    <button
+                      type="button"
+                      class="assistant-pattern-board-preview__carousel-btn"
+                      aria-label="Previous pattern"
+                      [disabled]="!canGoPrev"
+                      (click)="goPrev()"
+                    >
+                      <span aria-hidden="true">‹</span>
+                    </button>
+                    <div class="assistant-pattern-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
+                      @for (card of cards(); track card.id; let i = $index) {
+                        <button
+                          type="button"
+                          role="tab"
+                          [attr.aria-selected]="currentSlideIndex() === i"
+                          [attr.aria-label]="'Pattern ' + (i + 1) + ' of ' + cards().length"
+                          class="assistant-pattern-board-preview__carousel-dot"
+                          [class.assistant-pattern-board-preview__carousel-dot--active]="currentSlideIndex() === i"
+                          (click)="goToSlide(i)"
+                        >
+                        </button>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="assistant-pattern-board-preview__carousel-btn"
+                      aria-label="Next pattern"
+                      [disabled]="!canGoNext"
+                      (click)="goNext()"
+                    >
+                      <span aria-hidden="true">›</span>
+                    </button>
+                  </div>
+                }
                 <div
                   #board
                   class="overflow-hidden border border-slate-200 bg-white shadow-sm"
@@ -75,42 +111,6 @@
           }
         </div>
       </div>
-      @if (cards().length > 1) {
-        <div class="assistant-pattern-board-preview__carousel-nav" aria-label="Carousel navigation">
-          <button
-            type="button"
-            class="assistant-pattern-board-preview__carousel-btn"
-            aria-label="Previous pattern"
-            [disabled]="!canGoPrev"
-            (click)="goPrev()"
-          >
-            <span aria-hidden="true">‹</span>
-          </button>
-          <div class="assistant-pattern-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
-            @for (card of cards(); track card.id; let i = $index) {
-              <button
-                type="button"
-                role="tab"
-                [attr.aria-selected]="currentSlideIndex() === i"
-                [attr.aria-label]="'Pattern ' + (i + 1) + ' of ' + cards().length"
-                class="assistant-pattern-board-preview__carousel-dot"
-                [class.assistant-pattern-board-preview__carousel-dot--active]="currentSlideIndex() === i"
-                (click)="goToSlide(i)"
-              >
-              </button>
-            }
-          </div>
-          <button
-            type="button"
-            class="assistant-pattern-board-preview__carousel-btn"
-            aria-label="Next pattern"
-            [disabled]="!canGoNext"
-            (click)="goNext()"
-          >
-            <span aria-hidden="true">›</span>
-          </button>
-        </div>
-      }
     </div>
   }
 </div>
