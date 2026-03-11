@@ -158,7 +158,7 @@ export class AssistantPatternBoardPreview {
       const card = this.cards()[index];
       let dataUrl = boardDataUrl;
       const qrSizePx = 360; // 120 logical px at 3x
-      if (card?.patternUrl) {
+      if (card?.patternUrl && this.displayOptions()?.showQrCode) {
         try {
           const qrDataUrl = await QRCode.toDataURL(card.patternUrl, {
             width: qrSizePx,

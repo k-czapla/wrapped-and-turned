@@ -118,6 +118,8 @@ export type PatternRoundUpDisplayOptions = {
   showGauge: boolean;
   showSuggestedYarn: boolean;
   showPrice: boolean;
+  /** When true, downloaded PNG includes a QR code linking to the Ravelry pattern page. */
+  showQrCode: boolean;
 };
 
 export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOptions = {
@@ -128,6 +130,7 @@ export const DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS: PatternRoundUpDisplayOpti
   showGauge: true,
   showSuggestedYarn: true,
   showPrice: true,
+  showQrCode: true,
 };
 
 /** Options for what to show on the Podcaster's Assistant board (Ravelry-backed fields). */

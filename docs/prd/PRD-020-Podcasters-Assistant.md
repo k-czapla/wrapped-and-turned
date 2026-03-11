@@ -37,7 +37,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 - **Bundle list**: when Pattern Round Up is selected, the app immediately fetches the user's Ravelry bundles (bundles_list). User selects one bundle from a dropdown.
 - **Bundle content**: after selection, the app fetches the bundle (bundles_show) and pattern details for each pattern in the bundle. User sees a **selectable pattern list** (pattern name, designer) and selects one or more patterns to generate boards and description for.
-- **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (from API `sizes_available` when present, else computed sizes + range), **Gauge (with needle size)** (gauge text with needle size in parentheses when present, e.g. "20 sts / 28 rows = 10 cm (4mm)"), **Suggested yarn** (from pattern packs `yarn_name`), **Price** (pattern price, always displayed in EUR). Same board design selection (Board Design page) and PNG export as Project Update.
+- **Board display options (Pattern Round Up)**: toggles for **Photo**, **Pattern name** (always on), **Designer** (always on), **Sizes available** (from API `sizes_available` when present, else computed sizes + range), **Gauge (with needle size)** (gauge text with needle size in parentheses when present, e.g. "20 sts / 28 rows = 10 cm (4mm)"), **Suggested yarn** (from pattern packs `yarn_name`), **Price** (pattern price, always displayed in EUR), **QR code (on download)** (when on, downloaded PNG includes a QR code linking to the Ravelry pattern page). Same board design selection (Board Design page) and PNG export as Project Update.
 - **Download all (Pattern Round Up)**: a “Download all” button in the pattern board preview section downloads all selected pattern boards as individual PNG files (one file per pattern), matching the Project Update behaviour.
 
 ### Generate YouTube / show notes description (AI-assisted)
@@ -83,7 +83,7 @@ The Pattern Round Up board shows **Pattern name** and **Designer** always, and o
 - **Gauge (with needle size)**: gauge from Ravelry pattern, with needle size shown in parentheses when present (e.g. "20 sts / 28 rows = 10 cm (4mm)")
 - **Suggested yarn**: from pattern packs `yarn_name` (e.g. “De Rerum Natura Bérénice”)
 - **Price**: pattern price always shown in euros (e.g. “9.60 EUR”). When the source provides a different currency, the backend converts it to EUR using ECB daily exchange rates (with a static fallback for common currencies if the feed is unavailable).
-- **QR code**: not shown on the board; when the user downloads the PNG and the card has a Ravelry pattern URL, a QR code is appended on export (see Export).
+- **QR code**: not shown on the board; when the user downloads the PNG, **QR code (on download)** is enabled in Board display options, and the card has a Ravelry pattern URL, a QR code is appended on export (see Export).
 
 **Editable fields (Pattern Round Up):** In the board preview, the user can edit the text for **Sizes available** and **Suggested yarn** in place. Pattern name, designer, gauge (with needle size), and price are not editable. Same interaction as Project Update: editable fields show a text cursor on hover; click to edit; Enter or click outside to save. The preview and downloaded PNG include the user's changes.
 
