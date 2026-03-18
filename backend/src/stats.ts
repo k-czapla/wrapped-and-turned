@@ -50,6 +50,16 @@ export function monthKey(d: Date) {
   return `${y}-${m}`;
 }
 
+function normalizedProjectStatus(p: RavelryProjectListItem): string {
+  return (p.status_name ?? "").trim().toLowerCase();
+}
+
+/** Project Update list: only Completed and In progress (Ravelry status names). */
+export function isProjectUpdateListableStatus(p: RavelryProjectListItem): boolean {
+  const s = normalizedProjectStatus(p);
+  return s === "completed" || s === "in progress";
+}
+
 export function computeBaseStats(args: {
   from: string;
   to: string;
@@ -58,10 +68,12 @@ export function computeBaseStats(args: {
   const fromD = new Date(args.from);
   const toD = new Date(args.to);
 
-  // Finished objects (FOs): only projects with completed date in range. Used for FO count, yardage, highlights.
+  // Finished objects (FOs): completed date in range and status Completed (exclude e.g. Frogged with stale dates).
   const finishedInRange = args.items.filter((p) => {
     const completed = safeDate(p.completed);
-    return completed ? withinRange(completed, fromD, toD) : false;
+    if (!completed || !withinRange(completed, fromD, toD)) return false;
+    const s = normalizedProjectStatus(p);
+    return s === "completed" || s === "";
   });
 
   // All projects in range: started in range OR completed in range OR in progress during range
@@ -76,7 +88,9 @@ export function computeBaseStats(args: {
       started &&
       started.getTime() <= toD.getTime() &&
       (!completed || completed.getTime() >= fromD.getTime());
-    return startedInRange || completedInRange || inProgressDuringRange;
+    const inDateRange =
+      startedInRange || completedInRange || inProgressDuringRange;
+    return inDateRange && isProjectUpdateListableStatus(p);
   });
 
   const craft: Record<string, number> = {};
