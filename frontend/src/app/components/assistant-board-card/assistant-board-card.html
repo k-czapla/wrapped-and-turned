@@ -7,7 +7,12 @@
 
     @if (opts().showPhoto && displayImageUrl()) {
       <div class="assistant-board-card__image-wrap">
-        <img [src]="displayImageUrl()" class="assistant-board-card__image" alt="" />
+        <img
+          [src]="displayImageUrl()"
+          class="assistant-board-card__image"
+          alt=""
+          [style.object-position]="photoPositionX() + '% ' + photoPositionY() + '%'"
+        />
       </div>
     }
 

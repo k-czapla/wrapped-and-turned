@@ -70,6 +70,11 @@ export class Assistant {
   /** Photo source (project vs pattern) per project board. */
   protected photoSourceByProjectId: Record<number, 'project' | 'pattern'> = {};
 
+  /** Photo crop framing (object-position %) per project board. */
+  protected photoPositionByProjectId: Record<number, { x: number; y: number }> = {};
+  /** Same for Pattern Round Up boards (key = pattern id). */
+  protected photoPositionByPatternId: Record<number, { x: number; y: number }> = {};
+
   protected displayOptions: BoardDisplayOptions = { ...DEFAULT_BOARD_DISPLAY_OPTIONS };
   protected patternRoundUpDisplayOptions: PatternRoundUpDisplayOptions = {
     ...DEFAULT_PATTERN_ROUND_UP_DISPLAY_OPTIONS,
@@ -132,6 +137,7 @@ export class Assistant {
     this.error = null;
     this.selectedPhotoIndexByProjectId = {};
     this.photoSourceByProjectId = {};
+    this.photoPositionByProjectId = {};
 
     if (ids.length === 0) {
       this.cards = [];
@@ -156,6 +162,7 @@ export class Assistant {
 
   onSelectedPhotoIndexChange(projectId: number, index: number) {
     this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: index };
+    this.clearPhotoPositionProject(projectId);
     this.cdr.markForCheck();
   }
 
@@ -174,6 +181,17 @@ export class Assistant {
 
   onPhotoSourceChange(projectId: number, source: 'project' | 'pattern') {
     this.photoSourceByProjectId = { ...this.photoSourceByProjectId, [projectId]: source };
+    this.clearPhotoPositionProject(projectId);
+    this.cdr.markForCheck();
+  }
+
+  onPhotoPositionChange(projectId: number, position: { x: number; y: number }) {
+    this.photoPositionByProjectId = { ...this.photoPositionByProjectId, [projectId]: position };
+    this.cdr.markForCheck();
+  }
+
+  onPhotoPositionResetProject(projectId: number) {
+    this.clearPhotoPositionProject(projectId);
     this.cdr.markForCheck();
   }
 
@@ -185,6 +203,7 @@ export class Assistant {
       [projectId]: newList,
     };
     this.selectedPhotoIndexByProjectId = { ...this.selectedPhotoIndexByProjectId, [projectId]: newList.length - 1 };
+    this.clearPhotoPositionProject(projectId);
     this.cdr.markForCheck();
   }
 
@@ -216,6 +235,7 @@ export class Assistant {
     this.bundlePatternCards.set(payload.patternCards);
     this.selectedPatternIds.set([]);
     this.selectedPhotoIndexByPatternId = {};
+    this.photoPositionByPatternId = {};
     this.cdr.markForCheck();
   }
 
@@ -229,7 +249,30 @@ export class Assistant {
       ...this.selectedPhotoIndexByPatternId,
       [patternId]: index,
     };
+    this.clearPhotoPositionPattern(patternId);
     this.cdr.markForCheck();
+  }
+
+  protected onPatternPhotoPositionChange(patternId: number, position: { x: number; y: number }) {
+    this.photoPositionByPatternId = { ...this.photoPositionByPatternId, [patternId]: position };
+    this.cdr.markForCheck();
+  }
+
+  protected onPhotoPositionResetPattern(patternId: number) {
+    this.clearPhotoPositionPattern(patternId);
+    this.cdr.markForCheck();
+  }
+
+  private clearPhotoPositionProject(projectId: number) {
+    const next = { ...this.photoPositionByProjectId };
+    delete next[projectId];
+    this.photoPositionByProjectId = next;
+  }
+
+  private clearPhotoPositionPattern(patternId: number) {
+    const next = { ...this.photoPositionByPatternId };
+    delete next[patternId];
+    this.photoPositionByPatternId = next;
   }
 }
 

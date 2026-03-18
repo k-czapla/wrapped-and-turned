@@ -26,6 +26,8 @@ export class AssistantPatternBoardCard {
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<PatternRoundUpDisplayOptions | null>(null);
   selectedPhotoIndex = input<number>(0);
+  photoPositionX = input<number>(50);
+  photoPositionY = input<number>(50);
   editable = input<boolean>(false);
   fieldOverrides = input<Record<string, string> | null>(null);
   fieldOverrideChange = output<{ field: string; value: string }>();

@@ -6,7 +6,12 @@
   <div class="assistant-pattern-board-card__inner">
     @if (opts().showPhoto && displayImageUrl()) {
       <div class="assistant-pattern-board-card__image-wrap">
-        <img [src]="displayImageUrl()" class="assistant-pattern-board-card__image" alt="" />
+        <img
+          [src]="displayImageUrl()"
+          class="assistant-pattern-board-card__image"
+          alt=""
+          [style.object-position]="photoPositionX() + '% ' + photoPositionY() + '%'"
+        />
       </div>
     }
 

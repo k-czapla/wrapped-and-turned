@@ -25,6 +25,10 @@ export class AssistantBoardCard {
   displayOptions = input<BoardDisplayOptions | null>(null);
   /** Selected photo index within project or pattern photos (from gallery). */
   selectedPhotoIndex = input<number>(0);
+  /** Object-position X % (0–100) for photo crop framing. */
+  photoPositionX = input<number>(50);
+  /** Object-position Y % (0–100) for photo crop framing. */
+  photoPositionY = input<number>(50);
   /** When true, yarn/size fields are editable in place. */
   editable = input<boolean>(false);
   /** Overrides for field values (from parent); key = field name, value = display text. */

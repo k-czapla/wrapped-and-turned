@@ -39,6 +39,8 @@ export class AssistantBoardPreview {
   photoSourceByProjectId = input<Record<number, 'project' | 'pattern'>>({});
   /** Per-project selected photo index (for project/pattern photo gallery). */
   selectedPhotoIndexByProjectId = input<Record<number, number>>({});
+  /** Per-project photo framing (object-position %). */
+  photoPositionByProjectId = input<Record<number, { x: number; y: number }>>({});
   /** Per-card overrides for editable fields (yarn, sizes). Held locally so preview and PNG reflect edits. */
   private fieldOverridesByCardId = signal<Record<number, Record<string, string>>>({});
   /** Output for two-way binding; overrides are kept in fieldOverridesByCardId signal. */
@@ -48,6 +50,8 @@ export class AssistantBoardPreview {
   selectedPhotoIndexChange = output<{ projectId: number; index: number }>();
   /** Emitted when the user uploads a photo from their computer for a project board. */
   photoUpload = output<{ projectId: number; dataUrl: string }>();
+  photoPositionChange = output<{ projectId: number; position: { x: number; y: number } }>();
+  photoPositionReset = output<{ projectId: number }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 
@@ -88,6 +92,18 @@ export class AssistantBoardPreview {
     const map = this.selectedPhotoIndexByProjectId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  protected photoPosForCard(card: ProjectCard): { x: number; y: number } {
+    return this.photoPositionByProjectId()[card.id] ?? { x: 50, y: 50 };
+  }
+
+  protected onFramingInput(card: ProjectCard, ev: Event, axis: 'x' | 'y') {
+    const raw = Number((ev.target as HTMLInputElement).value);
+    const v = Math.max(0, Math.min(100, Number.isFinite(raw) ? raw : 50));
+    const cur = this.photoPosForCard(card);
+    const position = axis === 'x' ? { ...cur, x: v } : { ...cur, y: v };
+    this.photoPositionChange.emit({ projectId: card.id, position });
   }
 
   protected fieldOverridesForCard(card: ProjectCard): Record<string, string> | null {

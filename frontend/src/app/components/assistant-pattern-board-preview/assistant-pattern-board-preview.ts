@@ -37,9 +37,12 @@ export class AssistantPatternBoardPreview {
   design = input<ProjectBoardDesign | null>(null);
   displayOptions = input<PatternRoundUpDisplayOptions | null>(null);
   selectedPhotoIndexByPatternId = input<Record<number, number>>({});
+  photoPositionByPatternId = input<Record<number, { x: number; y: number }>>({});
   private fieldOverridesByCardId = signal<Record<number, Record<string, string>>>({});
 
   selectedPhotoIndexChange = output<{ patternId: number; index: number }>();
+  photoPositionChange = output<{ patternId: number; position: { x: number; y: number } }>();
+  photoPositionReset = output<{ patternId: number }>();
 
   @ViewChildren('board') private boardEls?: QueryList<ElementRef<HTMLElement>>;
 
@@ -55,6 +58,18 @@ export class AssistantPatternBoardPreview {
     const map = this.selectedPhotoIndexByPatternId();
     const idx = map[card.id];
     return typeof idx === 'number' ? idx : 0;
+  }
+
+  protected photoPosForCard(card: PatternRoundUpCard): { x: number; y: number } {
+    return this.photoPositionByPatternId()[card.id] ?? { x: 50, y: 50 };
+  }
+
+  protected onFramingInput(card: PatternRoundUpCard, ev: Event, axis: 'x' | 'y') {
+    const raw = Number((ev.target as HTMLInputElement).value);
+    const v = Math.max(0, Math.min(100, Number.isFinite(raw) ? raw : 50));
+    const cur = this.photoPosForCard(card);
+    const position = axis === 'x' ? { ...cur, x: v } : { ...cur, y: v };
+    this.photoPositionChange.emit({ patternId: card.id, position });
   }
 
   protected fieldOverridesForCard(card: PatternRoundUpCard): Record<string, string> | null {

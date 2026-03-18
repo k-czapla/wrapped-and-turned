@@ -40,9 +40,12 @@
           [displayOptions]="displayOptions"
           [photoSourceByProjectId]="photoSourceByProjectId"
           [selectedPhotoIndexByProjectId]="selectedPhotoIndexByProjectId"
+          [photoPositionByProjectId]="photoPositionByProjectId"
           (photoSourceChange)="onPhotoSourceChange($event.projectId, $event.source)"
           (selectedPhotoIndexChange)="onSelectedPhotoIndexChange($event.projectId, $event.index)"
           (photoUpload)="onPhotoUpload($event.projectId, $event.dataUrl)"
+          (photoPositionChange)="onPhotoPositionChange($event.projectId, $event.position)"
+          (photoPositionReset)="onPhotoPositionResetProject($event.projectId)"
         />
       </div>
     }
@@ -77,7 +80,10 @@
           [design]="selectedDesign()"
           [displayOptions]="patternRoundUpDisplayOptions"
           [selectedPhotoIndexByPatternId]="selectedPhotoIndexByPatternId"
+          [photoPositionByPatternId]="photoPositionByPatternId"
           (selectedPhotoIndexChange)="onPatternPhotoIndexChange($event.patternId, $event.index)"
+          (photoPositionChange)="onPatternPhotoPositionChange($event.patternId, $event.position)"
+          (photoPositionReset)="onPhotoPositionResetPattern($event.patternId)"
         />
       </div>
     } @else if (lastSelectedBundleName) {
