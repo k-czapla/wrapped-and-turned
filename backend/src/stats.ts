@@ -1,4 +1,4 @@
-import type { RavelryProjectListItem } from './ravelryApi.js';
+import type { RavelryProjectListItem } from "./ravelryApi.js";
 
 export type WrappedStats = {
   range: { from: string; to: string };
@@ -46,7 +46,7 @@ export function inc(map: Record<string, number>, key: string, by = 1) {
 
 export function monthKey(d: Date) {
   const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const m = String(d.getMonth() + 1).padStart(2, "0");
   return `${y}-${m}`;
 }
 
@@ -64,26 +64,33 @@ export function computeBaseStats(args: {
     return completed ? withinRange(completed, fromD, toD) : false;
   });
 
-  // All projects in range: started in range OR completed in range. Used for the assistant project list.
+  // All projects in range: started in range OR completed in range OR in progress during range
+  // (started on or before range end, and either no completion or completed on or after range start).
+  // Used for the assistant project list (Project Update).
   const projectsInRange = args.items.filter((p) => {
     const started = safeDate(p.started);
     const completed = safeDate(p.completed);
-    return (
-      (started && withinRange(started, fromD, toD)) ||
-      (completed && withinRange(completed, fromD, toD))
-    );
+    const startedInRange = started && withinRange(started, fromD, toD);
+    const completedInRange = completed && withinRange(completed, fromD, toD);
+    const inProgressDuringRange =
+      started &&
+      started.getTime() <= toD.getTime() &&
+      (!completed || completed.getTime() >= fromD.getTime());
+    return startedInRange || completedInRange || inProgressDuringRange;
   });
 
   const craft: Record<string, number> = {};
   const byMonth: Record<string, number> = {};
 
   for (const p of finishedInRange) {
-    inc(craft, p.craft_name ?? 'Unknown');
+    inc(craft, p.craft_name ?? "Unknown");
     const d = safeDate(p.completed);
     if (d) inc(byMonth, monthKey(d));
   }
 
-  const mostProductiveMonth = Object.entries(byMonth).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const mostProductiveMonth = Object.entries(byMonth).sort(
+    (a, b) => b[1] - a[1],
+  )[0]?.[0];
 
   return {
     /** Projects completed in range (FOs). For totals.finishedProjects, yardage, highlights. */
@@ -98,7 +105,7 @@ export function computeBaseStats(args: {
 export async function mapWithConcurrency<T, R>(
   items: T[],
   limit: number,
-  mapper: (item: T) => Promise<R>
+  mapper: (item: T) => Promise<R>,
 ): Promise<R[]> {
   const results: R[] = new Array(items.length);
   let i = 0;
