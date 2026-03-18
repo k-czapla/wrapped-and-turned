@@ -94,6 +94,7 @@ Returns Wrapped stats and a list of projects in range, enriched with optional de
     {
       "id": 123,
       "name": "Project name",
+      "statusName": "In progress",
       "completed": "YYYY-MM-DD",
       "started": "YYYY-MM-DD",
       "craft": "Knitting",

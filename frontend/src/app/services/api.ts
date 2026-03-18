@@ -47,6 +47,8 @@ export type WrappedStats = {
     designerName?: string;
     imageUrl?: string;
     url?: string;
+    /** Ravelry status label shown next to project name in the picker */
+    statusName?: string;
   }>;
 };
 

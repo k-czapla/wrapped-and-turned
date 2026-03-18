@@ -27,6 +27,7 @@ function mockWrapped(from: string, to: string) {
       {
         id: 101,
         name: 'Cozy Ribbed Hat',
+        statusName: 'Finished',
         craft: 'Knitting',
         yardage: 220,
         meterage: 200,
@@ -36,6 +37,7 @@ function mockWrapped(from: string, to: string) {
       {
         id: 102,
         name: 'Mosaic Cowl',
+        statusName: 'In progress',
         craft: 'Knitting',
         yardage: 420,
         meterage: 385,
@@ -45,6 +47,7 @@ function mockWrapped(from: string, to: string) {
       {
         id: 103,
         name: 'Granny Square Tote',
+        statusName: 'Hibernating',
         craft: 'Crochet',
         yardage: 560,
         meterage: 510,
@@ -97,11 +100,19 @@ export function registerWrappedRoutes(router: Router, ctx: RouteContext): void {
 
       const patternName: string | undefined = proj?.pattern_name ?? p.pattern_name;
 
+      const statusName =
+        typeof p.status_name === 'string' && p.status_name.trim()
+          ? p.status_name.trim()
+          : typeof proj?.status_name === 'string' && proj.status_name.trim()
+            ? String(proj.status_name).trim()
+            : undefined;
+
       return {
         id: p.id,
         name: proj?.name ?? p.name ?? `Project #${p.id}`,
         completed: p.completed,
         started: p.started,
+        statusName,
         craft: p.craft_name,
         yardage,
         meterage,

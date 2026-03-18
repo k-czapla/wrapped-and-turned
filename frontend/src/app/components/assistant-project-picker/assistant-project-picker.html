@@ -31,9 +31,15 @@
             [checked]="isSelected(p.id)"
             (change)="toggle(p.id)"
             class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-            [attr.aria-label]="'Select ' + p.name"
+            [attr.aria-label]="
+              'Select ' + p.name + (p.statusName ? ' (' + p.statusName + ')' : '')
+            "
           />
-          <span class="text-sm text-slate-900">{{ p.name }}</span>
+          <span class="text-sm text-slate-900">
+            {{ p.name }}@if (p.statusName) {
+              <span class="text-slate-500"> ({{ p.statusName }})</span>
+            }
+          </span>
         </label>
       </li>
     }

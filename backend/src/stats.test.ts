@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   computeBaseStats,
-  isProjectUpdateListableStatus,
   safeDate,
   withinRange,
   inc,
@@ -97,44 +96,6 @@ describe("stats", () => {
     });
   });
 
-  describe("isProjectUpdateListableStatus", () => {
-    it("allows Finished and In progress (case-insensitive)", () => {
-      expect(
-        isProjectUpdateListableStatus({
-          id: 1,
-          status_name: "Finished",
-        } as RavelryProjectListItem),
-      ).toBe(true);
-      expect(
-        isProjectUpdateListableStatus({
-          id: 2,
-          status_name: "In progress",
-        } as RavelryProjectListItem),
-      ).toBe(true);
-    });
-
-    it("excludes Hibernating and Frogged", () => {
-      expect(
-        isProjectUpdateListableStatus({
-          id: 1,
-          status_name: "Hibernating",
-        } as RavelryProjectListItem),
-      ).toBe(false);
-      expect(
-        isProjectUpdateListableStatus({
-          id: 2,
-          status_name: "Frogged",
-        } as RavelryProjectListItem),
-      ).toBe(false);
-    });
-
-    it("excludes missing or unknown status", () => {
-      expect(
-        isProjectUpdateListableStatus({ id: 1 } as RavelryProjectListItem),
-      ).toBe(false);
-    });
-  });
-
   describe("computeBaseStats", () => {
     const mockProjects: RavelryProjectListItem[] = [
       {
@@ -143,7 +104,6 @@ describe("stats", () => {
         completed: "2025-03-15",
         started: "2025-03-01",
         craft_name: "Knitting",
-        status_name: "Finished",
       },
       {
         id: 2,
@@ -151,7 +111,6 @@ describe("stats", () => {
         completed: "2025-06-20",
         started: "2025-06-01",
         craft_name: "Crochet",
-        status_name: "finished",
       },
       {
         id: 3,
@@ -159,14 +118,12 @@ describe("stats", () => {
         completed: "2025-08-10",
         started: "2025-08-01",
         craft_name: "Knitting",
-        status_name: "Finished",
       },
       {
         id: 4,
         name: "Project 4",
         started: "2024-12-01",
         craft_name: "Knitting",
-        status_name: "In progress",
       },
       {
         id: 5,
@@ -174,14 +131,12 @@ describe("stats", () => {
         completed: "2026-01-15",
         started: "2025-12-01",
         craft_name: "Crochet",
-        status_name: "In progress",
       },
       {
         id: 6,
         name: "Hibernating WIP",
         started: "2025-06-01",
         craft_name: "Knitting",
-        status_name: "Hibernating",
       },
     ];
 
@@ -194,9 +149,8 @@ describe("stats", () => {
 
       expect(result.finishedInRange).toHaveLength(3);
       expect(result.finishedInRange.map((p) => p.id)).toEqual([1, 2, 3]);
-      // projectsInRange: date rules + status Finished or In progress only (6 = Hibernating excluded)
-      expect(result.projectsInRange).toHaveLength(5);
-      expect(result.projectsInRange.map((p) => p.id)).toEqual([1, 2, 3, 4, 5]);
+      expect(result.projectsInRange).toHaveLength(6);
+      expect(result.projectsInRange.map((p) => p.id)).toEqual([1, 2, 3, 4, 5, 6]);
     });
 
     it("should count crafts correctly", () => {
@@ -217,21 +171,18 @@ describe("stats", () => {
           name: "Project 1",
           completed: "2025-03-15",
           craft_name: "Knitting",
-          status_name: "Finished",
         },
         {
           id: 2,
           name: "Project 2",
           completed: "2025-03-20",
           craft_name: "Crochet",
-          status_name: "Finished",
         },
         {
           id: 3,
           name: "Project 3",
           completed: "2025-06-10",
           craft_name: "Knitting",
-          status_name: "Finished",
         },
       ];
 
@@ -251,7 +202,6 @@ describe("stats", () => {
           name: "Ongoing",
           started: "2024-06-01",
           craft_name: "Knitting",
-          status_name: "In progress",
         },
       ];
 
@@ -273,7 +223,6 @@ describe("stats", () => {
           name: "Project 1",
           started: "2025-06-15",
           craft_name: "Knitting",
-          status_name: "In progress",
         },
       ];
 
@@ -286,44 +235,6 @@ describe("stats", () => {
       expect(result.finishedInRange).toHaveLength(0);
       expect(result.projectsInRange).toHaveLength(1);
       expect(result.craft.Knitting ?? 0).toBe(0);
-    });
-
-    it("should exclude Hibernating from Project Update list even when dates match", () => {
-      const projects: RavelryProjectListItem[] = [
-        {
-          id: 1,
-          name: "Zzz",
-          started: "2025-06-01",
-          craft_name: "Knitting",
-          status_name: "Hibernating",
-        },
-      ];
-      const result = computeBaseStats({
-        from: "2025-01-01",
-        to: "2025-12-31",
-        items: projects,
-      });
-      expect(result.projectsInRange).toHaveLength(0);
-    });
-
-    it("should not count Frogged as FO when completed date falls in range", () => {
-      const projects: RavelryProjectListItem[] = [
-        {
-          id: 1,
-          name: "Ripped",
-          completed: "2025-03-01",
-          started: "2025-01-01",
-          craft_name: "Knitting",
-          status_name: "Frogged",
-        },
-      ];
-      const result = computeBaseStats({
-        from: "2025-01-01",
-        to: "2025-12-31",
-        items: projects,
-      });
-      expect(result.finishedInRange).toHaveLength(0);
-      expect(result.projectsInRange).toHaveLength(0);
     });
 
     it("should handle empty project list", () => {
