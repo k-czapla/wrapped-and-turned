@@ -126,6 +126,46 @@
                     }
                   </div>
                 }
+                @if (cards().length > 1) {
+                  <div
+                    class="assistant-board-preview__carousel-nav w-full"
+                    aria-label="Carousel navigation"
+                    [attr.inert]="currentSlideIndex() !== i ? '' : null"
+                  >
+                    <button
+                      type="button"
+                      class="assistant-board-preview__carousel-btn"
+                      [attr.aria-label]="'Previous project'"
+                      [disabled]="!canGoPrev"
+                      (click)="goPrev()"
+                    >
+                      <span aria-hidden="true">‹</span>
+                    </button>
+                    <div class="assistant-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
+                      @for (c of cards(); track c.id; let j = $index) {
+                        <button
+                          type="button"
+                          role="tab"
+                          [attr.aria-selected]="currentSlideIndex() === j"
+                          [attr.aria-label]="'Project ' + (j + 1) + ' of ' + cards().length"
+                          class="assistant-board-preview__carousel-dot"
+                          [class.assistant-board-preview__carousel-dot--active]="currentSlideIndex() === j"
+                          (click)="goToSlide(j)"
+                        >
+                        </button>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="assistant-board-preview__carousel-btn"
+                      [attr.aria-label]="'Next project'"
+                      [disabled]="!canGoNext"
+                      (click)="goNext()"
+                    >
+                      <span aria-hidden="true">›</span>
+                    </button>
+                  </div>
+                }
                 <div
                   #board
                   class="assistant-board-preview__board-wrap overflow-hidden border border-slate-200 bg-white shadow-sm"
@@ -160,42 +200,6 @@
           }
         </div>
       </div>
-      @if (cards().length > 1) {
-        <div class="assistant-board-preview__carousel-nav" aria-label="Carousel navigation">
-          <button
-            type="button"
-            class="assistant-board-preview__carousel-btn"
-            [attr.aria-label]="'Previous project'"
-            [disabled]="!canGoPrev"
-            (click)="goPrev()"
-          >
-            <span aria-hidden="true">‹</span>
-          </button>
-          <div class="assistant-board-preview__carousel-dots" role="tablist" aria-label="Select slide">
-            @for (card of cards(); track card.id; let i = $index) {
-              <button
-                type="button"
-                role="tab"
-                [attr.aria-selected]="currentSlideIndex() === i"
-                [attr.aria-label]="'Project ' + (i + 1) + ' of ' + cards().length"
-                class="assistant-board-preview__carousel-dot"
-                [class.assistant-board-preview__carousel-dot--active]="currentSlideIndex() === i"
-                (click)="goToSlide(i)"
-              >
-              </button>
-            }
-          </div>
-          <button
-            type="button"
-            class="assistant-board-preview__carousel-btn"
-            [attr.aria-label]="'Next project'"
-            [disabled]="!canGoNext"
-            (click)="goNext()"
-          >
-            <span aria-hidden="true">›</span>
-          </button>
-        </div>
-      }
     </div>
   }
 </div>
