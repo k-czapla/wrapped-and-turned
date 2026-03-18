@@ -37,7 +37,7 @@ export type RavelryProjectListItem = {
   craft_name?: string;
   pattern_name?: string;
   permalink?: string;
-  /** Ravelry list: e.g. "Completed", "In progress", "Hibernating", "Frogged" */
+  /** Ravelry list: e.g. "Finished", "In progress", "Hibernating", "Frogged" */
   status_name?: string;
 };
 

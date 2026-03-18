@@ -8,6 +8,24 @@
   width: fit-content;
 }
 
+.assistant-board-preview__board-wrap--linkable {
+  cursor: pointer;
+}
+
+.assistant-board-preview__board-wrap--linkable:focus {
+  outline: 2px solid rgb(99 102 241);
+  outline-offset: 2px;
+}
+
+.assistant-board-preview__board-wrap--linkable:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.assistant-board-preview__board-wrap--linkable:focus-visible {
+  outline: 2px solid rgb(99 102 241);
+  outline-offset: 2px;
+}
+
 /* Carousel */
 
 .assistant-board-preview__carousel {

@@ -54,10 +54,10 @@ function normalizedProjectStatus(p: RavelryProjectListItem): string {
   return (p.status_name ?? "").trim().toLowerCase();
 }
 
-/** Project Update list: only Completed and In progress (Ravelry status names). */
+/** Project Update list: only Finished and In progress (Ravelry status names). */
 export function isProjectUpdateListableStatus(p: RavelryProjectListItem): boolean {
   const s = normalizedProjectStatus(p);
-  return s === "completed" || s === "in progress";
+  return s === "finished" || s === "in progress";
 }
 
 export function computeBaseStats(args: {
@@ -68,12 +68,12 @@ export function computeBaseStats(args: {
   const fromD = new Date(args.from);
   const toD = new Date(args.to);
 
-  // Finished objects (FOs): completed date in range and status Completed (exclude e.g. Frogged with stale dates).
+  // Finished objects (FOs): completed date in range and status Finished (exclude e.g. Frogged with stale dates).
   const finishedInRange = args.items.filter((p) => {
     const completed = safeDate(p.completed);
     if (!completed || !withinRange(completed, fromD, toD)) return false;
     const s = normalizedProjectStatus(p);
-    return s === "completed" || s === "";
+    return s === "finished" || s === "";
   });
 
   // All projects in range: started in range OR completed in range OR in progress during range

@@ -4,7 +4,7 @@
 - **Feature**: Podcaster’s Assistant
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-02-27
+- **Last updated**: 2026-03-18
 
 ## Summary
 
@@ -25,11 +25,12 @@ As a fiber arts content creator, I want a clean “project card” image contain
 ### Inputs (Project Update)
 
 - Date range (**From**, **To**) to load candidate projects
-- **Selectable project list**: user is presented with a checkmark list of **all projects in the date range** (same date rules as above) whose Ravelry status is **Completed** or **In progress** only—**Hibernating**, **Frogged**, and other statuses are excluded. They select one or more projects to generate a visualisation for. The **finished object (FO) count** counts only projects **completed in the range** with status **Completed** (used for Generate Description wording, e.g. “3 FOs in this period”), not for filtering the selectable list.
+- **Selectable project list**: user is presented with a checkmark list of **all projects in the date range** (same date rules as above) whose Ravelry status is **Finished** or **In progress** only—**Hibernating**, **Frogged**, and other statuses are excluded. They select one or more projects to generate a visualisation for. The **finished object (FO) count** counts only projects **completed in the range** with status **Finished** (used for Generate Description wording, e.g. “3 FOs in this period”), not for filtering the selectable list.
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). The last option is “My design” (user’s customized version); the rest are predefined styles. Selected design is persisted in localStorage and applied to all generated boards.
 - **Board design customization** (optional): on the Board Design page, “My design” is the last option; selecting it opens the customizer (font, optional board background image upload, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
 - **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Needle sizes**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
+- **Open on Ravelry**: when the project has a Ravelry project URL, clicking the board preview (outside editable yarn/size/needle fields) opens that project page in a new tab; keyboard users can focus the board and press Enter or Space. Editable fields and inputs keep their existing behaviour.
 - **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
 - **Download all**: a “Download all” button in the preview section downloads all selected project boards as individual PNG files (one file per board). Each board uses the same filename pattern as the per-board “Download PNG” button.
 
@@ -44,7 +45,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 
 When the user has selected **one or more projects** (Project Update) or **one or more patterns** (Pattern Round Up)—same selection as for the boards—a **“Generate Description”** button is shown. The user can optionally provide a **prompt** (e.g. episode theme, tone, or extra context) to enrich the generated description; if provided, it is included in the request to the AI. Clicking **Generate Description** triggers AI-assisted generation of text suitable for a YouTube video (podcast episode) that the user can paste into the **show notes box** and use as the **title**. For **Pattern Round Up**, the title format is **Ep. [##] | Pattern Round Up - #catchy title# - Knitting Podcast #emoji#** and the description focuses on sharing patterns from a bundle (not FOs).
 
-**UI:** The description section shows the **count of finished objects (FOs)** in the loaded date range (from Wrapped stats) for **title/description wording only** (e.g. “3 finished objects in this period (for title/description wording)” and “(of 3 FOs in this period)”). Only projects with a **completed date** within the range **and** Ravelry status **Completed** count as FOs. The project list shows date-eligible **Completed** and **In progress** projects only, not only FOs. The section title uses light emoji (e.g. “✨ Show notes & YouTube description”).
+**UI:** The description section shows the **count of finished objects (FOs)** in the loaded date range (from Wrapped stats) for **title/description wording only** (e.g. “3 finished objects in this period (for title/description wording)” and “(of 3 FOs in this period)”). Only projects with a **completed date** within the range **and** Ravelry status **Finished** count as FOs. The project list shows date-eligible **Finished** and **In progress** projects only, not only FOs. The section title uses light emoji (e.g. “✨ Show notes & YouTube description”).
 
 **Output structure (order matters for YouTube):**
 

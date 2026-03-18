@@ -127,6 +127,31 @@ export class AssistantBoardPreview {
     if (this.canGoNext) this.currentSlideIndex.update((i) => i + 1);
   }
 
+  /**
+   * Opens the Ravelry project page when the user clicks the board (not on editable fields or inputs).
+   */
+  protected onBoardPreviewClick(event: MouseEvent, card: ProjectCard): void {
+    const url = card.projectUrl?.trim();
+    if (!url) return;
+    const el = event.target as HTMLElement | null;
+    if (!el) return;
+    if (el.closest('input, button, a, textarea, select')) return;
+    if (el.closest('.assistant-board-card__field-value')) return;
+    this.openProjectUrl(url);
+  }
+
+  protected onBoardPreviewKeydown(event: KeyboardEvent, card: ProjectCard): void {
+    const url = card.projectUrl?.trim();
+    if (!url) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    this.openProjectUrl(url);
+  }
+
+  private openProjectUrl(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   goToSlide(index: number): void {
     const len = this.cards().length;
     if (index >= 0 && index < len) this.currentSlideIndex.set(index);

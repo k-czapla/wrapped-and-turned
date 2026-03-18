@@ -98,11 +98,11 @@ describe("stats", () => {
   });
 
   describe("isProjectUpdateListableStatus", () => {
-    it("allows Completed and In progress (case-insensitive)", () => {
+    it("allows Finished and In progress (case-insensitive)", () => {
       expect(
         isProjectUpdateListableStatus({
           id: 1,
-          status_name: "Completed",
+          status_name: "Finished",
         } as RavelryProjectListItem),
       ).toBe(true);
       expect(
@@ -143,7 +143,7 @@ describe("stats", () => {
         completed: "2025-03-15",
         started: "2025-03-01",
         craft_name: "Knitting",
-        status_name: "Completed",
+        status_name: "Finished",
       },
       {
         id: 2,
@@ -151,7 +151,7 @@ describe("stats", () => {
         completed: "2025-06-20",
         started: "2025-06-01",
         craft_name: "Crochet",
-        status_name: "completed",
+        status_name: "finished",
       },
       {
         id: 3,
@@ -159,7 +159,7 @@ describe("stats", () => {
         completed: "2025-08-10",
         started: "2025-08-01",
         craft_name: "Knitting",
-        status_name: "Completed",
+        status_name: "Finished",
       },
       {
         id: 4,
@@ -194,7 +194,7 @@ describe("stats", () => {
 
       expect(result.finishedInRange).toHaveLength(3);
       expect(result.finishedInRange.map((p) => p.id)).toEqual([1, 2, 3]);
-      // projectsInRange: date rules + status Completed or In progress only (6 = Hibernating excluded)
+      // projectsInRange: date rules + status Finished or In progress only (6 = Hibernating excluded)
       expect(result.projectsInRange).toHaveLength(5);
       expect(result.projectsInRange.map((p) => p.id)).toEqual([1, 2, 3, 4, 5]);
     });
@@ -217,21 +217,21 @@ describe("stats", () => {
           name: "Project 1",
           completed: "2025-03-15",
           craft_name: "Knitting",
-          status_name: "Completed",
+          status_name: "Finished",
         },
         {
           id: 2,
           name: "Project 2",
           completed: "2025-03-20",
           craft_name: "Crochet",
-          status_name: "Completed",
+          status_name: "Finished",
         },
         {
           id: 3,
           name: "Project 3",
           completed: "2025-06-10",
           craft_name: "Knitting",
-          status_name: "Completed",
+          status_name: "Finished",
         },
       ];
 

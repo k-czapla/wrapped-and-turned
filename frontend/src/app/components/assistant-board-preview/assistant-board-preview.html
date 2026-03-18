@@ -90,6 +90,12 @@
                 <div
                   #board
                   class="assistant-board-preview__board-wrap overflow-hidden border border-slate-200 bg-white shadow-sm"
+                  [class.assistant-board-preview__board-wrap--linkable]="!!card.projectUrl"
+                  [tabIndex]="card.projectUrl ? 0 : -1"
+                  [attr.role]="card.projectUrl ? 'link' : null"
+                  [attr.aria-label]="card.projectUrl ? 'Open this project on Ravelry in a new tab' : null"
+                  (click)="onBoardPreviewClick($event, card)"
+                  (keydown)="onBoardPreviewKeydown($event, card)"
                 >
                   <app-assistant-board-card
                     [card]="card"
