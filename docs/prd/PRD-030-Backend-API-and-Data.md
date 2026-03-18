@@ -75,7 +75,7 @@ Updates the logged-in user’s stat preferences. Body: same shape as GET respons
 
 ### `GET /api/wrapped?from=YYYY-MM-DD&to=YYYY-MM-DD`
 
-Returns Wrapped stats and a list of projects in range, enriched with optional details.
+Returns Wrapped stats and a list of projects in range, enriched with optional details. Projects with Ravelry status **Frogged** are omitted from `projects` and from aggregate totals that derive from that list.
 
 **Response shape (owned by app)**
 

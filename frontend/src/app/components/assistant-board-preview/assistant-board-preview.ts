@@ -230,7 +230,7 @@ export class AssistantBoardPreview {
       const card = this.cards()[index];
       let dataUrl = boardDataUrl;
       const qrSizePx = 360; // 120 logical px at 3x
-      if (card?.projectUrl) {
+      if (card?.projectUrl && this.displayOptions()?.showQrCode) {
         try {
           const qrDataUrl = await QRCode.toDataURL(card.projectUrl, {
             width: qrSizePx,

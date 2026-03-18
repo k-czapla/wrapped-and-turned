@@ -28,7 +28,7 @@ As a fiber arts content creator, I want a clean “project card” image contain
 - **Selectable project list**: user is presented with a checkmark list of **all projects in the date range** (started or completed within the range, plus projects started before the range but still in progress during the range). Each row shows the **Ravelry project status in brackets** next to the project name (e.g. In progress, Finished, Hibernating). They select one or more projects to generate a visualisation for. The **finished object (FO) count** (projects with a **completed date** in the range) is used only for Generate Description wording (e.g. “3 FOs in this period”), not for filtering the list.
 - **Board design selection** (optional): user can choose from multiple visual styles for the project board via the Board Design page (`/board-design`). The last option is “My design” (user’s customized version); the rest are predefined styles. Selected design is persisted in localStorage and applied to all generated boards.
 - **Board design customization** (optional): on the Board Design page, “My design” is the last option; selecting it opens the customizer (font, optional board background image upload, RGBA background/text colors, border). Predefined designs can be selected without opening the customizer. Customizations persist in localStorage and apply to all generated boards (preview and PNG export).
-- **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Needle sizes**, **Start date**, **Completed date**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
+- **Board display options**: a control section below the main Podcaster’s Assistant controls lets the user choose which Ravelry-sourced information to show on the board. **Pattern name** and **Designer** are always shown (checkboxes disabled). User can toggle: **Photo**, **Yarn + color**, **Size made**, **Needle sizes**, **Start date**, **Completed date**, **QR code (on download)**. All toggles are on by default. When **Photo** is enabled, each project board has its own **Project / Pattern** toggle so the user can choose per board whether to use photos from the project or from the pattern.
 - **Photo selection**: when Photo is shown, a photo gallery appears on the board preview for each project. The user can select which photo to display from either the project's photos or the pattern's photos (depending on the Project/Pattern toggle). Medium-sized images are used and scaled correctly on the board.
 - **Open on Ravelry**: when the project has a Ravelry project URL, clicking the board preview (outside editable yarn/size/needle fields) opens that project page in a new tab; keyboard users can focus the board and press Enter or Space. Editable fields and inputs keep their existing behaviour.
 - **Photo upload**: for each project board, the user can upload a photo directly from their computer. Uploaded photos are added to the gallery for that board (prepended to project/pattern photos) and can be selected like Ravelry-sourced photos. Uploaded photos are kept in memory for the session and included in the preview and PNG export.
@@ -68,7 +68,7 @@ The board shows **Pattern name** and **Designer** always, and only the other fie
 - **Yarn + color**: yarn used (from Ravelry packs)
 - **Size made**: size made (from Ravelry project)
 - **Needle sizes**: needle sizes used (from Ravelry project needles); if multiple, joined with "+" (e.g. "4mm + 3.5mm")
-- **Dates**: one line at the bottom of the board when **Start date** or **Completed date** is enabled and a start date is available. If only start date: “DD.MM.YYYY – In progress”. If both: “DD.MM.YYYY – DD.MM.YYYY”. If no start date, the date section is hidden. A QR code is not shown on the board; when the user downloads the PNG and the card has a Ravelry project URL, a QR code is appended on export (see Export).
+- **Dates**: one line at the bottom of the board when **Start date** or **Completed date** is enabled and a start date is available. If only start date: “DD.MM.YYYY – In progress”. If both: “DD.MM.YYYY – DD.MM.YYYY”. If no start date, the date section is hidden. A QR code is not shown on the board; when the user downloads the PNG, **QR code (on download)** is enabled in Board display options, and the card has a Ravelry project URL, a QR code is appended on export (see Export).
 
 App branding (“Wrapped & Turned”) remains on the board.
 
@@ -90,13 +90,13 @@ The Pattern Round Up board shows **Pattern name** and **Designer** always, and o
 
 ### Export
 
-- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing. The PNG includes any in-place edits the user made to yarn/size fields on the board. When the card has a Ravelry project or pattern URL, the downloaded image also includes a QR code (linking to that URL) on the **left side** of the board, **outside** the board rectangle; the QR has a white background and the board layout and visuals are unchanged.
+- “Download PNG” button exports the preview as a PNG at a reasonable resolution for sharing. The PNG includes any in-place edits the user made to yarn/size fields on the board. When **QR code (on download)** is enabled in Board display options and the card has a Ravelry project or pattern URL, the downloaded image also includes a QR code (linking to that URL) on the **left side** of the board, **outside** the board rectangle; the QR has a white background and the board layout and visuals are unchanged.
 
 ## Out of scope (v1)
 
 - Full design editor (Canva-like experience); basic customization (font, RGBA colors) is in scope.
 - User-uploaded fonts (user-uploaded project/board photo is in scope)
-- ~~Data field selection (toggling which fields appear on the board)~~ — implemented: Board display options (Photo, Pattern name, Designer always on; Yarn + color, Size made, Start date, Completed date)
+- ~~Data field selection (toggling which fields appear on the board)~~ — implemented: Board display options (Photo, Pattern name, Designer always on; Yarn + color, Size made, Start date, Completed date, QR code on download)
 - Export to PDF
 - Multi-project boards / carousel generation
 - Scheduling/social posting integrations

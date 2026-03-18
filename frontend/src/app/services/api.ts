@@ -147,6 +147,8 @@ export type BoardDisplayOptions = {
   showNeedleSizes: boolean;
   showStartDate: boolean;
   showCompletedDate: boolean;
+  /** When true, downloaded PNG includes a QR code linking to the Ravelry project page. */
+  showQrCode: boolean;
 };
 
 export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
@@ -159,6 +161,7 @@ export const DEFAULT_BOARD_DISPLAY_OPTIONS: BoardDisplayOptions = {
   showNeedleSizes: true,
   showStartDate: true,
   showCompletedDate: true,
+  showQrCode: true,
 };
 
 @Injectable({

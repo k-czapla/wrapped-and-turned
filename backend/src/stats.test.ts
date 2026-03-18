@@ -249,6 +249,43 @@ describe("stats", () => {
       expect(result.craft).toEqual({});
       expect(result.mostProductiveMonth).toBeUndefined();
     });
+
+    it("should exclude Frogged status from projects in range and FOs", () => {
+      const items: RavelryProjectListItem[] = [
+        {
+          id: 1,
+          name: "Frogged WIP",
+          started: "2025-06-01",
+          craft_name: "Knitting",
+          status_name: "Frogged",
+        },
+        {
+          id: 2,
+          name: "Active WIP",
+          started: "2025-06-01",
+          craft_name: "Knitting",
+          status_name: "In progress",
+        },
+        {
+          id: 3,
+          name: "Frogged FO",
+          completed: "2025-03-15",
+          started: "2025-03-01",
+          craft_name: "Crochet",
+          status_name: "frogged",
+        },
+      ];
+
+      const result = computeBaseStats({
+        from: "2025-01-01",
+        to: "2025-12-31",
+        items,
+      });
+
+      expect(result.projectsInRange.map((p) => p.id)).toEqual([2]);
+      expect(result.finishedInRange).toHaveLength(0);
+      expect(result.craft).toEqual({});
+    });
   });
 
   describe("mapWithConcurrency", () => {

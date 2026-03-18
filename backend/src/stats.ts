@@ -46,6 +46,13 @@ export function inc(map: Record<string, number>, key: string, by = 1) {
   map[key] = (map[key] ?? 0) + by;
 }
 
+/** Ravelry status for unraveled/removed projects — excluded from Wrapped and Assistant lists. */
+export function isFroggedStatus(statusName?: string): boolean {
+  return (
+    typeof statusName === "string" && statusName.trim().toLowerCase() === "frogged"
+  );
+}
+
 export function monthKey(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -62,6 +69,7 @@ export function computeBaseStats(args: {
 
   // Finished objects (FOs): only projects with completed date in range.
   const finishedInRange = args.items.filter((p) => {
+    if (isFroggedStatus(p.status_name)) return false;
     const completed = safeDate(p.completed);
     return completed ? withinRange(completed, fromD, toD) : false;
   });
@@ -70,6 +78,7 @@ export function computeBaseStats(args: {
   // (started on or before range end, and either no completion or completed on or after range start).
   // Used for the assistant project list (Project Update).
   const projectsInRange = args.items.filter((p) => {
+    if (isFroggedStatus(p.status_name)) return false;
     const started = safeDate(p.started);
     const completed = safeDate(p.completed);
     const startedInRange = started && withinRange(started, fromD, toD);

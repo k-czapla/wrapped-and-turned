@@ -4,7 +4,7 @@
 - **Feature**: Wrapped
 - **Doc type**: PRD
 - **Status**: Draft
-- **Last updated**: 2026-01-28
+- **Last updated**: 2026-03-18
 
 ## Summary
 
@@ -41,6 +41,10 @@ As a fiber artist, I want to pick a time period and see a fun, clear summary of 
 - Social posting integrations (IG/TikTok APIs)
 
 ## Definitions and data rules
+
+### Frogged projects
+
+Projects whose Ravelry status is **Frogged** (unraveled) are **not** included in Wrapped totals, gallery, or the Assistant project picker.
 
 ### “In range” definition
 

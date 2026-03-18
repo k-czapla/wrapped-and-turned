@@ -67,5 +67,14 @@
       />
       <span class="text-sm text-slate-700">Start & completed date</span>
     </label>
+    <label class="assistant-board-options__item inline-flex cursor-pointer items-center gap-2">
+      <input
+        type="checkbox"
+        [checked]="options().showQrCode"
+        (change)="toggle('showQrCode')"
+        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+      />
+      <span class="text-sm text-slate-700">QR code (on download)</span>
+    </label>
   </div>
 </div>

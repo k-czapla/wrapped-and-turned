@@ -1,7 +1,12 @@
 import type { Router } from 'express';
 import { makeRavelryApi, type RavelryProjectsListResponse } from '../../ravelryApi.js';
 import { ravelryPhotoUrl } from '../../ravelry-helpers.js';
-import { computeBaseStats, mapWithConcurrency, safeDate } from '../../stats.js';
+import {
+  computeBaseStats,
+  isFroggedStatus,
+  mapWithConcurrency,
+  safeDate,
+} from '../../stats.js';
 import type { RouteContext } from '../context.js';
 
 function mockWrapped(from: string, to: string) {
@@ -128,7 +133,8 @@ export function registerWrappedRoutes(router: Router, ctx: RouteContext): void {
       };
     });
 
-    const finishedDetailed = detailed.filter((p) => finishedIds.has(p.id));
+    const visible = detailed.filter((p) => !isFroggedStatus(p.statusName));
+    const finishedDetailed = visible.filter((p) => finishedIds.has(p.id));
     const totalYardage = finishedDetailed.reduce((sum, p) => sum + (p.yardage ?? 0), 0);
     const totalMeterage = finishedDetailed.reduce((sum, p) => sum + (p.meterage ?? 0), 0);
 
@@ -142,8 +148,8 @@ export function registerWrappedRoutes(router: Router, ctx: RouteContext): void {
     res.json({
       range: { from, to },
       totals: {
-        projects: base.projectsInRange.length,
-        finishedProjects: base.finishedInRange.length,
+        projects: visible.length,
+        finishedProjects: finishedDetailed.length,
         totalYardage,
         totalMeterage,
       },
@@ -154,7 +160,7 @@ export function registerWrappedRoutes(router: Router, ctx: RouteContext): void {
         mostProductiveMonth: base.mostProductiveMonth,
         avgDurationDays,
       },
-      projects: detailed.map(({ _durationDays, ...p }) => p),
+      projects: visible.map(({ _durationDays, ...p }) => p),
     });
   });
 }
